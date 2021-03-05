@@ -3,15 +3,14 @@ export type RootStackParamList = {
   NotFound: undefined;
 };
 
-export type BottomTabParamList = {
-  TabOne: undefined;
-  TabTwo: undefined;
+export type DashboardParamList = {
+  Dashboard:undefined;
+  Joy: undefined;
+  JoyImport:undefined;
+
+
+
 };
 
-export type TabOneParamList = {
-  TabOneScreen: undefined;
-};
 
-export type TabTwoParamList = {
-  TabTwoScreen: undefined;
-};
+

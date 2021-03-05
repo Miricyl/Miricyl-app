@@ -6,16 +6,12 @@ export default {
     screens: {
       Root: {
         screens: {
-          TabOne: {
+          Dashboard: {
             screens: {
-              TabOneScreen: 'one',
+              JoyScreen: 'joy',
+              JoyImportScreen:'joy-import'
             },
-          },
-          TabTwo: {
-            screens: {
-              TabTwoScreen: 'two',
-            },
-          },
+          }
         },
       },
       NotFound: '*',
