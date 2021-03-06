@@ -6,19 +6,22 @@ import { useNavigation } from '@react-navigation/native';
 import Colors from '../constants/Colors';
 import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
+import { HeaderHeightContext } from '@react-navigation/stack';
 
 interface NavigationCardDetails {
   text:string;
   screenName:string;
+  height:number;
+  width:number;
 }
 
-const NavigationCard = ({text,screenName}:NavigationCardDetails ) => {
+const NavigationCard = ({text,screenName, height, width}:NavigationCardDetails ) => {
   const navigation = useNavigation();
 
   return (
       <View style={styles.messageCard}>
         <TouchableOpacity onPress={() => navigation.navigate(screenName)}>
-        <Text style={styles.cardText}>
+        <Text style={{...styles.cardText, height:height, width:width}}>
           {text}
         </Text>  
          </TouchableOpacity>
@@ -39,10 +42,12 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderRadius: 5,
     backgroundColor: "orange",
-    margin: 10,
+    margin:'5%',
     padding: 10
   },
   cardText:{
-    color:'white'
+    color:'white',
+    textAlign: 'center',
+    textAlignVertical: 'center'
   }
 });

@@ -9,7 +9,12 @@ export default {
           Dashboard: {
             screens: {
               JoyScreen: 'joy',
-              JoyImportScreen:'joy-import'
+              JoyImportScreen:'joy-import',
+              CopingStrategiesScreen:'coping-strategies',
+              MoodScreen:'mood',
+              PlacesToDistractScreen:'places-to-distract',
+              SelfCheckScreen:'self-check',
+              AddWellnessMessageScreen:'wellness-message'
             },
           }
         },

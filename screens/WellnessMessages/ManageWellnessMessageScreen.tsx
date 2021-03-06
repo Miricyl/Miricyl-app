@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 
 import { Text, View } from '../../components/Themed';
 
-export default function MoodScreen() {
+export default function ManageWellnessMessagesScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Add Wellness message</Text>
