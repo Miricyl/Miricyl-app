@@ -13,9 +13,21 @@ export type DashboardParamList = {
   ManageWellnessMessage:undefined;
   PlacesToDistract:undefined;
 
-
-
 };
+
+export enum JoyType {
+  Image,
+  Text,
+  Music
+
+}
+
+export type JoyItem = {
+  type:JoyType;
+  text?:string;
+  url?:string;
+  //TODO add image
+}
 
 
 
