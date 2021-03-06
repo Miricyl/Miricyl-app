@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
-import Card from '../../components/Card';
 import { Text, View } from '../../components/Themed';
 
 export default function JoyImportScreen() {
@@ -9,7 +8,7 @@ export default function JoyImportScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Add some joyful content...</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <Card></Card>
+
     </View>
   );
 }
