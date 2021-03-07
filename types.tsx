@@ -23,14 +23,14 @@ export enum ContentType {
 
 }
 
-export interface NavigationCardDetails {
+export interface INavigationCardDetails {
   text:string;
   screenName:string;
   height?:any;
   width?:any;
 }
 
-export interface ContentCardDetails {
+export interface IContentCardDetails {
   text?:string;
   image?:any;
   url?:string;
@@ -39,14 +39,12 @@ export interface ContentCardDetails {
   width?:any;
 }
 
-
-
-// export type JoyItem = {
-//   type:JoyType;
-//   text?:string;
-//   url?:string;
-//   //TODO add image
-// }
+export interface IJoyItem {
+  type: ContentType;
+  text?: string;
+  url?: string;
+  //TODO add image
+}
 
 
 
