@@ -1,10 +1,10 @@
 import { ActionCreator } from 'redux'
 import { ThunkAction } from 'redux-thunk'
-import { JoyType } from './types'
+import { ContentType } from './types'
 
 
 export interface IJoyItem {
-    type: JoyType;
+    type: ContentType;
     text?: string;
     url?: string;
     //TODO add image

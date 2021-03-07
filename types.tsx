@@ -12,22 +12,41 @@ export type DashboardParamList = {
   SelfCheck:undefined;
   ManageWellnessMessage:undefined;
   PlacesToDistract:undefined;
+  Content:undefined;
 
 };
 
-export enum JoyType {
+export enum ContentType {
   Image,
   Text,
-  Music
+  Url
 
 }
 
-export type JoyItem = {
-  type:JoyType;
+export interface NavigationCardDetails {
+  text:string;
+  screenName:string;
+  height?:any;
+  width?:any;
+}
+
+export interface ContentCardDetails {
   text?:string;
+  image?:any;
   url?:string;
-  //TODO add image
+  contentType:ContentType;
+  height?:any;
+  width?:any;
 }
+
+
+
+// export type JoyItem = {
+//   type:JoyType;
+//   text?:string;
+//   url?:string;
+//   //TODO add image
+// }
 
 
 

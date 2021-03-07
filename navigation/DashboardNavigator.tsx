@@ -13,6 +13,7 @@ import MoodScreen from '../screens/Mood/MoodScreen';
 import PlacesToDistractScreen from '../screens/PlacesToDistract/PlacesToDistractScreen';
 import SelfCheckScreen from '../screens/SelfCheck/SelfCheckScreen';
 import ManageWellnessMessageScreen from '../screens/WellnessMessages/ManageWellnessMessageScreen';
+import ContentScreen from '../screens/ContentScreen';
 
 const DashboardStack = createStackNavigator<DashboardParamList>();
 
@@ -60,6 +61,11 @@ export default function DashboardNavigator() {
                 name="ManageWellnessMessage"
                 component={ManageWellnessMessageScreen}
                 options={{ title: 'Manage your Wellness messages' }}
+            />
+            <DashboardStack.Screen
+                name="Content"
+                component={ContentScreen}
+                options={{ title: '' }}
             />
         </DashboardStack.Navigator>
 

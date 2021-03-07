@@ -14,7 +14,8 @@ export default {
               MoodScreen:'mood',
               PlacesToDistractScreen:'places-to-distract',
               SelfCheckScreen:'self-check',
-              AddWellnessMessageScreen:'wellness-message'
+              AddWellnessMessageScreen:'wellness-message',
+              ContentScreen:'content'
             },
           }
         },
