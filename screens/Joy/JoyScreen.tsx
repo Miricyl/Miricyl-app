@@ -6,20 +6,16 @@ import { Text, View } from '../../components/Themed';
 import Layout from '../../constants/Layout';
 import ContentCard from '../../components/ContentCard';
 import { ContentType, IJoyItem } from '../../types';
-import { LoadJoyItems, UpdateJoyItems } from '../../storage/joyItemStorage';
+import { LoadJoyItems, AddJoyItems } from '../../storage/joyItemStorage';
 
 export default function JoyScreen() {
 
     const [joyItems, setJoyItems] = useState<IJoyItem[]>([]);
 
     useEffect(() => {
-        let joy:IJoyItem = {
-            type:ContentType.Text,
-            text:'Test'
-        }
-        UpdateJoyItems(joy,0).then(reply=>
+       
         LoadJoyItems().then(data => setJoyItems(data))
-        )
+        
     }, []);
 
     let joyitemsView=joyItems.map((item,index)=>{

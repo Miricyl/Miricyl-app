@@ -7,11 +7,11 @@ import Colors from '../constants/Colors';
 import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
 import { HeaderHeightContext } from '@react-navigation/stack';
-import { ContentCardDetails, ContentType } from '../types';
+import { IContentCardDetails, ContentType } from '../types';
 
 
 
-const ContentCard = ({ text, image, url, contentType, height='100%', width='100%' }: ContentCardDetails) => {
+const ContentCard = ({ text, image, url, contentType, height='100%', width='100%' }: IContentCardDetails) => {
   const navigation = useNavigation();
 
   let content;
