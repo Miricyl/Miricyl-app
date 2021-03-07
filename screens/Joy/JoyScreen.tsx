@@ -5,27 +5,32 @@ import NavigationCard from '../../components/NavigationCard';
 import { Text, View } from '../../components/Themed';
 import Layout from '../../constants/Layout';
 import ContentCard from '../../components/ContentCard';
-import { ContentType, IJoyItem } from '../../types';
+import { IJoyItem } from '../../types';
 import { LoadJoyItems, AddJoyItems } from '../../storage/joyItemStorage';
+import { useIsFocused } from '@react-navigation/native';
 
 export default function JoyScreen() {
 
     const [joyItems, setJoyItems] = useState<IJoyItem[]>([]);
-
+    const isFocused = useIsFocused();
+    
     useEffect(() => {
        
         LoadJoyItems().then(data => setJoyItems(data))
         
-    }, []);
+    }, [isFocused]);
 
     let joyitemsView=joyItems.map((item,index)=>{
-        return <ContentCard key={item.text} text={item.text} contentType={item.type}></ContentCard>
+       
+        return <ContentCard key={item.text} text={item.text} contentType={item.type} height={50} width={100}></ContentCard>
     })
+
+    console.log(joyitemsView);
     
     return (
         <View style={styles.container}>
             <NavigationCard text="Add more joy!" screenName="JoyImport" height={Layout.window.height * 0.05} width={Layout.window.width * 0.8}></NavigationCard>
-            <ScrollView>{joyitemsView}</ScrollView>
+            <ScrollView contentContainerStyle={{width:'100%', alignItems:'center'}}>{joyitemsView}</ScrollView>
             <NavigationCard text="Manage Wellness messages" screenName="ManageWellnessMessadge" height={Layout.window.height * 0.05} width={Layout.window.width * 0.8}></NavigationCard>
         </View>
     );

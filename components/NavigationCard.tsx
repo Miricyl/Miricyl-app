@@ -1,12 +1,10 @@
-import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
 import Colors from '../constants/Colors';
-import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
-import { HeaderHeightContext } from '@react-navigation/stack';
 import { INavigationCardDetails } from '../types';
 
 
@@ -37,7 +35,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 5,
     borderRadius: 5,
-    backgroundColor: "orange",
+    backgroundColor: Colors.primary,
     margin:'5%',
     padding: 10
   },

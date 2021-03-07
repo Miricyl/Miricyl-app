@@ -1,12 +1,9 @@
-import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import Colors from '../constants/Colors';
-import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
-import { HeaderHeightContext } from '@react-navigation/stack';
 import { IContentCardDetails, ContentType } from '../types';
 
 
@@ -17,7 +14,7 @@ const ContentCard = ({ text, image, url, contentType, height='100%', width='100%
   let content;
   switch (contentType) {
     case ContentType.Text: {
-      content = <Text style={{ ...styles.cardText, height: height, width: width }}>{text}</Text>
+      content = <Text style={styles.cardText}>{text}</Text>
       break;
     }
     case ContentType.Image: {
@@ -36,7 +33,7 @@ const ContentCard = ({ text, image, url, contentType, height='100%', width='100%
 
 
   return (
-    <View style={styles.messageCard}>
+    <View style={{...styles.messageCard, height: height, width: width}}>
       {/* PUT LINK TO CONTENT PAGE <TouchableOpacity onPress={() => navigation.navigate()}> */}
       {content}
 
@@ -56,11 +53,12 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 5,
     borderRadius: 5,
-    backgroundColor: "orange",
-    margin: '5%',
-    padding: 10
+    backgroundColor: Colors.primary,
+    margin: '2%',
+    padding: 5
   },
   cardText: {
+    width:'100%',
     color: 'white',
     textAlign: 'center',
     textAlignVertical: 'center'

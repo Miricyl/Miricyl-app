@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { ContentType, IJoyItem } from '../../types';
 import { LoadJoyItems, AddJoyItems } from '../../storage/joyItemStorage';
 import AddButton from '../../components/AddButton'
+import { useNavigation } from '@react-navigation/native';
 
 const radioButtonsData: RadioButtonProps[] = [{
     id: '1', // acts as primary key, should be unique and non-empty string
@@ -30,6 +31,7 @@ export default function JoyImportScreen() {
         type: ContentType.Text,
         text: ''
     }
+    const navigation = useNavigation();
     const [radioButtons, setRadioButtons] = useState<RadioButtonProps[]>(radioButtonsData)
     const [joyItem, setJoyItem] = useState<IJoyItem>(joyItemTemplate)
 
@@ -55,7 +57,7 @@ export default function JoyImportScreen() {
         let joyItemNew=joyItem;
         joyItemNew.type=type;
         
-        AddJoyItems(joyItemNew);
+        AddJoyItems(joyItemNew).then(()=>navigation.navigate('Joy'));
 
     }
 
