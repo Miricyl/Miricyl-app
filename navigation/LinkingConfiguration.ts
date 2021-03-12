@@ -8,6 +8,8 @@ export default {
         screens: {
           Dashboard: {
             screens: {
+              DashboardScreen:'dashboard',
+              SelfCareScreen:'self-care',
               JoyScreen: 'joy',
               JoyImportScreen:'joy-import',
               CopingStrategiesScreen:'coping-strategies',
@@ -15,7 +17,7 @@ export default {
               PlacesToDistractScreen:'places-to-distract',
               SelfCheckScreen:'self-check',
               AddWellnessMessageScreen:'wellness-message',
-              ContentScreen:'content'
+              ContentScreen:'contentScreen'
             },
           }
         },

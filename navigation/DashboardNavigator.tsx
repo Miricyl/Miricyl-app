@@ -1,73 +1,81 @@
-import { Ionicons } from '@expo/vector-icons';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import DashboardScreen from '../screens/DashboardScreen';
-import JoyScreen from '../screens/Joy/JoyScreen';
+import { DashboardParamList } from '../types';
+import ContentScreen from '../screens/ContentScreen';
 import JoyImportScreen from '../screens/Joy/JoyImportScreen';
-import { DashboardParamList} from '../types';
-import CopingStrategiesScreen from '../screens/Strategies/CopingStrategyScreen';
+import JoyScreen from '../screens/Joy/JoyScreen';
 import MoodScreen from '../screens/Mood/MoodScreen';
 import PlacesToDistractScreen from '../screens/PlacesToDistract/PlacesToDistractScreen';
+import SelfCareScreen from '../screens/SelfCareScreen';
 import SelfCheckScreen from '../screens/SelfCheck/SelfCheckScreen';
+import CopingStrategiesScreen from '../screens/Strategies/CopingStrategyScreen';
 import ManageWellnessMessageScreen from '../screens/WellnessMessages/ManageWellnessMessageScreen';
-import ContentScreen from '../screens/ContentScreen';
 
-const DashboardStack = createStackNavigator<DashboardParamList>();
 
-export default function DashboardNavigator() {
+const Stack = createStackNavigator<DashboardParamList>();
+
+export default function DashboardStackNavigator() {
     const colorScheme = useColorScheme();
 
     return (
-        <DashboardStack.Navigator initialRouteName="Dashboard">
-            <DashboardStack.Screen
-                name="Dashboard"
-                component={DashboardScreen}
-                options={{ headerTitle: 'Dashboard' }}
+            <Stack.Navigator initialRouteName="Dashboard">
+                <Stack.Screen
+                    name="Dashboard"
+                    component={DashboardScreen}
+                    options={{ headerTitle: 'Miricyl' }} />
+                <Stack.Screen
+                name="SelfCare"
+                component={SelfCareScreen}
+                options={{ headerTitle: 'SelfCare' }}
             />
-            <DashboardStack.Screen
+            <Stack.Screen
                 name="Mood"
                 component={MoodScreen}
                 options={{ title: 'How are you today?' }}
             />
-               <DashboardStack.Screen
+               <Stack.Screen
                 name="SelfCheck"
                 component={SelfCheckScreen}
                 options={{ title: 'Self Check Up' }}
             />
-             <DashboardStack.Screen
+             <Stack.Screen
                 name="CopingStrategies"
                 component={CopingStrategiesScreen}
                 options={{ title: 'Coping Strategies' }}
             />
-             <DashboardStack.Screen
+             <Stack.Screen
                 name="PlacesToDistract"
                 component={PlacesToDistractScreen}
                 options={{ title: 'Places to Distract' }}
             />
-            <DashboardStack.Screen
+            <Stack.Screen
                 name="Joy"
                 component={JoyScreen}
                 options={{ title: 'Things that gives me joy' }}
             />
-            <DashboardStack.Screen
+            <Stack.Screen
                 name="JoyImport"
                 component={JoyImportScreen}
                 options={{ title: 'Add new item' }}
             />
-              <DashboardStack.Screen
+            <Stack.Screen
                 name="ManageWellnessMessage"
                 component={ManageWellnessMessageScreen}
                 options={{ title: 'Manage your Wellness messages' }}
             />
-            <DashboardStack.Screen
+            <Stack.Screen
                 name="Content"
                 component={ContentScreen}
                 options={{ title: '' }}
             />
-        </DashboardStack.Navigator>
+
+            </Stack.Navigator>
+
+
 
     );
 }

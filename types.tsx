@@ -5,6 +5,7 @@ export type RootStackParamList = {
 
 export type DashboardParamList = {
   Dashboard:undefined;
+  SelfCare:undefined;
   Joy: undefined;
   JoyImport:undefined;
   CopingStrategies:undefined;
@@ -13,8 +14,9 @@ export type DashboardParamList = {
   ManageWellnessMessage:undefined;
   PlacesToDistract:undefined;
   Content:undefined;
-
 };
+
+
 
 export enum ContentType {
   Image,
