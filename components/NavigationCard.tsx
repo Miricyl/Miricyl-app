@@ -5,21 +5,36 @@ import { useNavigation } from '@react-navigation/native';
 
 import Colors from '../constants/Colors';
 import { Text, View } from './Themed';
-import { INavigationCardDetails } from '../types';
+import { INavigationCardDetails, LinkType } from '../types';
 
 
 
-const NavigationCard = ({text,screenName, height='100%', width='100%'}:INavigationCardDetails ) => {
+const NavigationCard = ({ text, link, linkType, height = '100%', width = '100%' }: INavigationCardDetails) => {
   const navigation = useNavigation();
+  var onPressFunction: any;
+
+  switch (linkType) {
+    case LinkType.Screen:
+      onPressFunction = () => {
+        navigation.navigate(link);
+      }
+    case LinkType.Url:
+      //onPressFunction = () => { }//TODO: handle Url links
+
+    default: {
+      break;
+    }
+  }
+
 
   return (
-      <View style={styles.messageCard}>
-        <TouchableOpacity onPress={() => navigation.navigate(screenName)}>
-        <Text style={{...styles.cardText, height:height, width:width}}>
+    <View style={styles.messageCard}>
+      <TouchableOpacity onPress={onPressFunction}>
+        <Text style={{ ...styles.cardText, height: height, width: width }}>
           {text}
-        </Text>  
-         </TouchableOpacity>
-       </View>
+        </Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 
@@ -36,11 +51,11 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderRadius: 5,
     backgroundColor: Colors.primary,
-    margin:'5%',
+    margin: '5%',
     padding: 10
   },
-  cardText:{
-    color:'white',
+  cardText: {
+    color: 'white',
     textAlign: 'center',
     textAlignVertical: 'center'
   }
