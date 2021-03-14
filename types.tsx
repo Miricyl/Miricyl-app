@@ -1,3 +1,5 @@
+import { AndroidNotificationPriority } from "expo-notifications";
+
 export type RootStackParamList = {
   Root: undefined;
   NotFound: undefined;
@@ -52,7 +54,5 @@ export interface IJoyItem {
   text?: string;
   url?: string;
   //TODO add image
+
 }
-
-
-
