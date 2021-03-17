@@ -5,7 +5,7 @@ import NavigationCard from '../../components/NavigationCard';
 import { Text, View } from '../../components/Themed';
 import Layout from '../../constants/Layout';
 import ContentCard from '../../components/ContentCard';
-import { IJoyItem } from '../../types';
+import { IJoyItem, LinkType } from '../../types';
 import { LoadJoyItems, AddJoyItems } from '../../storage/joyItemStorage';
 import { useIsFocused } from '@react-navigation/native';
 
@@ -13,7 +13,7 @@ export default function JoyScreen() {
 
     const [joyItems, setJoyItems] = useState<IJoyItem[]>([]);
     const isFocused = useIsFocused();
-    
+
     useEffect(() => {
        
         LoadJoyItems().then(data => setJoyItems(data))
@@ -29,9 +29,9 @@ export default function JoyScreen() {
     
     return (
         <View style={styles.container}>
-            <NavigationCard text="Add more joy!" screenName="JoyImport" height={Layout.window.height * 0.05} width={Layout.window.width * 0.8}></NavigationCard>
+            <NavigationCard text="Add more joy!" link="JoyImport" linkType={LinkType.Screen} height={Layout.window.height * 0.05} width={Layout.window.width * 0.8}></NavigationCard>
             <ScrollView contentContainerStyle={{width:'100%', alignItems:'center'}}>{joyitemsView}</ScrollView>
-            <NavigationCard text="Manage Wellness messages" screenName="ManageWellnessMessadge" height={Layout.window.height * 0.05} width={Layout.window.width * 0.8}></NavigationCard>
+            <NavigationCard text="Manage Wellness messages" link="ManageWellnessMessadge" linkType={LinkType.Screen} height={Layout.window.height * 0.05} width={Layout.window.width * 0.8}></NavigationCard>
         </View>
     );
 }

@@ -25,9 +25,15 @@ export enum ContentType {
 
 }
 
+export enum LinkType {
+  Screen,
+  Url
+}
+
 export interface INavigationCardDetails {
   text:string;
-  screenName:string;
+  link:string;
+  linkType:LinkType;
   height?:any;
   width?:any;
 }

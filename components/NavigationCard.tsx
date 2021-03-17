@@ -5,21 +5,38 @@ import { useNavigation } from '@react-navigation/native';
 
 import Colors from '../constants/Colors';
 import { Text, View } from './Themed';
-import { INavigationCardDetails } from '../types';
+import { INavigationCardDetails, LinkType } from '../types';
 
 
 
-const NavigationCard = ({text,screenName, height='100%', width='100%'}:INavigationCardDetails ) => {
+const NavigationCard = ({ text, link, linkType, height = '100%', width = '100%' }: INavigationCardDetails) => {
   const navigation = useNavigation();
+  var onPressFunction: any;
+
+  switch (linkType) {
+    case LinkType.Screen:
+      onPressFunction = () => {
+        navigation.navigate(link);
+      }
+    case LinkType.Url:
+      //onPressFunction = () => { }//TODO: handle Url links
+
+    default: {
+      break;
+    }
+  }
+
 
   return (
+
       <View style={styles.messageCard}>
         <TouchableOpacity style={styles.touchableOpacity} onPress={() => navigation.navigate(screenName)}>
         <Text style={{...styles.cardText, height:height, width:width}}>
+
           {text}
-        </Text>  
-         </TouchableOpacity>
-       </View>
+        </Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 
@@ -42,6 +59,7 @@ const styles = StyleSheet.create({
   cardText:{
     fontSize: 18,
     color:'#8b2b0f',
+
     textAlign: 'center',
     textAlignVertical: 'center'
   },
