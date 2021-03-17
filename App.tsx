@@ -5,10 +5,11 @@ import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
 import * as Notifications from 'expo-notifications';
+
+//import { registerDevicePushTokenAsync } from '../api';
 import Constants from 'expo-constants';
 import { Linking, Platform } from 'react-native';
 import { StorePushToken } from './storage/pushNotificationStorage';
-
 
 
 export default function App() {
@@ -25,6 +26,7 @@ export default function App() {
       Linking.openURL(lastNotificationResponse.notification.request.content.data.url);
     }
   }, [lastNotificationResponse]);
+
   useEffect(() => {
     registerForPushNotificationsAsync().then(token => StorePushToken(token as string));
     schedulePushNotification();
@@ -44,7 +46,7 @@ export default function App() {
 }
 
 async function schedulePushNotification() {
-  await Notifications.scheduleNotificationAsync({
+  const identifyer = await Notifications.scheduleNotificationAsync({
     content: {
       title: "🌻🌻🌻🌻🌻",
       body: 'A message of positivity',
@@ -52,6 +54,7 @@ async function schedulePushNotification() {
     },
     trigger: { seconds: 2 },
   });
+  console.log(identifyer);
 }
 
 async function registerForPushNotificationsAsync() {
