@@ -28,9 +28,11 @@ const NavigationCard = ({ text, link, linkType, height = '100%', width = '100%' 
 
 
   return (
-    <View style={styles.messageCard}>
-      <TouchableOpacity onPress={onPressFunction}>
-        <Text style={{ ...styles.cardText, height: height, width: width }}>
+
+      <View style={styles.messageCard}>
+        <TouchableOpacity style={styles.touchableOpacity} onPress={() => navigation.navigate(screenName)}>
+        <Text style={{...styles.cardText, height:height, width:width}}>
+
           {text}
         </Text>
       </TouchableOpacity>
@@ -42,21 +44,27 @@ export default NavigationCard;
 
 const styles = StyleSheet.create({
   messageCard: {
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    width: '70%',
+    height: '8%',
     shadowColor: 'black',
     shadowOpacity: 0.26,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
     elevation: 5,
-    borderRadius: 5,
-    backgroundColor: Colors.primary,
-    margin: '5%',
-    padding: 10
+    borderRadius: 25,
+    backgroundColor: 'white',
+    margin:'5%',
+    padding: 20 
   },
-  cardText: {
-    color: 'white',
+  cardText:{
+    fontSize: 18,
+    color:'#8b2b0f',
+
     textAlign: 'center',
     textAlignVertical: 'center'
+  },
+  touchableOpacity: {
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });
