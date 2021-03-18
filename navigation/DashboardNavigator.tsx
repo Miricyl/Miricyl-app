@@ -26,7 +26,8 @@ export default function DashboardStackNavigator() {
                 <Stack.Screen
                     name="Dashboard"
                     component={DashboardScreen}
-                    options={{ headerTitle: 'Miricyl' }} />
+                    options={{headerShown:false}}/>
+                   
                 <Stack.Screen
                 name="SelfCare"
                 component={SelfCareScreen}

@@ -30,7 +30,7 @@ const NavigationCard = ({ text, link, linkType, height = '100%', width = '100%' 
   return (
 
       <View style={styles.messageCard}>
-        <TouchableOpacity style={styles.touchableOpacity} onPress={() => navigation.navigate(screenName)}>
+        <TouchableOpacity style={styles.touchableOpacity} onPress={onPressFunction}>
         <Text style={{...styles.cardText, height:height, width:width}}>
 
           {text}
@@ -59,7 +59,6 @@ const styles = StyleSheet.create({
   cardText:{
     fontSize: 18,
     color:'#8b2b0f',
-
     textAlign: 'center',
     textAlignVertical: 'center'
   },
