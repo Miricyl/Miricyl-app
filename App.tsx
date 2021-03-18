@@ -11,6 +11,7 @@ import Constants from 'expo-constants';
 import { Linking, Platform } from 'react-native';
 import { StorePushToken } from './storage/pushNotificationStorage';
 
+import { View, StyleSheet } from 'react-native';
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
