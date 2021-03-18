@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
@@ -30,7 +30,7 @@ const NavigationCard = ({ text, link, linkType, height = '100%', width = '100%' 
   return (
 
       <View style={styles.messageCard}>
-        <TouchableOpacity style={styles.touchableOpacity} onPress={onPressFunction}>
+        <TouchableOpacity onPress={onPressFunction}>
         <Text style={{...styles.cardText, height:height, width:width}}>
 
           {text}
@@ -54,16 +54,16 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     backgroundColor: 'white',
     margin:'5%',
-    padding: 20 
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   cardText:{
     fontSize: 18,
     color:'#8b2b0f',
     textAlign: 'center',
-    textAlignVertical: 'center'
-  },
-  touchableOpacity: {
-    alignItems: 'center',
-    justifyContent: 'center'
+    textAlignVertical: 'center',
+    lineHeight: Platform.OS === 'ios' ? 80 : 20 
   }
+
 });
