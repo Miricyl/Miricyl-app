@@ -1,6 +1,6 @@
 import * as SecureStore from 'expo-secure-store';
 
 export const StorePushToken = async (pushToken: string) => {
-
-    await SecureStore.setItemAsync('pushToken', pushToken);
+    const token = JSON.stringify(pushToken)
+    await SecureStore.setItemAsync('pushToken', token);
 }

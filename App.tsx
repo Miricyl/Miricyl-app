@@ -29,7 +29,8 @@ export default function App() {
   }, [lastNotificationResponse]);
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then(token => StorePushToken(token as string));
+    registerForPushNotificationsAsync();
+    //registerForPushNotificationsAsync().then(token => StorePushToken(token as string));
     schedulePushNotification();
 
   }, []);
