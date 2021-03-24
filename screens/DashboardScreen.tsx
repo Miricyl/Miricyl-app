@@ -36,17 +36,21 @@ screen:{
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    height: Layout.window.height,
+    width: Layout.window.width, 
   },
   welcomeText: {
-    width: '75%',
+    width: '65%',
     textAlign: 'center',
-    fontSize: 18,
+    fontSize: 15,
     color:'#8b2b0f',
-    marginBottom: 10,
-    lineHeight: 25,
+    marginBottom: 30,
+    lineHeight: 20,
   },
   welcomeImage: {
     borderRadius: 100,
-    marginBottom: 20
+    marginBottom: 30,
+    height: Layout.window.height * 0.15,
+    width: Layout.window.width * 0.30,
   }
 });
