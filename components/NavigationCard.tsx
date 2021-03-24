@@ -1,11 +1,12 @@
 import React from 'react';
-import { Platform, StyleSheet } from 'react-native';
+import { Image, Platform, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
 import Colors from '../constants/Colors';
 import { Text, View } from './Themed';
 import { INavigationCardDetails, LinkType } from '../types';
+import Layout from '../constants/Layout';
 
 
 
@@ -30,11 +31,14 @@ const NavigationCard = ({ text, link, linkType, height = '100%', width = '100%' 
   return (
 
       <View style={styles.messageCard}>
-        <TouchableOpacity onPress={onPressFunction}>
-        <Text style={{...styles.cardText, height:height, width:width}}>
-
-          {text}
-        </Text>
+        <TouchableOpacity style={styles.touchableOpacity} onPress={onPressFunction}>
+            {/* <Text style={{...styles.cardText, height:height, width:width}}> */} 
+            <Text style={styles.cardText}>
+            {text}
+            </Text>
+            <Image 
+              source={require('../assets/icons/navigatorCardArrow.png')} 
+              style={styles.navigatorCardArrow}/>
       </TouchableOpacity>
     </View>
   );
@@ -53,14 +57,21 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  touchableOpacity: {
+    flexDirection: 'row',
+    alignItems: 'center',
     margin:10
+
   },
   cardText:{
     fontSize: 18,
     color:'#8b2b0f',
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    lineHeight: Platform.OS === 'ios' ? 80 : 20 
+  },
+  navigatorCardArrow: {
+    marginLeft: 15,
+    width: 18,
+    height: 18,
   }
 
 });
