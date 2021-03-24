@@ -48,23 +48,21 @@ export default NavigationCard;
 
 const styles = StyleSheet.create({
   messageCard: {
-    width: '70%',
-    height: '8%',
     shadowColor: 'black',
     shadowOpacity: 0.26,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
     elevation: 5,
-    borderRadius: 25,
+    borderRadius: 50,
     backgroundColor: 'white',
-    margin:'5%',
-    padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },
   touchableOpacity: {
     flexDirection: 'row',
     alignItems: 'center',
+    margin:10
+
   },
   cardText:{
     fontSize: 18,
