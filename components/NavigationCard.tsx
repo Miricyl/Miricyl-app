@@ -48,6 +48,8 @@ export default NavigationCard;
 
 const styles = StyleSheet.create({
   messageCard: {
+    width: Layout.window.width * 0.65,
+    height: Layout.window.height * 0.075,
     shadowColor: 'black',
     shadowOpacity: 0.26,
     shadowOffset: { width: 0, height: 2 },
