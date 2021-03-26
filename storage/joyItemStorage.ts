@@ -38,14 +38,20 @@ export const LoadJoyItems = async () => {
             type:ContentType.Url
         }
         const joyItem2:IContentItem ={
-            text:"This is a joy item with a phone number",
+            text:"Call my mum",
             phoneNumber:"07799416722",
             type:ContentType.PhoneNumber
+
+        }
+        const joyItem3:IContentItem ={
+            text:"Act as if what you do makes a difference. It does.",
+            type:ContentType.Text
 
         }
 
         joyitems.push(joyItem1);
         joyitems.push(joyItem2);
+        joyitems.push(joyItem3);
 
     }
   
