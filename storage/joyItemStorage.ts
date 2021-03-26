@@ -25,9 +25,7 @@ export const LoadJoyItems = async () => {
     let joyitemsString = await AsyncStorage.getItem('joyitems') as string;
     let joyitems: IContentItem[] = []
     if (joyitemsString) {
-        console.log(joyitemsString);
         joyitems = JSON.parse(joyitemsString) as IContentItem[];
-
 
     }
 

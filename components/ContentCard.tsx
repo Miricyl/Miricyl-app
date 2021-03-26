@@ -6,6 +6,7 @@ import Colors from '../constants/Colors';
 import { Text, View } from './Themed';
 import { IContentItem, ContentType } from '../types';
 import RNUrlPreview from 'react-native-url-preview';
+import Layout from '../constants/Layout';
 
 
 
@@ -15,11 +16,11 @@ const ContentCard = ({ text, url, phoneNumber,type}: IContentItem) => {
   let content;
   switch (type) {
     case ContentType.Text: {
-      content = <Text style={styles.cardText}>{text}</Text>
+      content = <Text>{text}</Text>
       break;
     }
     case ContentType.PhoneNumber: {
-      content =<View><Text style={styles.cardText}>{text}</Text><Text>{phoneNumber}</Text> </View>
+      content =<View><Text>{phoneNumber}</Text><Text>{text}</Text></View>
       break;
     }
     case ContentType.Url: {
@@ -34,11 +35,13 @@ const ContentCard = ({ text, url, phoneNumber,type}: IContentItem) => {
 
 
   return (
+
     <View style={styles.messageCard}>
-      {/* PUT LINK TO CONTENT PAGE <TouchableOpacity onPress={() => navigation.navigate()}> */}
+     
       {content}
 
     </View>
+
   );
 }
 
@@ -46,6 +49,8 @@ export default ContentCard;
 
 const styles = StyleSheet.create({
   messageCard: {
+    width: Layout.window.width * 0.85,
+    height: Layout.window.width * 0.45,
     justifyContent: 'space-between',
     alignItems: 'center',
     shadowColor: 'black',
@@ -57,8 +62,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     margin: '2%',
     padding: 5,
-    height: 80,
-    width: 160
+
   },
   cardText: {
     width:'100%',

@@ -22,16 +22,16 @@ export default function JoyScreen() {
 
     let joyitemsView=joyItems.map((item,index)=>{
        
-        return <ContentCard key={item.text} text={item.text} contentType={item.type} height={50} width={100}></ContentCard>
+        return <ContentCard key={item.text} text={item.text} url={item.url} phoneNumber={item.phoneNumber} type={item.type}></ContentCard>
     })
 
     console.log(joyitemsView);
     
     return (
         <View style={styles.container}>
-            <NavigationCard text="Add more joy!" link="JoyImport" linkType={LinkType.Screen} height={Layout.window.height * 0.05} width={Layout.window.width * 0.8}></NavigationCard>
+            <NavigationCard text="Add more joy!" link="JoyImport" linkType={LinkType.Screen}></NavigationCard>
             <ScrollView contentContainerStyle={{width:'100%', alignItems:'center'}}>{joyitemsView}</ScrollView>
-            <NavigationCard text="Manage Wellness messages" link="ManageWellnessMessadge" linkType={LinkType.Screen} height={Layout.window.height * 0.05} width={Layout.window.width * 0.8}></NavigationCard>
+            <NavigationCard text="Manage Wellness messages" link="ManageWellnessMessadge" linkType={LinkType.Screen}></NavigationCard>
         </View>
     );
 }
