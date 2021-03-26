@@ -101,6 +101,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     color: 'white',
     padding: 10,
+    fontSize:20,
+    textAlign:'center'
 
   },
   title: {
