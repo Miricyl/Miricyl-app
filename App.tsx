@@ -18,26 +18,31 @@ export default function App() {
   const colorScheme = useColorScheme();
   const lastNotificationResponse:any = Notifications.useLastNotificationResponse();
 
-  useEffect(() => {
-    if (
-      lastNotificationResponse &&
-      lastNotificationResponse.notification.request.content.data.url &&
-      lastNotificationResponse.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER
-    ) {
-      Linking.openURL(lastNotificationResponse.notification.request.content.data.url);
-    }
-  }, [lastNotificationResponse]);
-
-  useEffect(() => {
-    registerForPushNotificationsAsync();
-    //registerForPushNotificationsAsync().then(token => StorePushToken(token as string));
-    schedulePushNotification();
-
-  }, []);
 
   if (!isLoadingComplete) {
     return null;
   } else {
+
+
+  // useEffect(() => {
+  //   if (
+  //     lastNotificationResponse &&
+  //     lastNotificationResponse.notification.request.content.data.url &&
+  //     lastNotificationResponse.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER
+  //   ) {
+  //     Linking.openURL(lastNotificationResponse.notification.request.content.data.url);
+  //   }
+  // }, [lastNotificationResponse]);
+
+  // useEffect(() => {
+  //   registerForPushNotificationsAsync();
+  //   //registerForPushNotificationsAsync().then(token => StorePushToken(token as string));
+  //   schedulePushNotification();
+
+  // }, []);
+
+
+
     return (
       <SafeAreaProvider>
         <Navigation colorScheme={colorScheme} />

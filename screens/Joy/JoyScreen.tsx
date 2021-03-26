@@ -5,13 +5,13 @@ import NavigationCard from '../../components/NavigationCard';
 import { Text, View } from '../../components/Themed';
 import Layout from '../../constants/Layout';
 import ContentCard from '../../components/ContentCard';
-import { IJoyItem, LinkType } from '../../types';
+import { IContentItem, LinkType } from '../../types';
 import { LoadJoyItems, AddJoyItems } from '../../storage/joyItemStorage';
 import { useIsFocused } from '@react-navigation/native';
 
 export default function JoyScreen() {
 
-    const [joyItems, setJoyItems] = useState<IJoyItem[]>([]);
+    const [joyItems, setJoyItems] = useState<IContentItem[]>([]);
     const isFocused = useIsFocused();
 
     useEffect(() => {

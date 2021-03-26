@@ -4,25 +4,26 @@ import { useNavigation } from '@react-navigation/native';
 
 import Colors from '../constants/Colors';
 import { Text, View } from './Themed';
-import { IContentCardDetails, ContentType } from '../types';
+import { IContentItem, ContentType } from '../types';
+import RNUrlPreview from 'react-native-url-preview';
 
 
 
-const ContentCard = ({ text, image, url, contentType, height='100%', width='100%' }: IContentCardDetails) => {
+const ContentCard = ({ text, url, phoneNumber,type}: IContentItem) => {
   const navigation = useNavigation();
 
   let content;
-  switch (contentType) {
+  switch (type) {
     case ContentType.Text: {
       content = <Text style={styles.cardText}>{text}</Text>
       break;
     }
-    case ContentType.Image: {
-      //statements; 
+    case ContentType.PhoneNumber: {
+      content =<View><Text style={styles.cardText}>{text}</Text><Text>{phoneNumber}</Text> </View>
       break;
     }
     case ContentType.Url: {
-      //statements; 
+      content =<View><RNUrlPreview text={url}/></View>
       break;
     }
     default: {
@@ -33,7 +34,7 @@ const ContentCard = ({ text, image, url, contentType, height='100%', width='100%
 
 
   return (
-    <View style={{...styles.messageCard, height: height, width: width}}>
+    <View style={styles.messageCard}>
       {/* PUT LINK TO CONTENT PAGE <TouchableOpacity onPress={() => navigation.navigate()}> */}
       {content}
 
@@ -55,7 +56,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: Colors.primary,
     margin: '2%',
-    padding: 5
+    padding: 5,
+    height: 80,
+    width: 160
   },
   cardText: {
     width:'100%',

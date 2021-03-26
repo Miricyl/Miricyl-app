@@ -4,7 +4,7 @@ import Colors from '../../constants/Colors'
 import { Text, View } from '../../components/Themed';
 import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group';
 import { useState } from 'react';
-import { ContentType, IJoyItem } from '../../types';
+import { ContentType, IContentItem } from '../../types';
 import { LoadJoyItems, AddJoyItems } from '../../storage/joyItemStorage';
 import AddButton from '../../components/AddButton'
 import { useNavigation } from '@react-navigation/native';
@@ -19,21 +19,21 @@ const radioButtonsData: RadioButtonProps[] = [{
     value: ContentType[ContentType.Url]
 }, {
     id: '3',
-    label: 'Image',
-    value: ContentType[ContentType.Image]
+    label: 'Phone number',
+    value: ContentType[ContentType.PhoneNumber]
 }]
 
 
 
 
 export default function JoyImportScreen() {
-    let joyItemTemplate: IJoyItem = {
+    let joyItemTemplate: IContentItem = {
         type: ContentType.Text,
         text: ''
     }
     const navigation = useNavigation();
     const [radioButtons, setRadioButtons] = useState<RadioButtonProps[]>(radioButtonsData)
-    const [joyItem, setJoyItem] = useState<IJoyItem>(joyItemTemplate)
+    const [joyItem, setJoyItem] = useState<IContentItem>(joyItemTemplate)
 
     const onPressRadioButton = (radioButtonsArray: RadioButtonProps[]) => {
         setRadioButtons(radioButtonsArray);
