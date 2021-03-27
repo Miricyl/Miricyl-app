@@ -1,9 +1,13 @@
 import { AndroidNotificationPriority } from "expo-notifications";
+import { StackScreenProps } from '@react-navigation/stack';
 
 export type RootStackParamList = {
   Root: undefined;
+  Content:{contentId:string};
   NotFound: undefined;
 };
+
+export type Props = StackScreenProps<RootStackParamList, 'Content'>;
 
 export type DashboardParamList = {
   Dashboard:undefined;
@@ -32,6 +36,13 @@ export enum LinkType {
   Url
 }
 
+export enum CategoryType
+ {
+   Joy,
+   Places,
+   Activity
+ }
+
 export interface INavigationCardDetails {
   text:string;
   link:string;
@@ -43,10 +54,12 @@ export interface INavigationCardDetails {
 
 
 export interface IContentItem {
-  type: ContentType;
+  id:string;
+  contentType: ContentType;
   text?: string;
   url?: string;
   phoneNumber?:string;
+  category:CategoryType;
   //TODO add image
 
 }

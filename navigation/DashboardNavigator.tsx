@@ -71,7 +71,7 @@ export default function DashboardStackNavigator() {
             <Stack.Screen
                 name="Content"
                 component={ContentScreen}
-                options={{ title: '' }}
+                options={{ title: 'ContentScreen' }}
             />
 
             </Stack.Navigator>

@@ -6,7 +6,7 @@ import { Text, View } from '../../components/Themed';
 import Layout from '../../constants/Layout';
 import ContentCard from '../../components/ContentCard';
 import { IContentItem, LinkType } from '../../types';
-import { LoadJoyItems, AddJoyItems } from '../../storage/joyItemStorage';
+import { LoadJoyItems, AddJoyItem } from '../../storage/ContentStorage';
 import { useIsFocused } from '@react-navigation/native';
 
 export default function JoyScreen() {
@@ -16,13 +16,13 @@ export default function JoyScreen() {
 
     useEffect(() => {
        
-        LoadJoyItems().then(data => setJoyItems(data))
+        LoadJoyItems().then((data:IContentItem[]) => setJoyItems(data))
         
     }, [isFocused]);
 
     let joyitemsView=joyItems.map((item,index)=>{
        
-        return <ContentCard key={item.text} text={item.text} url={item.url} phoneNumber={item.phoneNumber} type={item.type}></ContentCard>
+        return <View key={item.id}><ContentCard {...item}></ContentCard></View>
     })
 
     console.log(joyitemsView);

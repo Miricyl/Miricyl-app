@@ -4,8 +4,8 @@ import Colors from '../../constants/Colors'
 import { Text, View } from '../../components/Themed';
 import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group';
 import { useState } from 'react';
-import { ContentType, IContentItem } from '../../types';
-import { LoadJoyItems, AddJoyItems } from '../../storage/joyItemStorage';
+import { CategoryType, ContentType, IContentItem } from '../../types';
+import { LoadJoyItems, AddJoyItem } from '../../storage/ContentStorage';
 import AddButton from '../../components/AddButton'
 import { useNavigation } from '@react-navigation/native';
 
@@ -28,8 +28,10 @@ const radioButtonsData: RadioButtonProps[] = [{
 
 export default function JoyImportScreen() {
     let joyItemTemplate: IContentItem = {
-        type: ContentType.Text,
-        text: ''
+        contentType: ContentType.Text,
+        text: '',
+        id:'test',
+        category:CategoryType.Joy
     }
     const navigation = useNavigation();
     const [radioButtons, setRadioButtons] = useState<RadioButtonProps[]>(radioButtonsData)
@@ -55,9 +57,9 @@ export default function JoyImportScreen() {
         }
 
         let joyItemNew=joyItem;
-        joyItemNew.type=type;
+        joyItemNew.contentType=type;
         
-        AddJoyItems(joyItemNew).then(()=>navigation.navigate('Joy'));
+        AddJoyItem(joyItemNew).then(()=>navigation.navigate('Joy'));
 
     }
 

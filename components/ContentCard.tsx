@@ -5,7 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 import Colors from '../constants/Colors';
 import { Text, View } from './Themed';
 import { IContentItem, ContentType } from '../types';
-import RNUrlPreview from 'react-native-url-preview';
 import Layout from '../constants/Layout';
 import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -14,19 +13,25 @@ import { Linking } from 'react-native';
 import sms from 'react-native-sms-linking';
 
 
-const ContentCard = ({ text, url, phoneNumber, type }: IContentItem) => {
+const ContentCard = (contentItem: IContentItem) => {
   const navigation = useNavigation();
 
+  const goToContentScreen = () => {
+       navigation.navigate('Content', {
+        contentId:contentItem.id
+      });
+  } 
+
   const openPhone = () => {
-    if (phoneNumber) {
-      phoneNumber = phoneNumber.replace(/[^0-9+]/g, '');
+    if (contentItem.phoneNumber) {
+      contentItem.phoneNumber = contentItem.phoneNumber.replace(/[^0-9+]/g, '');
       let link;
 
       if (Platform.OS === 'ios') {
-        link = 'telprompt:${' + phoneNumber + '}';
+        link = 'telprompt:${' + contentItem.phoneNumber + '}';
       }
       else {
-        link = 'tel:' + phoneNumber;
+        link = 'tel:' + contentItem.phoneNumber;
       }
       Linking.openURL(link);
     }
@@ -34,26 +39,26 @@ const ContentCard = ({ text, url, phoneNumber, type }: IContentItem) => {
   }
 
   const openSMS = () => {
-    if (phoneNumber) {
-      phoneNumber = phoneNumber.replace(/[^0-9+]/g, '');
-      sms(phoneNumber, "").catch(console.error);
+    if (contentItem.phoneNumber) {
+      contentItem.phoneNumber = contentItem.phoneNumber.replace(/[^0-9+]/g, '');
+      sms(contentItem.phoneNumber, "").catch(console.error);
     }
   }
 
   let content;
-  switch (type) {
+  switch (contentItem.contentType) {
     case ContentType.Text: {
-      content = <Text style={styles.textItem}>{text}</Text>
+      content = <TouchableOpacity onPress={goToContentScreen}><Text style={styles.textItem}>{contentItem.text}</Text></TouchableOpacity>
       break;
     }
     case ContentType.PhoneNumber: {
-      content = (<View><Text style={styles.title}>{text}</Text>
+      content = (<View><TouchableOpacity onPress={goToContentScreen}><Text style={styles.title}>{contentItem.text}</Text></TouchableOpacity>
         <View style={styles.callIcons}><TouchableOpacity onPress={openPhone}><Feather name="phone-call" size={34} color="green" /></TouchableOpacity><TouchableOpacity onPress={openSMS}><MaterialIcons name="sms" size={34} color="green" /></TouchableOpacity></View>
       </View>)
       break;
     }
     case ContentType.Url: {
-      content = <View><Text style={styles.title}>{text}</Text><RNUrlPreview text={url} /></View>
+      content = <View><TouchableOpacity onPress={goToContentScreen}><Text style={styles.title}>{contentItem.text}</Text></TouchableOpacity></View>
       break;
     }
     default: {
@@ -66,6 +71,7 @@ const ContentCard = ({ text, url, phoneNumber, type }: IContentItem) => {
   return (
 
     <View style={styles.messageCard}>
+      
 
       {content}
 
