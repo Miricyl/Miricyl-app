@@ -9,6 +9,7 @@ import { LoadItem } from '../storage/ContentStorage';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
 import sms from 'react-native-sms-linking';
+import { LinkPreview } from '@flyerhq/react-native-link-preview';
 
 
 const ContentScreen = ({ navigation,route }:Props) => {
@@ -59,7 +60,7 @@ let content;
       break;
     }
     case ContentType.Url: {
-      content = <View><Text style={styles.title}>{contentItem.text}</Text></View>
+      content = <View><Text style={styles.title}>{contentItem.text}</Text><LinkPreview text={contentItem.url as string}/></View>
       break;
     }
     default: {

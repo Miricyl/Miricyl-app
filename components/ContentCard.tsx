@@ -6,11 +6,12 @@ import Colors from '../constants/Colors';
 import { Text, View } from './Themed';
 import { IContentItem, ContentType } from '../types';
 import Layout from '../constants/Layout';
-import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Platform } from 'react-native';
 import { Linking } from 'react-native';
 import sms from 'react-native-sms-linking';
+import { LinkPreview } from '@flyerhq/react-native-link-preview';
 
 
 const ContentCard = (contentItem: IContentItem) => {
@@ -58,7 +59,7 @@ const ContentCard = (contentItem: IContentItem) => {
       break;
     }
     case ContentType.Url: {
-      content = <View><TouchableOpacity onPress={goToContentScreen}><Text style={styles.title}>{contentItem.text}</Text></TouchableOpacity></View>
+      content = <View><TouchableOpacity onPress={goToContentScreen}><Text style={styles.title}>{contentItem.text}</Text></TouchableOpacity><LinkPreview text={contentItem.url as string}/></View>
       break;
     }
     default: {

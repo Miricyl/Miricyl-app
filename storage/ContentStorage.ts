@@ -36,8 +36,8 @@ export const LoadJoyItems = async () => {
         //this is to allow quick testing and development, remove before publish
         const joyItem1:IContentItem = {
             id:"1",
-            text:"This is a joy item with a link-will be implemlented next",
-            url:"https://google.com",
+            text:"This is a joy item with a link",
+            url:"https://www.bbc.co.uk",
             contentType:ContentType.Url,
             category:CategoryType.Joy
             
