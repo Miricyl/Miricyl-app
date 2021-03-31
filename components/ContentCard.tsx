@@ -4,25 +4,62 @@ import { useNavigation } from '@react-navigation/native';
 
 import Colors from '../constants/Colors';
 import { Text, View } from './Themed';
-import { IContentCardDetails, ContentType } from '../types';
+import { IContentItem, ContentType } from '../types';
+import Layout from '../constants/Layout';
+import { Feather, MaterialIcons } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Platform } from 'react-native';
+import { Linking } from 'react-native';
+import sms from 'react-native-sms-linking';
+import { LinkPreview } from '@flyerhq/react-native-link-preview';
 
 
-
-const ContentCard = ({ text, image, url, contentType, height='100%', width='100%' }: IContentCardDetails) => {
+const ContentCard = (contentItem: IContentItem) => {
   const navigation = useNavigation();
 
+  const goToContentScreen = () => {
+       navigation.navigate('Content', {
+        contentId:contentItem.id
+      });
+  } 
+
+  const openPhone = () => {
+    if (contentItem.phoneNumber) {
+      contentItem.phoneNumber = contentItem.phoneNumber.replace(/[^0-9+]/g, '');
+      let link;
+
+      if (Platform.OS === 'ios') {
+        link = 'telprompt:${' + contentItem.phoneNumber + '}';
+      }
+      else {
+        link = 'tel:' + contentItem.phoneNumber;
+      }
+      Linking.openURL(link);
+    }
+
+  }
+
+  const openSMS = () => {
+    if (contentItem.phoneNumber) {
+      contentItem.phoneNumber = contentItem.phoneNumber.replace(/[^0-9+]/g, '');
+      sms(contentItem.phoneNumber, "").catch(console.error);
+    }
+  }
+
   let content;
-  switch (contentType) {
+  switch (contentItem.contentType) {
     case ContentType.Text: {
-      content = <Text style={styles.cardText}>{text}</Text>
+      content = <TouchableOpacity onPress={goToContentScreen}><Text style={styles.textItem}>{contentItem.text}</Text></TouchableOpacity>
       break;
     }
-    case ContentType.Image: {
-      //statements; 
+    case ContentType.PhoneNumber: {
+      content = (<View><TouchableOpacity onPress={goToContentScreen}><Text style={styles.title}>{contentItem.text}</Text></TouchableOpacity>
+        <View style={styles.callIcons}><TouchableOpacity onPress={openPhone}><Feather name="phone-call" size={34} color="green" /></TouchableOpacity><TouchableOpacity onPress={openSMS}><MaterialIcons name="sms" size={34} color="green" /></TouchableOpacity></View>
+      </View>)
       break;
     }
     case ContentType.Url: {
-      //statements; 
+      content = <View><TouchableOpacity onPress={goToContentScreen}><Text style={styles.title}>{contentItem.text}</Text></TouchableOpacity><LinkPreview text={contentItem.url as string}/></View>
       break;
     }
     default: {
@@ -33,11 +70,14 @@ const ContentCard = ({ text, image, url, contentType, height='100%', width='100%
 
 
   return (
-    <View style={{...styles.messageCard, height: height, width: width}}>
-      {/* PUT LINK TO CONTENT PAGE <TouchableOpacity onPress={() => navigation.navigate()}> */}
+
+    <View style={styles.messageCard}>
+      
+
       {content}
 
     </View>
+
   );
 }
 
@@ -45,6 +85,7 @@ export default ContentCard;
 
 const styles = StyleSheet.create({
   messageCard: {
+    width: Layout.window.width * 0.85,
     justifyContent: 'space-between',
     alignItems: 'center',
     shadowColor: 'black',
@@ -53,14 +94,33 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 5,
     borderRadius: 5,
-    backgroundColor: Colors.primary,
     margin: '2%',
-    padding: 5
+    padding: 5,
+
   },
   cardText: {
-    width:'100%',
+    width: '100%',
     color: 'white',
     textAlign: 'center',
     textAlignVertical: 'center'
+  },
+  textItem: {
+    backgroundColor: Colors.primary,
+    color: 'white',
+    padding: 10,
+    fontSize:20,
+    textAlign:'center'
+
+  },
+  title: {
+    padding: 10,
+    fontSize: 20,
+    fontWeight: 'bold'
+  },
+  callIcons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    margin:10
   }
 });

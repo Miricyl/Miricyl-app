@@ -5,33 +5,33 @@ import NavigationCard from '../../components/NavigationCard';
 import { Text, View } from '../../components/Themed';
 import Layout from '../../constants/Layout';
 import ContentCard from '../../components/ContentCard';
-import { IJoyItem, LinkType } from '../../types';
-import { LoadJoyItems, AddJoyItems } from '../../storage/joyItemStorage';
+import { IContentItem, LinkType } from '../../types';
+import { LoadJoyItems, AddJoyItem } from '../../storage/ContentStorage';
 import { useIsFocused } from '@react-navigation/native';
 
 export default function JoyScreen() {
 
-    const [joyItems, setJoyItems] = useState<IJoyItem[]>([]);
+    const [joyItems, setJoyItems] = useState<IContentItem[]>([]);
     const isFocused = useIsFocused();
 
     useEffect(() => {
        
-        LoadJoyItems().then(data => setJoyItems(data))
+        LoadJoyItems().then((data:IContentItem[]) => setJoyItems(data))
         
     }, [isFocused]);
 
     let joyitemsView=joyItems.map((item,index)=>{
        
-        return <ContentCard key={item.text} text={item.text} contentType={item.type} height={50} width={100}></ContentCard>
+        return <View key={item.id}><ContentCard {...item}></ContentCard></View>
     })
 
     console.log(joyitemsView);
     
     return (
         <View style={styles.container}>
-            <NavigationCard text="Add more joy!" link="JoyImport" linkType={LinkType.Screen} height={Layout.window.height * 0.05} width={Layout.window.width * 0.8}></NavigationCard>
+            <NavigationCard text="Add more joy!" link="JoyImport" linkType={LinkType.Screen}></NavigationCard>
             <ScrollView contentContainerStyle={{width:'100%', alignItems:'center'}}>{joyitemsView}</ScrollView>
-            <NavigationCard text="Manage Wellness messages" link="ManageWellnessMessadge" linkType={LinkType.Screen} height={Layout.window.height * 0.05} width={Layout.window.width * 0.8}></NavigationCard>
+            <NavigationCard text="Manage Wellness messages" link="ManageWellnessMessadge" linkType={LinkType.Screen}></NavigationCard>
         </View>
     );
 }
