@@ -31,6 +31,12 @@ export enum ContentType {
 
 }
 
+export type ContentSelect = {
+  label:string;
+  value:ContentType;
+
+}
+
 export enum LinkType {
   Screen,
   Url
