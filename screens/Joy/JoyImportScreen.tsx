@@ -20,6 +20,9 @@ export default function JoyImportScreen() {
     }
     const navigation = useNavigation();
     const [contentType, setContentType] = useState(ContentType.Text);
+    const [contentText, setContentText] = useState("");
+    const [contentPhoneNumber, setContentPhoneNumber] = useState("");
+    const [contentUrl, setContentUrl] = useState("");
     const [joyItem, setJoyItem] = useState<IContentItem>(joyItemTemplate)
 
   
@@ -34,7 +37,9 @@ export default function JoyImportScreen() {
       
         let joyItemNew=joyItem;
         joyItemNew.contentType=contentType;
-        joyItemNew.text="test1";
+        joyItemNew.text=contentText;
+        joyItemNew.url=contentUrl;
+        joyItemNew.phoneNumber=contentPhoneNumber;
         joyItemNew.category=CategoryType.Joy;
         
         AddJoyItem(joyItemNew).then(()=>navigation.navigate('Joy'));
@@ -50,7 +55,9 @@ export default function JoyImportScreen() {
     return (
         <View style={styles.container}>
            <SelectWidget selectionItems={contentTypes} onSelect={setContentType}/>
-            <TextInput multiline={true} onChangeText={(value) => updateJoyItemText(value)} placeholder="Please enter something here"></TextInput>
+            <TextInput placeholder="Put anything here" multiline={true} numberOfLines={4} onChangeText={(text:string) => setContentText(text)} value={contentText}/>
+            <TextInput placeholder="Web link to a favorite image/video/site here" multiline={true} numberOfLines={4} onChangeText={(text:string) => setContentUrl(text)} value={contentUrl}/>
+            <TextInput placeholder="Number of someone to call" onChangeText={(text:string)=> setContentPhoneNumber(text)} value={contentPhoneNumber}/>
             <AddButton onPress={saveJoyItem}>SAVE</AddButton>
         </View>
     );
