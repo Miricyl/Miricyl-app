@@ -1,8 +1,9 @@
 import * as SecureStore from 'expo-secure-store';
-import { CategoryType, ContentType, IContentItem } from '../types';
+import { CategoryType, ContentType, IContentItem } from '../types'; 
+import uuid from 'uuid';
 
 export const AddJoyItem = async (contentItem: IContentItem) => {
-
+    contentItem.id=uuid.v4();
     let contentItemString = await SecureStore.getItemAsync('joyitems') as string;
     let joyitems: IContentItem[] = []
     if (contentItemString) {
