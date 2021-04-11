@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Linking, Platform, StyleSheet, TouchableOpacity } from 'react-native';
+import { Linking, Platform, Image, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
 import NavigationCard from '../components/NavigationCard';
 import { Text, View } from '../components/Themed';
 import Layout from '../constants/Layout';
@@ -13,6 +13,7 @@ import { LinkPreview } from '@flyerhq/react-native-link-preview';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import SelectWidget from '../components/SelectWidget';
 import AddButton from '../components/AddButton';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 
@@ -69,6 +70,12 @@ let content;
       content = <View><Text style={styles.title}>{contentItem.text}</Text><LinkPreview text={contentItem.url as string}/></View>
       break;
     }
+    case ContentType.Image: {
+      content = <View><Image style={styles.title} source={{
+        uri: contentItem.imageUri
+      }}></Image></View>
+      break;
+    }
     default: {
       //statements; 
       break;
@@ -110,16 +117,14 @@ let content;
       scheduling = <View style={styles.button}><TouchableOpacity onPress={schedulingShow}><Text>Schedule</Text></TouchableOpacity></View>
   }
 
-  
-
-
   return (
     <View style={styles.container}>
+      <ScrollView><ImageBackground source={require('../assets/images/dashboard_background.png')} style={styles.background}>   
     {content}
-
-    <View>
+    <View style={styles.contentCards}>
     {scheduling}
     </View>
+    </ImageBackground></ScrollView>
     </View>
  
   );
@@ -132,6 +137,18 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-evenly'
+  },
+  background: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: Layout.window.height,
+    width: Layout.window.width, 
+  },
+  contentCards: {
+    flex: 1,
+    justifyContent: 'space-evenly',
+    backgroundColor: 'transparent',
   },
   cardRow: {
     justifyContent: 'space-evenly',
@@ -162,3 +179,12 @@ const styles = StyleSheet.create({
 });
 
 
+// Notifications.scheduleNotificationAsync({
+//   content: {
+//     title: 'Happy new hour!',
+//   },
+//   trigger: {
+//   hours: 20,
+//   minute: 0,
+//   repeats: true
+// });

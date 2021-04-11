@@ -27,7 +27,8 @@ export type DashboardParamList = {
 export enum ContentType {
   PhoneNumber,
   Text,
-  Url
+  Url,
+  Image
 
 }
 
@@ -64,6 +65,7 @@ export interface IContentItem {
   contentType: ContentType;
   text?: string;
   url?: string;
+  imageUri?:string;
   phoneNumber?:string;
   category:CategoryType;
   //TODO add image

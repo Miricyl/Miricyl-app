@@ -44,7 +44,8 @@
     "react-native-url-preview": "^1.1.9",
     "react-native-uuid": "^2.0.0",
     "react-native-web": "~0.13.12",
-    "react-tiny-link": "^3.6.1"
+    "react-tiny-link": "^3.6.1",
+    "expo-image-picker": "~9.2.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",

@@ -59,10 +59,19 @@ export const LoadJoyItems = async () => {
 
         }
 
+        const joyItem4:IContentItem ={
+            id:"4",
+            text:"Me and my friends.",
+            imageUri:"https://media.bloomandwild.com/v1/trim:15/2160x2160/smart/filters:format(webp)/https://assets-0.bloomandwild.com/letterbox-main/the-quinn-ht/cfe4b3bf-5e6b-4e08-a557-a0ce36704a65.jpeg",
+            contentType:ContentType.Image,
+            category:CategoryType.Joy
+
+        }
+
         joyitems.push(joyItem1);
         joyitems.push(joyItem2);
         joyitems.push(joyItem3);
-
+        joyitems.push(joyItem4);
         SecureStore.setItemAsync('joyitems', JSON.stringify(joyitems));
 
     }

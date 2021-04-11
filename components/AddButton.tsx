@@ -1,34 +1,44 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import Colors from '../constants/Colors'
+import Layout from '../constants/Layout';
 
 
-const AddButton = (props:any) => {
+const AddButton = (props: any) => {
 
     return (
-        <TouchableOpacity onPress={props.onPress} style={props.style}>
-            <View style={{...styles.button, ...props.color}}>
-                <Text style={styles.buttonText}>{props.children}</Text>
-            </View>
-        </TouchableOpacity>
+        <View style={styles.messageCard}>
+            <TouchableOpacity style={styles.touchableOpacity} onPress={props.onPress}>
+                <Text style={styles.cardText}>{props.children}</Text>
+            </TouchableOpacity>
+        </View>
     )
 };
 
 const styles = StyleSheet.create({
-    button: {
-        backgroundColor: Colors.primary,
-        paddingVertical: 12,
-        paddingHorizontal: 15,
-        borderRadius: 10,
-        marginVertical: 10
+    messageCard: {
+        width: Layout.window.width * 0.65,
+        height: Layout.window.height * 0.075,
+        shadowColor: 'black',
+        shadowOpacity: 0.26,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 8,
+        elevation: 5,
+        borderRadius: 50,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    touchableOpacity: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        margin: 10
 
     },
-    buttonText: {
-        color: 'white',
+    cardText: {
         fontSize: 18,
-        textAlign:'center'
-
-    }
+        color: Colors.light.text,
+    },
 });
 
 

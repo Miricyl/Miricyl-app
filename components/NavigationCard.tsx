@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   },
   cardText:{
     fontSize: 18,
-    color:'#8b2b0f',
+    color: Colors.light.text,
   },
   navigatorCardArrow: {
     marginLeft: 15,
