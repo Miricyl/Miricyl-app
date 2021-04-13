@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Image, Platform, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
 import Colors from '../constants/Colors';
 import { Text, View } from './Themed';
+import * as WebBrowser from 'expo-web-browser';
 import { INavigationCardDetails, LinkType } from '../types';
 import Layout from '../constants/Layout';
 
@@ -14,13 +15,14 @@ const NavigationCard = ({ text, link, linkType, height = '100%', width = '100%' 
   const navigation = useNavigation();
   var onPressFunction: any;
 
+
   switch (linkType) {
     case LinkType.Screen:
       onPressFunction = () => {
         navigation.navigate(link);
       }
     case LinkType.Url:
-      //onPressFunction = () => { }//TODO: handle Url links
+      onPressFunction = () => {WebBrowser.openBrowserAsync(link)}
 
     default: {
       break;
