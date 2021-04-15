@@ -119,7 +119,8 @@ let content;
 
   return (
     <View style={styles.container}>
-      <ScrollView><ImageBackground source={require('../assets/images/dashboard_background.png')} style={styles.background}>   
+      <ScrollView><ImageBackground source={require('../assets/images/dashboard_background.png')} style={styles.background}> 
+      <Text>{contentItem.title}</Text>  
     {content}
     <View style={styles.contentCards}>
     {scheduling}
