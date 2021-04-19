@@ -21,8 +21,10 @@ const NavigationCard = ({ text, link, linkType, height = '100%', width = '100%' 
       onPressFunction = () => {
         navigation.navigate(link);
       }
+      break;
     case LinkType.Url:
       onPressFunction = () => {WebBrowser.openBrowserAsync(link)}
+      break;
 
     default: {
       break;
@@ -70,7 +72,7 @@ const styles = StyleSheet.create({
   },
   cardText:{
     fontSize: 18,
-    color:'#8b2b0f',
+    color: Colors.light.text,
   },
   navigatorCardArrow: {
     marginLeft: 15,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
+import { FlatList, ImageBackground, StatusBar, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import NavigationCard from '../../components/NavigationCard';
 import { Text, View } from '../../components/Themed';
@@ -7,31 +7,39 @@ import Layout from '../../constants/Layout';
 import ContentCard from '../../components/ContentCard';
 import { IContentItem, LinkType } from '../../types';
 import { LoadJoyItems, AddJoyItem } from '../../storage/ContentStorage';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
+import AddButton from '../../components/AddButton';
+
 
 export default function JoyScreen() {
 
     const [joyItems, setJoyItems] = useState<IContentItem[]>([]);
     const isFocused = useIsFocused();
+    const navigation= useNavigation();
 
     useEffect(() => {
-       
-        LoadJoyItems().then((data:IContentItem[]) => setJoyItems(data))
-        
+
+        LoadJoyItems().then((data: IContentItem[]) => setJoyItems(data))
+
     }, [isFocused]);
 
-    let joyitemsView=joyItems.map((item,index)=>{
-       
-        return <View key={item.id}><ContentCard {...item}></ContentCard></View>
-    })
-
-    console.log(joyitemsView);
-    
     return (
         <View style={styles.container}>
-            <NavigationCard text="Add more joy!" link="JoyImport" linkType={LinkType.Screen}></NavigationCard>
-            <ScrollView contentContainerStyle={{width:'100%', alignItems:'center'}}>{joyitemsView}</ScrollView>
+        <ImageBackground source={require('../../assets/images/dashboard_background.png')} style={styles.background}>
+            <AddButton onPress={()=>{navigation.navigate('JoyImport')}}>Add more love!</AddButton>
+            <View style={styles.flatlist}><FlatList
+                columnWrapperStyle={{ justifyContent: 'space-between' }}
+                data={joyItems}
+                numColumns={2}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => {
+                    return (
+                        <ContentCard {...item}></ContentCard>
+                    );
+                }}
+            /></View>
             <NavigationCard text="Manage Wellness messages" link="ManageWellnessMessadge" linkType={LinkType.Screen}></NavigationCard>
+        </ImageBackground>
         </View>
     );
 }
@@ -39,16 +47,30 @@ export default function JoyScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        marginTop: StatusBar.currentHeight || 0,
+        
+    },
+    background: {
+        justifyContent: 'center',
         alignItems: 'center',
+        height: Layout.window.height,
+        width: Layout.window.width,
+    },
+    flatlist:{
+        flex: 1,
+        flexDirection: 'row',
         justifyContent: 'space-between',
+        padding: 10,
+        marginBottom: 40,
+        backgroundColor:'transparent'
     },
     title: {
         fontSize: 20,
         fontWeight: 'bold',
     },
-    separator: {
-        marginVertical: 30,
-        height: 1,
-        width: '80%',
+    items: {
+        justifyContent: 'space-around',
+        alignItems: 'center',
     },
+   
 });

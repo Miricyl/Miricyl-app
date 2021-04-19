@@ -1,9 +1,11 @@
-import * as SecureStore from 'expo-secure-store';
+
 import { CategoryType, ContentType, IContentItem } from '../types';
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
+import uuid from 'uuid';
 
 export const AddJoyItem = async (contentItem: IContentItem) => {
-
-    let contentItemString = await SecureStore.getItemAsync('joyitems') as string;
+    contentItem.id=uuid.v4();
+    let contentItemString = await AsyncStorage.getItem('joyitems') as string;
     let joyitems: IContentItem[] = []
     if (contentItemString) {
   
@@ -16,7 +18,7 @@ export const AddJoyItem = async (contentItem: IContentItem) => {
         joyitems.push(contentItem);
     }
 
-    SecureStore.setItemAsync('joyitems', JSON.stringify(joyitems));
+    AsyncStorage.setItem('joyitems', JSON.stringify(joyitems));
 }
 
 
@@ -24,7 +26,7 @@ export const AddJoyItem = async (contentItem: IContentItem) => {
 
 export const LoadJoyItems = async () => {
 
-    let joyitemsString = await SecureStore.getItemAsync('joyitems') as string;
+    let joyitemsString = await AsyncStorage.getItem('joyitems') as string;
     let joyitems: IContentItem[] = []
     if (joyitemsString) {
         joyitems = JSON.parse(joyitemsString) as IContentItem[];
@@ -58,11 +60,20 @@ export const LoadJoyItems = async () => {
 
         }
 
+        const joyItem4:IContentItem ={
+            id:"4",
+            text:"Me and my friends.",
+            imageUri:"https://media.bloomandwild.com/v1/trim:15/2160x2160/smart/filters:format(webp)/https://assets-0.bloomandwild.com/letterbox-main/the-quinn-ht/cfe4b3bf-5e6b-4e08-a557-a0ce36704a65.jpeg",
+            contentType:ContentType.Image,
+            category:CategoryType.Joy
+
+        }
+
         joyitems.push(joyItem1);
         joyitems.push(joyItem2);
         joyitems.push(joyItem3);
-
-        SecureStore.setItemAsync('joyitems', JSON.stringify(joyitems));
+        joyitems.push(joyItem4);
+        AsyncStorage.setItem('joyitems', JSON.stringify(joyitems));
 
     }
   
@@ -71,7 +82,7 @@ export const LoadJoyItems = async () => {
 
 export const LoadItem = async (id:string) => {
 
-    let itemsString = await SecureStore.getItemAsync('joyitems') as string;
+    let itemsString = await AsyncStorage.getItem('joyitems') as string;
     let items: IContentItem[] = []
     if (itemsString) {
         items = JSON.parse(itemsString) as IContentItem[];

@@ -27,7 +27,14 @@ export type DashboardParamList = {
 export enum ContentType {
   PhoneNumber,
   Text,
-  Url
+  Url,
+  Image
+
+}
+
+export type ContentSelect = {
+  label:string;
+  value:ContentType;
 
 }
 
@@ -56,10 +63,26 @@ export interface INavigationCardDetails {
 export interface IContentItem {
   id:string;
   contentType: ContentType;
+  title?: string;
   text?: string;
   url?: string;
+  imageUri?:string;
   phoneNumber?:string;
   category:CategoryType;
   //TODO add image
+
+}
+
+export interface IInputFieldDetails {
+  placeholder:string;
+  lines:number;
+  height:any;
+  onChangeText(value:string):any;
+  value:string;
+}
+
+export interface ISelectionButtonDetails {
+  onPressFunction():any;
+  text:string;
 
 }

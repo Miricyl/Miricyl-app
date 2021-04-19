@@ -1,7 +1,6 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
 import Colors from '../constants/Colors';
 import { Text, View } from './Themed';
 import { IContentItem, ContentType } from '../types';
@@ -18,10 +17,10 @@ const ContentCard = (contentItem: IContentItem) => {
   const navigation = useNavigation();
 
   const goToContentScreen = () => {
-       navigation.navigate('Content', {
-        contentId:contentItem.id
-      });
-  } 
+    navigation.navigate('Content', {
+      contentId: contentItem.id
+    });
+  }
 
   const openPhone = () => {
     if (contentItem.phoneNumber) {
@@ -53,13 +52,17 @@ const ContentCard = (contentItem: IContentItem) => {
       break;
     }
     case ContentType.PhoneNumber: {
-      content = (<View><TouchableOpacity onPress={goToContentScreen}><Text style={styles.title}>{contentItem.text}</Text></TouchableOpacity>
+      content = (<View><TouchableOpacity onPress={goToContentScreen}><Text style={styles.title}>{contentItem.title}</Text></TouchableOpacity>
         <View style={styles.callIcons}><TouchableOpacity onPress={openPhone}><Feather name="phone-call" size={34} color="green" /></TouchableOpacity><TouchableOpacity onPress={openSMS}><MaterialIcons name="sms" size={34} color="green" /></TouchableOpacity></View>
       </View>)
       break;
     }
     case ContentType.Url: {
-      content = <View><TouchableOpacity onPress={goToContentScreen}><Text style={styles.title}>{contentItem.text}</Text></TouchableOpacity><LinkPreview text={contentItem.url as string}/></View>
+      content = <View><TouchableOpacity onPress={goToContentScreen}><Text style={styles.title}>{contentItem.text}</Text></TouchableOpacity><LinkPreview text={contentItem.url as string} /></View>
+      break;
+    }
+    case ContentType.Image: {
+      content = <View><TouchableOpacity onPress={goToContentScreen}><Image source={{ uri: contentItem.imageUri }} style={styles.image} /></TouchableOpacity></View>
       break;
     }
     default: {
@@ -72,7 +75,6 @@ const ContentCard = (contentItem: IContentItem) => {
   return (
 
     <View style={styles.messageCard}>
-      
 
       {content}
 
@@ -84,8 +86,13 @@ const ContentCard = (contentItem: IContentItem) => {
 export default ContentCard;
 
 const styles = StyleSheet.create({
+  image: {
+    width: Layout.window.width * 0.45,
+    height: 350,
+
+
+  },
   messageCard: {
-    width: Layout.window.width * 0.85,
     justifyContent: 'space-between',
     alignItems: 'center',
     shadowColor: 'black',
@@ -93,23 +100,25 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
     elevation: 5,
-    borderRadius: 5,
-    margin: '2%',
-    padding: 5,
+    borderRadius: 8,
+    backgroundColor: '#fff',
+    width: Layout.window.width * 0.45,
+    height: 350,
+    marginTop: 10,
+    marginBottom: 10,
+    overflow: 'hidden',
 
   },
   cardText: {
-    width: '100%',
     color: 'white',
     textAlign: 'center',
     textAlignVertical: 'center'
   },
   textItem: {
-    backgroundColor: Colors.primary,
-    color: 'white',
+    color: Colors.light.text,
     padding: 10,
-    fontSize:20,
-    textAlign:'center'
+    fontSize: 20,
+    textAlign: 'center'
 
   },
   title: {
@@ -121,6 +130,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    margin:10
+    margin: 10
   }
 });
