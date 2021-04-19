@@ -71,9 +71,9 @@ let content;
       break;
     }
     case ContentType.Image: {
-      content = <View><Image style={styles.title} source={{
+      content = <View style={styles.contentHolder}><Image style={styles.image} source={{
         uri: contentItem.imageUri
-      }}></Image></View>
+      }}></Image><Text style={styles.title}>{contentItem.title}</Text></View>
       break;
     }
     default: {
@@ -119,8 +119,7 @@ let content;
 
   return (
     <View style={styles.container}>
-      <ScrollView><ImageBackground source={require('../assets/images/dashboard_background.png')} style={styles.background}> 
-      <Text>{contentItem.title}</Text>  
+      <ScrollView><ImageBackground source={require('../assets/images/dashboard_background.png')} style={styles.background}>  
     {content}
     <View style={styles.contentCards}>
     {scheduling}
@@ -138,6 +137,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-evenly'
+  },
+  contentHolder: {
+    backgroundColor: 'transparent',
+    alignItems:'center'
   },
   background: {
     flex: 1,
@@ -169,13 +172,22 @@ const styles = StyleSheet.create({
   title: {
     padding: 10,
     fontSize: 20,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    backgroundColor: 'transparent',
+    color:Colors.brown
+
+
   },
   callIcons: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     margin:10
+  },
+  image:{
+    width: Layout.window.width * 0.9,
+    height:Layout.window.height * 0.4
+
   }
 });
 

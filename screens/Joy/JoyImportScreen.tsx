@@ -53,6 +53,7 @@ export default function JoyImportScreen() {
     const saveJoyItem = () => {
 
         let joyItemNew = joyItem;
+        joyItemNew.title= contentTitle;
         joyItemNew.contentType = contentType;
         joyItemNew.text = contentText;
         joyItemNew.url = contentUrl;

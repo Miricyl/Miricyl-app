@@ -52,7 +52,7 @@ const ContentCard = (contentItem: IContentItem) => {
       break;
     }
     case ContentType.PhoneNumber: {
-      content = (<View><TouchableOpacity onPress={goToContentScreen}><Text style={styles.title}>{contentItem.text}</Text></TouchableOpacity>
+      content = (<View><TouchableOpacity onPress={goToContentScreen}><Text style={styles.title}>{contentItem.title}</Text></TouchableOpacity>
         <View style={styles.callIcons}><TouchableOpacity onPress={openPhone}><Feather name="phone-call" size={34} color="green" /></TouchableOpacity><TouchableOpacity onPress={openSMS}><MaterialIcons name="sms" size={34} color="green" /></TouchableOpacity></View>
       </View>)
       break;
@@ -76,7 +76,6 @@ const ContentCard = (contentItem: IContentItem) => {
 
     <View style={styles.messageCard}>
 
-
       {content}
 
     </View>
@@ -90,6 +89,7 @@ const styles = StyleSheet.create({
   image: {
     width: Layout.window.width * 0.45,
     height: 350,
+
 
   },
   messageCard: {
@@ -105,7 +105,8 @@ const styles = StyleSheet.create({
     width: Layout.window.width * 0.45,
     height: 350,
     marginTop: 10,
-    marginBottom: 10
+    marginBottom: 10,
+    overflow: 'hidden',
 
   },
   cardText: {

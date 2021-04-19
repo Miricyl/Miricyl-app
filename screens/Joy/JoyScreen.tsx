@@ -7,13 +7,15 @@ import Layout from '../../constants/Layout';
 import ContentCard from '../../components/ContentCard';
 import { IContentItem, LinkType } from '../../types';
 import { LoadJoyItems, AddJoyItem } from '../../storage/ContentStorage';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
+import AddButton from '../../components/AddButton';
 
 
 export default function JoyScreen() {
 
     const [joyItems, setJoyItems] = useState<IContentItem[]>([]);
     const isFocused = useIsFocused();
+    const navigation= useNavigation();
 
     useEffect(() => {
 
@@ -24,7 +26,7 @@ export default function JoyScreen() {
     return (
         <View style={styles.container}>
         <ImageBackground source={require('../../assets/images/dashboard_background.png')} style={styles.background}>
-            <NavigationCard text="Add more joy!" link="JoyImport" linkType={LinkType.Screen}></NavigationCard>
+            <AddButton onPress={()=>{navigation.navigate('JoyImport')}}>Add more love!</AddButton>
             <View style={styles.flatlist}><FlatList
                 columnWrapperStyle={{ justifyContent: 'space-between' }}
                 data={joyItems}
