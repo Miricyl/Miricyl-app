@@ -1,10 +1,11 @@
-import * as SecureStore from 'expo-secure-store';
-import { CategoryType, ContentType, IContentItem } from '../types'; 
+
+import { CategoryType, ContentType, IContentItem } from '../types';
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
 import uuid from 'uuid';
 
 export const AddJoyItem = async (contentItem: IContentItem) => {
     contentItem.id=uuid.v4();
-    let contentItemString = await SecureStore.getItemAsync('joyitems') as string;
+    let contentItemString = await AsyncStorage.getItem('joyitems') as string;
     let joyitems: IContentItem[] = []
     if (contentItemString) {
   
@@ -17,7 +18,7 @@ export const AddJoyItem = async (contentItem: IContentItem) => {
         joyitems.push(contentItem);
     }
 
-    SecureStore.setItemAsync('joyitems', JSON.stringify(joyitems));
+    AsyncStorage.setItem('joyitems', JSON.stringify(joyitems));
 }
 
 
@@ -25,7 +26,7 @@ export const AddJoyItem = async (contentItem: IContentItem) => {
 
 export const LoadJoyItems = async () => {
 
-    let joyitemsString = await SecureStore.getItemAsync('joyitems') as string;
+    let joyitemsString = await AsyncStorage.getItem('joyitems') as string;
     let joyitems: IContentItem[] = []
     if (joyitemsString) {
         joyitems = JSON.parse(joyitemsString) as IContentItem[];
@@ -72,7 +73,7 @@ export const LoadJoyItems = async () => {
         joyitems.push(joyItem2);
         joyitems.push(joyItem3);
         joyitems.push(joyItem4);
-        SecureStore.setItemAsync('joyitems', JSON.stringify(joyitems));
+        AsyncStorage.setItem('joyitems', JSON.stringify(joyitems));
 
     }
   
@@ -81,7 +82,7 @@ export const LoadJoyItems = async () => {
 
 export const LoadItem = async (id:string) => {
 
-    let itemsString = await SecureStore.getItemAsync('joyitems') as string;
+    let itemsString = await AsyncStorage.getItem('joyitems') as string;
     let items: IContentItem[] = []
     if (itemsString) {
         items = JSON.parse(itemsString) as IContentItem[];
