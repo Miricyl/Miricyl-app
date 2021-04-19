@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Platform, StyleSheet, Image, TextInput, ImageBackground } from 'react-native';
+import { Platform, StyleSheet, Image, TextInput, ImageBackground, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import Colors from '../../constants/Colors'
@@ -13,7 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import SelectWidget from '../../components/SelectWidget';
 import Layout from '../../constants/Layout';
 import InputField from '../../components/InputField';
-//import WhiteLabel from '../../components/WhiteLabel';
+import SelectButton from '../../components/SelectButton';
 
 
 
@@ -32,13 +32,22 @@ export default function JoyImportScreen() {
     const [contentUrl, setContentUrl] = useState("");
     const [joyItem, setJoyItem] = useState<IContentItem>(joyItemTemplate);
     const [image, setImage] = useState("blank");
+    const [selectButtonShow, setSelectButtonShow] = useState(true);
 
+    let urlSelected = false;
+    let imageSelected = false;
+    let textSelected = false;
+    let phoneSelected = false;
 
     const updateJoyItemText = (text: string) => {
         let joyItemNew = joyItem;
         joyItemNew.text = text;
         setJoyItem(joyItemNew);
 
+    }
+
+    const selectContent = (type: ContentType) => {
+        setContentType(type);
     }
 
     const saveJoyItem = () => {
@@ -52,6 +61,12 @@ export default function JoyImportScreen() {
         joyItemNew.imageUri = image;
 
         AddJoyItem(joyItemNew).then(() => navigation.navigate('Joy'));
+
+    }
+
+    const setContentTextHandler = (text: string) => {
+        setContentText(text);
+        setSelectButtonShow(false);
 
     }
 
@@ -77,7 +92,6 @@ export default function JoyImportScreen() {
             quality: 1,
         });
 
-        console.log(result);
 
         if (!result.cancelled) {
             setImage(result.uri);
@@ -91,56 +105,105 @@ export default function JoyImportScreen() {
         { label: "Photo", value: ContentType.Image }
     ]
 
-    const controls = 
-       ( <View style={styles.controls}>
-            <InputField lines={1} placeholder="Title" onChangeText={(title: string) => setContentTitle(title)} value={contentTitle} />
-            <InputField lines={4} placeholder="Favourite Quote" onChangeText={(text: string) => setContentText(text)} value={contentText}/>
-            <InputField lines={2} placeholder="Put web link to a favorite image/video/site here" onChangeText={(text: string) => setContentText(text)} value={contentUrl}/> 
 
-            <InputField lines={1} placeholder="Number of someone to call" onChangeText={(text: string) => setContentPhoneNumber(text)} value={contentPhoneNumber} />
-            <Image source={{ uri: image }} style={styles.image} />
-            <AddButton onPress={chooseImage}>Select photo</AddButton>
-        </View>)
-    
+    let controls;
+
+
+    switch (contentType) {
+        case ContentType.Text:
+            textSelected = true;
+            controls = <View style={styles.textAdd}>
+                <InputField height='50%' lines={10} placeholder="Type your quote here" onChangeText={(text: string) => setContentTextHandler(text)} value={contentText} /></View>
+            break;
+        case ContentType.Image:
+            imageSelected = true;
+            controls = <View style={styles.textAdd}>
+                <InputField height={44} lines={1} placeholder="Title" onChangeText={(title: string) => setContentTitle(title)} value={contentTitle} />
+                <AddButton onPress={chooseImage}>Select photo</AddButton>   
+                <Image source={{ uri: image }} style={styles.image} /></View>
+            break;
+        case ContentType.Url:
+            urlSelected = true;
+            controls = <View style={styles.textAdd}>
+                <InputField height={60} lines={1} placeholder="Title" onChangeText={(title: string) => setContentTitle(title)} value={contentTitle} />
+                <InputField height={60} lines={2} placeholder="Paste URL" onChangeText={(text: string) => setContentUrl(text)} value={contentUrl} />
+            </View>
+            break;
+        case ContentType.PhoneNumber:
+            phoneSelected = true;
+            controls = <View style={styles.textAdd}>
+                <InputField height={60} lines={1} placeholder="Title" onChangeText={(title: string) => setContentTitle(title)} value={contentTitle} />
+                <InputField height={44} lines={1} placeholder="Number of someone to call" onChangeText={(text: string) => setContentPhoneNumber(text)} value={contentPhoneNumber} />
+            </View>
+            break;
+
+        default: {
+            break;
+        }
+    }
+
+    let selectButtons = selectButtonShow ? (<View style={styles.selector}><Text style={styles.whiteText}>What would you like to add?</Text><SelectButton selected={urlSelected} onPress={() => { selectContent(ContentType.Url) }}>Save a video or url</SelectButton>
+        <SelectButton selected={imageSelected} onPress={() => { selectContent(ContentType.Image) }}>Save an image</SelectButton>
+        <SelectButton selected={phoneSelected} onPress={() => { selectContent(ContentType.PhoneNumber) }}>Add someone to contact</SelectButton>
+        <SelectButton selected={textSelected} onPress={() => { selectContent(ContentType.Text) }}>Type a quote</SelectButton></View>) : null
 
     return (
-       // <View style={styles.container}>
+        <ImageBackground source={require('../../assets/images/dashboard_background.png')} style={styles.background}>
+            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}
+                style={styles.container}>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <View style={styles.container}>
+                        {selectButtons}
+                        <Text style={styles.whiteText}>Fill in the details</Text>
+                        {controls}
+                        <AddButton onPress={saveJoyItem}>Save</AddButton>
+                    </View>
+                </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
+        </ImageBackground>
 
-            <ImageBackground source={require('../../assets/images/dashboard_background.png')} style={styles.background}>
-                {/* <WhiteLabel text="What would you like to add?"></WhiteLabel> */}
-                <SelectWidget selectionItems={contentTypes} onSelect={setContentType} />
-                {controls}
-                <AddButton onPress={saveJoyItem}>SAVE</AddButton>
-            </ImageBackground>
-       // </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-    },
-    background: {
-        flex:1,
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        height: Layout.window.height,
-        width: Layout.window.width,
-    },
-    controls:{
-        justifyContent: 'space-between',
-        alignItems: 'center',
         backgroundColor: 'transparent'
+    },
+
+    background: {
+        flex: 1,
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+
     },
     title: {
         fontSize: 20,
         fontWeight: 'bold',
+    },
+    selector: {
+        flex: 1,
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        backgroundColor: 'transparent'
     },
     image: {
         width: '80%',
         height: undefined,
         aspectRatio: 135 / 76,
         borderRadius: 5,
+    },
+    whiteText: {
+        color: 'white',
+        fontSize: 22,
+        fontWeight: 'bold',
+        margin: 20
+    },
+    textAdd: {
+        flex: 1,
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        backgroundColor: 'transparent'
     }
 
 

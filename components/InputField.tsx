@@ -7,14 +7,14 @@ import Layout from '../constants/Layout';
 
 
 
-const InputField = ({ placeholder, lines, onChangeText, value }: IInputFieldDetails) => {
+const InputField = ({ placeholder, height, lines, onChangeText, value }: IInputFieldDetails) => {
     let multiline = false;
     if (lines > 1) {
         multiline = true;
     }
     return (
-
-        <View style={styles.field}>
+ 
+        <View style={{...styles.field, height:height}}>
             <TextInput placeholderTextColor={Colors.light.text} placeholder={placeholder} multiline={multiline} numberOfLines={lines} onChangeText={onChangeText} value={value} />
         </View>
     );
@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'center',
+       
     }
 
 });

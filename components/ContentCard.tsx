@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
 import Colors from '../constants/Colors';
 import { Text, View } from './Themed';
 import { IContentItem, ContentType } from '../types';

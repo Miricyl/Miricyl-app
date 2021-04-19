@@ -76,6 +76,7 @@ export interface IContentItem {
 export interface IInputFieldDetails {
   placeholder:string;
   lines:number;
+  height:any;
   onChangeText(value:string):any;
   value:string;
 }
