@@ -57,23 +57,23 @@ const ContentScreen = ({ navigation, route }: Props) => {
   let content;
   switch (contentItem.contentType) {
     case ContentType.Text: {
-      content = <View style={styles.contentHolder}><Text style={styles.textItem}>{contentItem.text}</Text></View>
+      content = <View style={styles.contentContainer}><View style={styles.contentHolder}><Text style={styles.textItem}>{contentItem.text}</Text></View></View>
       break;
     }
     case ContentType.PhoneNumber: {
-      content = (<View style={styles.contentHolder}><Text style={styles.title}>{contentItem.text}</Text>
+      content = (<View style={styles.contentContainer}><View style={styles.contentHolder}><Text style={styles.title}>{contentItem.text}</Text>
         <View style={styles.callIcons}><TouchableOpacity onPress={openPhone}><Feather name="phone-call" size={34} color="green" /></TouchableOpacity><TouchableOpacity onPress={openSMS}><MaterialIcons name="sms" size={34} color="green" /></TouchableOpacity></View>
-      </View>)
+      </View></View>)
       break;
     }
     case ContentType.Url: {
-      content = <View style={styles.contentHolder}><Text style={styles.title}>{contentItem.text}</Text><LinkPreview text={contentItem.url as string} /></View>
+      content = <View style={styles.contentContainer}><View style={styles.contentHolder}><Text style={styles.title}>{contentItem.text}</Text><LinkPreview text={contentItem.url as string} /></View></View>
       break;
     }
     case ContentType.Image: {
-      content = <View style={styles.contentHolder}><Image style={styles.image} source={{
+      content = <View style={styles.contentContainer}><View style={styles.contentHolder}><Image style={styles.image} source={{
         uri: contentItem.imageUri
-      }}></Image><Text style={styles.title}>{contentItem.title}</Text></View>
+      }}></Image></View><Text style={styles.title}>{contentItem.title}</Text></View>
       break;
     }
     default: {
@@ -153,10 +153,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-evenly'
   },
+  contentContainer:{
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    backgroundColor:'transparent'
+  },
 
   contentHolder: {
-    flex: 1,
-    backgroundColor: 'transparent',
+    //backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'space-evenly',
     shadowColor: 'black',
@@ -194,8 +199,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   textItem: {
-    backgroundColor: Colors.primary,
-    color: 'white',
+    backgroundColor: 'white',
+    color: Colors.brown,
     padding: 40,
     fontSize: 20,
     textAlign: 'center'
