@@ -46,7 +46,7 @@ export default function JoyScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: Platform.OS=='ios'?StatusBar.currentHeight:0,
+        marginTop: Platform.OS==='ios'?StatusBar.currentHeight:0,
         
     },
     background: {

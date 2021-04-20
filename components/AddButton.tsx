@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 
     },
     cardText: {
-        fontSize: 18,
+        fontSize: 16,
         color: Colors.light.text,
         fontWeight:'bold'
     },

@@ -22,8 +22,10 @@ const ContentScreen = ({ navigation, route }: Props) => {
   const { contentId } = route.params;
   const [contentItem, setContentItem] = useState<IContentItem>({ category: CategoryType.Joy, id: 'unknown', contentType: ContentType.Text });
   const [showScheduling, setShowScheduling] = useState<boolean>(false);
+  const [showTimePicker, setShowTimePicker] = useState<boolean>(false);
   const [time, setTime] = useState(new Date());
   const [day, setDay] = useState("Monday");
+
   useEffect(() => {
 
     LoadItem(contentId).then((data) => setContentItem(data as IContentItem))
@@ -88,23 +90,25 @@ const ContentScreen = ({ navigation, route }: Props) => {
 
   const onTimeChange = (event: any, selectedDate: any) => {
     setTime(selectedDate);
+    setShowTimePicker(false);
   }
 
   const scheduleMessage = () => {
     setShowScheduling(false);
-    console.log(day);
-    console.log(time);
-    const trigger = new Date(Date.now() + 60 * 1000);
-    trigger.setMinutes(0);
-    trigger.setSeconds(0);
-    Notifications.scheduleNotificationAsync({
+    console.log(contentItem.title);
+    console.log(contentItem.id);
+
+    let notificationId = Notifications.scheduleNotificationAsync({
       content: {
-        title: "You've got mail! 📬",
-        body: 'Here is the notification body',
-        data: { data: 'goes here' },
+        title: "A reminder",
+        body: contentItem.title,
+        data: { id: contentItem.id },
       },
-      trigger,
+      trigger: { repeats: true, hour: time.getHours(), minute: time.getMinutes() },
+      //trigger: { repeats: true, day: time.getDay(), hour:time.getHours(), minute:time.getMinutes() },
     });
+
+    console.log(notificationId);
   }
 
   const daysInWeek: any[] = [
@@ -116,21 +120,36 @@ const ContentScreen = ({ navigation, route }: Props) => {
     { label: "Saturday", value: "Saturday" },
     { label: "Sunday", value: "Sunday" }
   ]
-  let scheduling;
-  if (showScheduling) {
 
-    scheduling = (<View style={styles.contentCards}><SelectWidget selectionItems={daysInWeek} onSelect={setDay} /><DateTimePicker
+  let scheduling = null;
+  let timePicker = null;
+
+  const openTimePicker = () => {
+    setShowTimePicker(true);
+  }
+
+  if (showTimePicker) {
+    timePicker = <DateTimePicker
       testID="dateTimePicker"
       value={time}
       mode='time'
       is24Hour={true}
       display="default"
       onChange={onTimeChange}
-    /><View style={styles.button}><AddButton onPress={scheduleMessage}>Schedule message</AddButton></View></View>)
-
+    />
   }
   else {
-    scheduling = null
+    timePicker = <AddButton onPress={openTimePicker}>Set Time</AddButton>;
+  }
+
+  if (showScheduling) {
+
+    scheduling = (<View style={styles.contentCards}><SelectWidget selectionItems={daysInWeek} onSelect={setDay} />
+      {timePicker}
+      {/* Put both day and time here nnicely formatted*/}
+      <Text >{time}</Text>
+      <View style={styles.button}><AddButton onPress={scheduleMessage}>Schedule message</AddButton></View></View>)
+
   }
 
   return (
@@ -153,11 +172,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-evenly'
   },
-  contentContainer:{
+  contentContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-evenly',
-    backgroundColor:'transparent'
+    backgroundColor: 'transparent'
   },
 
   contentHolder: {
