@@ -7,7 +7,7 @@ import Layout from '../constants/Layout';
 const AddButton = (props: any) => {
 
     return (
-        <View style={styles.messageCard}>
+        <View style={{...styles.messageCard, width: props.width}}>
             <TouchableOpacity style={styles.touchableOpacity} onPress={props.onPress}>
                 <Text style={styles.cardText}>{props.children}</Text>
             </TouchableOpacity>
@@ -17,7 +17,6 @@ const AddButton = (props: any) => {
 
 const styles = StyleSheet.create({
     messageCard: {
-        width: Layout.window.width * 0.65,
         height: 40,
         shadowColor: 'black',
         shadowOpacity: 0.26,
@@ -28,7 +27,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffb115',
         alignItems: 'center',
         justifyContent: 'center',
-        margin:20
+        marginHorizontal:3,
+        marginVertical:10
     },
     touchableOpacity: {
         flexDirection: 'row',

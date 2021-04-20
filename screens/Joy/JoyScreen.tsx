@@ -26,7 +26,7 @@ export default function JoyScreen() {
     return (
         <View style={styles.container}>
         <ImageBackground source={require('../../assets/images/dashboard_background.png')} style={styles.background}>
-            <AddButton onPress={()=>{navigation.navigate('JoyImport')}}>Add more love!</AddButton>
+            <AddButton width={Layout.window.width * 0.65} onPress={()=>{navigation.navigate('JoyImport')}}>Add more love!</AddButton>
             <View style={styles.flatlist}><FlatList
                 columnWrapperStyle={{ justifyContent: 'space-between' }}
                 data={joyItems}
