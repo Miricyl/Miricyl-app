@@ -24,7 +24,7 @@ const ContentScreen = ({ navigation, route }: Props) => {
   const [showScheduling, setShowScheduling] = useState<boolean>(false);
   const [showTimePicker, setShowTimePicker] = useState<boolean>(false);
   const [time, setTime] = useState(new Date());
-  const [day, setDay] = useState("Monday");
+  const [day, setDay] = useState(2);
 
   useEffect(() => {
 
@@ -95,8 +95,6 @@ const ContentScreen = ({ navigation, route }: Props) => {
 
   const scheduleMessage = () => {
     setShowScheduling(false);
-    console.log(contentItem.title);
-    console.log(contentItem.id);
 
     let notificationId = Notifications.scheduleNotificationAsync({
       content: {
@@ -104,21 +102,21 @@ const ContentScreen = ({ navigation, route }: Props) => {
         body: contentItem.title,
         data: { id: contentItem.id },
       },
-      trigger: { repeats: true, hour: time.getHours(), minute: time.getMinutes() },
-      //trigger: { repeats: true, day: time.getDay(), hour:time.getHours(), minute:time.getMinutes() },
+      //this is the weekly repeating one. Use later when id is saved so it can be cancelled
+      //trigger: { repeats: true, weekday:day, hour: time.getHours(), minute: time.getMinutes() },
+      trigger: { repeats: false, day: time.getDay(), hour:time.getHours(), minute:time.getMinutes() },
     });
 
-    console.log(notificationId);
   }
 
   const daysInWeek: any[] = [
-    { label: "Monday", value: "Monday" },
-    { label: "Tuesday", value: "Tuesday" },
-    { label: "Wednesday", value: "Wednesday" },
-    { label: "Thursday", value: "Thursday" },
-    { label: "Friday", value: "Friday" },
-    { label: "Saturday", value: "Saturday" },
-    { label: "Sunday", value: "Sunday" }
+    { label: "Monday", value: 2 },
+    { label: "Tuesday", value: 3 },
+    { label: "Wednesday", value: 4 },
+    { label: "Thursday", value: 5 },
+    { label: "Friday", value: 6 },
+    { label: "Saturday", value: 7 },
+    { label: "Sunday", value: 1 }
   ]
 
   let scheduling = null;
@@ -146,11 +144,10 @@ const ContentScreen = ({ navigation, route }: Props) => {
 
     scheduling = (<View style={styles.contentCards}><SelectWidget selectionItems={daysInWeek} onSelect={setDay} />
       {timePicker}
-      {/* Put both day and time here nnicely formatted*/}
-      <Text >{time}</Text>
       <View style={styles.button}><AddButton onPress={scheduleMessage}>Schedule message</AddButton></View></View>)
 
   }
+
 
   return (
     <View style={styles.container}>
