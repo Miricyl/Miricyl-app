@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, ImageBackground, StatusBar, StyleSheet } from 'react-native';
+import { FlatList, ImageBackground, Platform, StatusBar, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import NavigationCard from '../../components/NavigationCard';
 import { Text, View } from '../../components/Themed';
@@ -26,7 +26,6 @@ export default function JoyScreen() {
     return (
         <View style={styles.container}>
         <ImageBackground source={require('../../assets/images/dashboard_background.png')} style={styles.background}>
-            <AddButton onPress={()=>{navigation.navigate('JoyImport')}}>Add more love!</AddButton>
             <View style={styles.flatlist}><FlatList
                 columnWrapperStyle={{ justifyContent: 'space-between' }}
                 data={joyItems}
@@ -38,7 +37,7 @@ export default function JoyScreen() {
                     );
                 }}
             /></View>
-            <NavigationCard text="Manage Wellness messages" link="ManageWellnessMessadge" linkType={LinkType.Screen}></NavigationCard>
+            <AddButton width={Layout.window.width * 0.65} onPress={()=>{navigation.navigate('JoyImport')}}>Add more love!</AddButton>
         </ImageBackground>
         </View>
     );
@@ -47,21 +46,20 @@ export default function JoyScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: StatusBar.currentHeight || 0,
+        marginTop: Platform.OS==='ios'?StatusBar.currentHeight:0,
         
     },
     background: {
         justifyContent: 'center',
         alignItems: 'center',
-        height: Layout.window.height,
-        width: Layout.window.width,
+        flex:1
     },
     flatlist:{
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
         padding: 10,
-        marginBottom: 40,
+        marginBottom: 10,
         backgroundColor:'transparent'
     },
     title: {

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, TextInput } from 'react-native';
 import RNPickerSelect from "react-native-picker-select";
+import Colors from '../constants/Colors';
 import {ContentSelect} from "../types";
 
 
@@ -19,20 +20,18 @@ inputIOS: {
     fontSize: 14,
     paddingVertical: 10,
     paddingHorizontal: 12,
-    borderWidth: 1,
-    borderColor: 'green',
     borderRadius: 8,
-    color: 'black',
+    color: Colors.brown,
+    backgroundColor: 'white',
     paddingRight: 30, // to ensure the text is never behind the icon
   },
   inputAndroid: {
     fontSize: 14,
     paddingHorizontal: 10,
     paddingVertical: 8,
-    borderWidth: 1,
-    borderColor: 'blue',
     borderRadius: 8,
-    color: 'black',
+    backgroundColor: 'white',
+    color: Colors.brown,
     paddingRight: 30, // to ensure the text is never behind the icon
   },
 });

@@ -1,8 +1,9 @@
-
 import { CategoryType, ContentType, IContentItem } from '../types';
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
 import uuid from 'uuid';
 
+//TODO change this to be just AddItem so it can serve for all types (places to distract and coping strategies )
+//extract CategoryType (Joy/places/coping) for displaying on correct screen
 export const AddJoyItem = async (contentItem: IContentItem) => {
     contentItem.id=uuid.v4();
     let contentItemString = await AsyncStorage.getItem('joyitems') as string;
