@@ -51,7 +51,9 @@ export enum CategoryType
  }
 
 export interface INavigationCardDetails {
+  CardType:string,
   text:string;
+  subheading?:string,
   link:string;
   linkType:LinkType;
   height?:any;

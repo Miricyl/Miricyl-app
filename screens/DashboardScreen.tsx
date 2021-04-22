@@ -40,10 +40,10 @@ const DashboardScreen = () => {
               <Text style={styles.welcomeText}>We are here for you if you need trusted guidance on accessing resources and services that can positively impact your mental health. We will guide you in finding the treatment and help you need.</Text>
             </View>
             <View style={styles.navigationCards}>
-              <NavigationCard text='Search Recources' link='https://help.miricyl.org/' linkType={LinkType.Url}></NavigationCard>
-              <NavigationCard text='Info &#38; Advice' link='https://help.miricyl.org/' linkType={LinkType.Url}></NavigationCard>
-              <NavigationCard text='Register for counselling' link='https://help.miricyl.org/' linkType={LinkType.Url}></NavigationCard>
-              <NavigationCard text='Self care' link='SelfCare' linkType={LinkType.Screen}></NavigationCard>
+              <NavigationCard key='Search Recources' CardType='Dashboard' text='Search Recources' link='https://help.miricyl.org/' linkType={LinkType.Url}></NavigationCard>
+              <NavigationCard key='Info &#38; Advice' CardType='Dashboard' text='Info &#38; Advice' link='https://help.miricyl.org/' linkType={LinkType.Url}></NavigationCard>
+              <NavigationCard key='Register for counselling' CardType='Dashboard' text='Register for counselling' link='https://help.miricyl.org/' linkType={LinkType.Url}></NavigationCard>
+              <NavigationCard key='Self care' CardType='Dashboard' text='Self care' link='SelfCare' linkType={LinkType.Screen}></NavigationCard>
             </View>
           </ImageBackground>
         </ScrollView>
