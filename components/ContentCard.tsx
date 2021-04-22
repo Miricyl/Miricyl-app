@@ -58,6 +58,7 @@ const ContentCard = (contentItem: IContentItem) => {
       break;
     }
     case ContentType.Url: {
+      //TODO see if there is a more stylish way of showing the link preview either with this or a different library
       content = <View><TouchableOpacity onPress={goToContentScreen}><Text style={styles.title}>{contentItem.text}</Text></TouchableOpacity><LinkPreview text={contentItem.url as string} /></View>
       break;
     }
