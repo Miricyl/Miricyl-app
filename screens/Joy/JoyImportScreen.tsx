@@ -157,7 +157,7 @@ export default function JoyImportScreen() {
                         {selectButtons}
                         <Text style={styles.whiteText}>Fill in the details</Text>
                         {controls}
-                        <AddButton onPress={saveJoyItem}>Save</AddButton>
+                        <AddButton width={Layout.window.width * 0.65} onPress={saveJoyItem}>Save</AddButton>
                     </View>
                 </TouchableWithoutFeedback>
             </KeyboardAvoidingView>
