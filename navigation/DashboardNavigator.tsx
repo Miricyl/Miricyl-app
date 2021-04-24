@@ -14,6 +14,7 @@ import SelfCareScreen from '../screens/SelfCareScreen';
 import SelfCheckScreen from '../screens/SelfCheck/SelfCheckScreen';
 import CopingStrategiesScreen from '../screens/Strategies/CopingStrategyScreen';
 import ManageWellnessMessageScreen from '../screens/WellnessMessages/ManageWellnessMessageScreen';
+import CreateAMessageScreen from '../screens/CreateAMessage/CreateAMessageScreen';
 
 
 const Stack = createStackNavigator<DashboardParamList>();
@@ -32,6 +33,11 @@ export default function DashboardStackNavigator() {
                 name="SelfCare"
                 component={SelfCareScreen}
                 options={{ headerTitle: 'SelfCare' }}
+            />
+            <Stack.Screen
+                name="CreateAMessage"
+                component={CreateAMessageScreen}
+                options={{ title: 'How are you today?' }}
             />
             <Stack.Screen
                 name="Mood"

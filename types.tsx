@@ -20,6 +20,7 @@ export type DashboardParamList = {
   ManageWellnessMessage:undefined;
   PlacesToDistract:undefined;
   Content:undefined;
+  CreateAMessage:undefined;
 };
 
 
@@ -51,11 +52,11 @@ export enum CategoryType
  }
 
 export interface INavigationCardDetails {
-  CardType:string,
+  CardType?:any,
   text:string;
   subheading?:string,
-  link:string;
-  linkType:LinkType;
+  link?:any;
+  linkType?:any;
   height?:any;
   width?:any;
 }

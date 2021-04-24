@@ -36,34 +36,44 @@ const NavigationCard = ({ text, subheading, link, linkType, CardType = "Dashboar
   let card;
 
   switch (CardType) {
-    case "SelfCare":
-      card = <>
-                <View style={styles.messageCardSelfCare}>
-                <TouchableOpacity style={styles.touchableOpacitySelfCare} onPress={onPressFunction}>
-                    <Text style={styles.cardTextSelfCare}>{text}</Text>
-                    <Text style={styles.cardSubheadingSelfCare}>{subheading}</Text>
-              </TouchableOpacity>
-            </View>
-            </>
-      break;
-
     case "Dashboard":
       card =  <><View style={styles.messageCard}>
-                <TouchableOpacity style={styles.touchableOpacityDashboard} onPress={onPressFunction}>
-                    <Text style={styles.cardTextDashboard}>{text}</Text>
+                <TouchableOpacity style={styles.touchableOpacity} onPress={onPressFunction}>
+                    <Text style={styles.cardText}>{text}</Text>
                     <Image 
                       source={require('../assets/icons/navigatorCardArrow.png')} 
                       style={styles.navigatorCardArrow}/>
                 </TouchableOpacity>
               </View></>
-       break;
+    break;
+
+    case "SelfCare":
+      card = <>
+                <View style={styles.messageCardSelfCare}>
+                <TouchableOpacity style={styles.touchableOpacity} onPress={onPressFunction}>
+                    <Text style={styles.cardText}>{text}</Text>
+                </TouchableOpacity>
+              </View>
+            </>
+    break;
+
+    case "CreateAMessage":
+      card =  <><View style={styles.messageCard}>
+                  <TouchableOpacity style={styles.touchableOpacitySubheading} onPress={onPressFunction}>
+                      <Text style={styles.cardTextHeader}>{text}</Text>
+                      <Text style={styles.subheading}>{subheading}</Text>
+                  </TouchableOpacity>
+                </View></>
+    break;
 
     default: {
-      break;
+    break;
     }
   }
 
-  return (card);
+  return (
+            <>{card}</>
+    );
 }
 
 export default NavigationCard;
@@ -85,6 +95,7 @@ const styles = StyleSheet.create({
   messageCardSelfCare: {
     width: Layout.window.width * 0.75,
     height: Layout.window.height * 0.1,
+    marginTop: 50,
     shadowColor: 'black',
     shadowOpacity: 0.26,
     shadowOffset: { width: 0, height: 2 },
@@ -95,26 +106,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  touchableOpacityDashboard: {
+  touchableOpacity: {
     flexDirection: 'row',
     alignItems: 'center',
     margin:10
   },
-  touchableOpacitySelfCare: {
+  touchableOpacitySubheading: {
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    margin: 5
+    padding: 5,
   },
-  cardTextDashboard:{
-    fontSize: 18,
+  cardText:{
+    fontSize: 20,
+    fontWeight: '700',
     color: Colors.light.text,
   },
-  cardTextSelfCare:{
+  cardTextHeader:{
     fontSize: 20,
     color: '#8B2B0F',
     fontWeight: '700',
   },
-  cardSubheadingSelfCare: {
+  subheading: {
     marginTop: 3,
     padding: 5,
     textAlign: 'center',

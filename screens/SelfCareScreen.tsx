@@ -16,12 +16,11 @@ const SelfCareScreen = () => {
                 <Text style={styles.headingSelfCare}>Self Care</Text>
                 <Text style={styles.paragraphSelfCare}>Practicing self-care helps maintain a healthy relationship with yourself, which you are then able to share with others. It is NOT selfish to practice self-care. When you pay a healthy amount of attention to your own mood, thoughts and feelings, you are considering the needs of others in your world too.</Text>
             </View>
-            <NavigationCard CardType='SelfCare' text='How are you today?' subheading="" link='Mood' linkType={LinkType.Screen} height={Layout.window.width * 0.2} width={Layout.window.width * 0.8}></NavigationCard>
-            <NavigationCard CardType='SelfCare' text='Staying Well Messages' subheading="Create reminders and see community favourites" link='SelfCheck' linkType={LinkType.Screen} height={Layout.window.width * 0.2} width={Layout.window.width * 0.8}></NavigationCard>
-            <NavigationCard CardType='SelfCare' text='Early Warning Signs' subheading="Keep track of your behaviours to keep your health in check" link='CopingStrategies' linkType={LinkType.Screen} height={Layout.window.width * 0.2} width={Layout.window.width * 0.8}></NavigationCard>
-            <NavigationCard CardType='SelfCare' text='Places to Go' subheading="Need a break? Get some fresh air and visit these local areas" link='PlacesToDistract' linkType={LinkType.Screen} height={Layout.window.width * 0.2} width={Layout.window.width * 0.8}></NavigationCard>
-            <NavigationCard CardType='SelfCare' text='Things I love' subheading="Remember all the little things that make living great!" link='Joy' linkType={LinkType.Screen} height={Layout.window.width * 0.2} width={Layout.window.width * 0.8}></NavigationCard>
-            <NavigationCard CardType='SelfCare' text='Feel the Fear and Do it Anyway' subheading="" link='ManageWellnessMessage' linkType={LinkType.Screen} height={Layout.window.width * 0.2} width={Layout.window.width * 0.8}></NavigationCard>
+            <View style={styles.buttons}>
+              <NavigationCard CardType='SelfCare' text='Create a Message' link='CreateAMessage' linkType={LinkType.Screen} height={Layout.window.width * 0.2} width={Layout.window.width * 0.8}></NavigationCard>
+              <NavigationCard CardType='SelfCare' text='My Messages'  height={Layout.window.width * 0.2} width={Layout.window.width * 0.8}></NavigationCard>
+              <NavigationCard CardType='SelfCare' text='My Plans'  height={Layout.window.width * 0.2} width={Layout.window.width * 0.8}></NavigationCard>
+            </View> 
         </ImageBackground>
       </ScrollView>
     </View>
@@ -42,8 +41,9 @@ const styles = StyleSheet.create({
     height: Dimensions.get('screen').height
   },
   textSelfCare: {
-    flex: 0.5,
+    flex: 0.6,
     backgroundColor: 'transparent',
+    marginTop: 40,
     height: '20%',
     width: '70%',
     
@@ -54,7 +54,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   paragraphSelfCare: {
-    fontSize: 10,
+    fontSize: 15,
+    marginLeft: 25,
+    marginRight: 25,
+    marginTop: 20,
+    textAlign: 'center',
+    color:'#8b2b0f',
+    lineHeight: 20,
   },
+  buttons: {
+    flex: 1.2,
+    justifyContent: 'flex-start',
+    backgroundColor: 'transparent',
+  }
 
 });
