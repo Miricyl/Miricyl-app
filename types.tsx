@@ -52,11 +52,11 @@ export enum CategoryType
  }
 
 export interface INavigationCardDetails {
-  CardType?:any,
+  CardType?:string,
   text:string;
   subheading?:string,
-  link?:any;
-  linkType?:any;
+  link:any;
+  linkType:LinkType;
   height?:any;
   width?:any;
 }
