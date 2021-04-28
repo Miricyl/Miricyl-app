@@ -1,53 +1,47 @@
 import * as React from 'react';
 import { Platform, StyleSheet, Image, TextInput, ImageBackground, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import Colors from '../../constants/Colors'
-import { Text, View } from '../../components/Themed';
+import Colors from '../constants/Colors'
+import { Text, View } from '../components/Themed';
 import { useState } from 'react';
-import { CategoryType, ContentSelect, ContentType, IContentItem, Frequency } from '../types';
-import { LoadJoyItems, AddJoyItem } from '../../storage/ContentStorage';
-import AddButton from '../../components/AddButton'
+import { CategoryType, ContentSelect, ContentType, IContentItem, Frequency, CategoryProps, SchedulingDetails } from '../types';
+import { LoadJoyItems, AddJoyItem } from '../storage/ContentStorage';
+import AddButton from '../components/AddButton'
 import { useNavigation } from '@react-navigation/native';
-import SelectWidget from '../../components/SelectWidget';
-import Layout from '../../constants/Layout';
-import InputField from '../../components/InputField';
-import SelectButton from '../../components/SelectButton';
-import * as Notifications from 'expo-notifications'
+import SelectWidget from '../components/SelectWidget';
+import Layout from '../constants/Layout';
+import InputField from '../components/InputField';
+import SelectButton from '../components/SelectButton';
 
 
-export default function AddContentScreen(categoryType:CategoryType) {
-    let joyItemTemplate: IContentItem = {
+
+export default function ContentImportScreen({ navigation, route }: CategoryProps ) {
+    const { categoryType } = route.params;
+    const nav = useNavigation();
+    let contentItemTemplate: IContentItem = {
         contentType: ContentType.Text,
         text: '',
         id: 'test',
-        category: CategoryType.Joy,
+        category: CategoryType.Love,
         active:false
+
     }
-    const navigation = useNavigation();
     const [contentType, setContentType] = useState(ContentType.Text);
     const [contentText, setContentText] = useState("");
     const [contentTitle, setContentTitle] = useState("");
     const [contentPhoneNumber, setContentPhoneNumber] = useState("");
     const [contentUrl, setContentUrl] = useState("");
-    const [contentItem, setContentItem] = useState<IContentItem>(joyItemTemplate);
+    const [contentItem, setContentItem] = useState<IContentItem>(contentItemTemplate);
     const [image, setImage] = useState("blank");
     const [selectButtonShow, setSelectButtonShow] = useState(true);
-    const [showScheduling, setShowScheduling] = useState<boolean>(false);
-    const [time, setTime] = useState(new Date());
-    const [day, setDay] = useState(2);
-    const [frequency, setFrequency] = useState(Frequency.Daily);
+
 
     let urlSelected = false;
     let imageSelected = false;
     let textSelected = false;
     let phoneSelected = false;
 
-    const updateJoyItemText = (text: string) => {
-        let itemNew = contentItem;
-        itemNew.text = text;
-        setContentItem(itemNew);
 
-    }
 
     const selectContent = (type: ContentType) => {
         setContentType(type);
@@ -56,7 +50,7 @@ export default function AddContentScreen(categoryType:CategoryType) {
     const saveContentItem = () => {
 
         let itemNew = contentItem;
-        itemNew.title= contentTitle;
+        itemNew.title = contentTitle;
         itemNew.contentType = contentType;
         itemNew.text = contentText;
         itemNew.url = contentUrl;
@@ -64,7 +58,8 @@ export default function AddContentScreen(categoryType:CategoryType) {
         itemNew.category = categoryType;
         itemNew.imageUri = image;
 
-        //AddJoyItem(itemNew).then(() => navigation.navigate('Joy'));
+
+        AddJoyItem(itemNew).then(() => nav.navigate('SelfCare'));
 
     }
 
@@ -146,38 +141,13 @@ export default function AddContentScreen(categoryType:CategoryType) {
         }
     }
 
-    const scheduleMessage = () => {
-        setShowScheduling(false);
-    
-        let notificationId = Notifications.scheduleNotificationAsync({
-          content: {
-            title: "A reminder",
-            body: contentItem.title,
-            data: { id: contentItem.id },
-          },
-          //this is the weekly repeating one. Use later when id is saved so it can be cancelled
-          //trigger: { repeats: true, weekday:day, hour: time.getHours(), minute: time.getMinutes() },
-          trigger: { repeats: false, day: time.getDay(), hour:time.getHours(), minute:time.getMinutes() },
-        });
-    
-      }
-
-    let scheduling = null;
-
-    if (showScheduling) {
-
-        scheduling = (
-   <AddButton onPress={scheduleMessage}>Schedule message</AddButton>)
-    
-      }
-
     let selectButtons = selectButtonShow ? (<View style={styles.selector}><Text style={styles.whiteText}>What would you like to add?</Text><SelectButton selected={urlSelected} onPress={() => { selectContent(ContentType.Url) }}>Save a video or url</SelectButton>
         <SelectButton selected={imageSelected} onPress={() => { selectContent(ContentType.Image) }}>Save an image</SelectButton>
         <SelectButton selected={phoneSelected} onPress={() => { selectContent(ContentType.PhoneNumber) }}>Add someone to contact</SelectButton>
         <SelectButton selected={textSelected} onPress={() => { selectContent(ContentType.Text) }}>Type a quote</SelectButton></View>) : null
 
     return (
-        <ImageBackground source={require('../../assets/images/dashboard_background.png')} style={styles.background}>
+        <ImageBackground source={require('../assets/images/dashboard_background.png')} style={styles.background}>
             <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}
                 style={styles.container}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

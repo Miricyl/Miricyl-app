@@ -37,7 +37,7 @@ export default function JoyScreen() {
                     );
                 }}
             /></View>
-            <AddButton width={Layout.window.width * 0.65} onPress={()=>{navigation.navigate('JoyImport')}}>Add more love!</AddButton>
+            <AddButton width={Layout.window.width * 0.65} onPress={()=>{navigation.navigate('ContentImport')}}>Add more love!</AddButton>
         </ImageBackground>
         </View>
     );

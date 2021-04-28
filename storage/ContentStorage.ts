@@ -42,7 +42,7 @@ export const LoadJoyItems = async () => {
             text:"This is a joy item with a link",
             url:"https://www.bbc.co.uk",
             contentType:ContentType.Url,
-            category:CategoryType.Joy,
+            category:CategoryType.Love,
             active:false
 
             
@@ -52,7 +52,7 @@ export const LoadJoyItems = async () => {
             text:"Call my mum",
             phoneNumber:"07799416722",
             contentType:ContentType.PhoneNumber,
-            category:CategoryType.Joy,
+            category:CategoryType.Love,
             active:false
 
 
@@ -61,7 +61,7 @@ export const LoadJoyItems = async () => {
             id:"3",
             text:"Act as if what you do makes a difference. It does.",
             contentType:ContentType.Text,
-            category:CategoryType.Joy,
+            category:CategoryType.Love,
             active:false
 
 
@@ -72,7 +72,7 @@ export const LoadJoyItems = async () => {
             text:"Me and my friends.",
             imageUri:"https://media.bloomandwild.com/v1/trim:15/2160x2160/smart/filters:format(webp)/https://assets-0.bloomandwild.com/letterbox-main/the-quinn-ht/cfe4b3bf-5e6b-4e08-a557-a0ce36704a65.jpeg",
             contentType:ContentType.Image,
-            category:CategoryType.Joy,
+            category:CategoryType.Love,
             active:false
 
         }
@@ -98,6 +98,6 @@ export const LoadItem = async (id:string) => {
         return item;
 
     }
-    const item:IContentItem={id:"unknown",category:CategoryType.Joy,contentType:ContentType.Text, active:false}
+    const item:IContentItem={id:"unknown",category:CategoryType.Love,contentType:ContentType.Text, active:false}
     return item;
 }

@@ -6,7 +6,7 @@ import useColorScheme from '../hooks/useColorScheme';
 import DashboardScreen from '../screens/DashboardScreen';
 import { DashboardParamList } from '../types';
 import ContentScreen from '../screens/ContentScreen';
-import JoyImportScreen from '../screens/Joy/JoyImportScreen';
+import ContentImportScreen from '../screens/ContentImportScreen';
 import JoyScreen from '../screens/Joy/JoyScreen';
 import MoodScreen from '../screens/Mood/MoodScreen';
 import PlacesToDistractScreen from '../screens/PlacesToDistract/PlacesToDistractScreen';
@@ -65,9 +65,9 @@ export default function DashboardStackNavigator() {
                 options={{ title: 'Things that gives me joy' }}
             />
             <Stack.Screen
-                name="JoyImport"
-                component={JoyImportScreen}
-                options={{ title: 'Add new item' }}
+                name="ContentImport"
+                component={ContentImportScreen}
+                options={{ title: 'Add new message' }}
             />
             <Stack.Screen
                 name="ManageWellnessMessage"

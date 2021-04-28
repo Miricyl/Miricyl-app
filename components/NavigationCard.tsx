@@ -11,7 +11,7 @@ import Layout from '../constants/Layout';
 
 
 
-const NavigationCard = ({ text, subheading, link, linkType, CardType = "Dashboard", height = '100%', width = '100%' }: INavigationCardDetails) => {
+const NavigationCard = ({ text, subheading, link, linkType, CardType = "Dashboard", category, height = '100%', width = '100%' }: INavigationCardDetails) => {
   const navigation = useNavigation();
   var onPressFunction: any;
 
@@ -19,12 +19,21 @@ const NavigationCard = ({ text, subheading, link, linkType, CardType = "Dashboar
 
   switch (linkType) {
     case LinkType.Screen:
-      onPressFunction = () => {
-        navigation.navigate(link);
+      if (category) {
+        onPressFunction = () => {
+          navigation.navigate(link, {
+            categoryType: category
+          });
+        }
+      }
+      else {
+        onPressFunction = () => {
+          navigation.navigate(link);
+        }
       }
       break;
     case LinkType.Url:
-      onPressFunction = () => {WebBrowser.openBrowserAsync(link)}
+      onPressFunction = () => { WebBrowser.openBrowserAsync(link) }
       break;
 
     default: {
@@ -37,43 +46,43 @@ const NavigationCard = ({ text, subheading, link, linkType, CardType = "Dashboar
 
   switch (CardType) {
     case "Dashboard":
-      card =  <><View style={styles.messageCard}>
-                <TouchableOpacity style={styles.touchableOpacity} onPress={onPressFunction}>
-                    <Text style={styles.cardText}>{text}</Text>
-                    <Image 
-                      source={require('../assets/icons/navigatorCardArrow.png')} 
-                      style={styles.navigatorCardArrow}/>
-                </TouchableOpacity>
-              </View></>
-    break;
+      card = <><View style={styles.messageCard}>
+        <TouchableOpacity style={styles.touchableOpacity} onPress={onPressFunction}>
+          <Text style={styles.cardText}>{text}</Text>
+          <Image
+            source={require('../assets/icons/navigatorCardArrow.png')}
+            style={styles.navigatorCardArrow} />
+        </TouchableOpacity>
+      </View></>
+      break;
 
     case "SelfCare":
       card = <>
-                <View style={styles.messageCardSelfCare}>
-                <TouchableOpacity style={styles.touchableOpacity} onPress={onPressFunction}>
-                    <Text style={styles.cardText}>{text}</Text>
-                </TouchableOpacity>
-              </View>
-            </>
-    break;
+        <View style={styles.messageCardSelfCare}>
+          <TouchableOpacity style={styles.touchableOpacity} onPress={onPressFunction}>
+            <Text style={styles.cardText}>{text}</Text>
+          </TouchableOpacity>
+        </View>
+      </>
+      break;
 
     case "CreateAMessage":
-      card =  <><View style={styles.messageCard}>
-                  <TouchableOpacity style={styles.touchableOpacitySubheading} onPress={onPressFunction}>
-                      <Text style={styles.cardTextHeader}>{text}</Text>
-                      <Text style={styles.subheading}>{subheading}</Text>
-                  </TouchableOpacity>
-                </View></>
-    break;
+      card = <><View style={styles.messageCard}>
+        <TouchableOpacity style={styles.touchableOpacitySubheading} onPress={onPressFunction}>
+          <Text style={styles.cardTextHeader}>{text}</Text>
+          <Text style={styles.subheading}>{subheading}</Text>
+        </TouchableOpacity>
+      </View></>
+      break;
 
     default: {
-    break;
+      break;
     }
   }
 
   return (
-            <>{card}</>
-    );
+    <>{card}</>
+  );
 }
 
 export default NavigationCard;
@@ -109,19 +118,19 @@ const styles = StyleSheet.create({
   touchableOpacity: {
     flexDirection: 'row',
     alignItems: 'center',
-    margin:10
+    margin: 10
   },
   touchableOpacitySubheading: {
     justifyContent: 'space-evenly',
     alignItems: 'center',
     padding: 5,
   },
-  cardText:{
+  cardText: {
     fontSize: 20,
     fontWeight: '700',
     color: Colors.light.text,
   },
-  cardTextHeader:{
+  cardTextHeader: {
     fontSize: 20,
     color: '#8B2B0F',
     fontWeight: '700',

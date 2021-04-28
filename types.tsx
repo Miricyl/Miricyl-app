@@ -4,16 +4,18 @@ import { StackScreenProps } from '@react-navigation/stack';
 export type RootStackParamList = {
   Root: undefined;
   Content:{contentId:string};
+  Category:{categoryType:CategoryType}
   NotFound: undefined;
 };
 
-export type Props = StackScreenProps<RootStackParamList, 'Content'>;
+export type ContentProps = StackScreenProps<RootStackParamList, 'Content'>;
+export type CategoryProps = StackScreenProps<RootStackParamList, 'Category'>;
 
 export type DashboardParamList = {
   Dashboard:undefined;
   SelfCare:undefined;
   Joy: undefined;
-  JoyImport:undefined;
+  ContentImport:undefined;
   CopingStrategies:undefined;
   Mood:undefined;
   SelfCheck:undefined;
@@ -46,9 +48,11 @@ export enum LinkType {
 
 export enum CategoryType
  {
-   Joy,
+   Love,
    Places,
-   Activity
+   Coping,
+   StayingWell,
+   EarlyWarning
  }
 
 export interface INavigationCardDetails {
@@ -59,6 +63,7 @@ export interface INavigationCardDetails {
   linkType:LinkType;
   height?:any;
   width?:any;
+  category?:CategoryType;
 }
 
 export interface IContentItem {

@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { Linking, Platform, Image, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
-import NavigationCard from '../components/NavigationCard';
 import { Text, View } from '../components/Themed';
 import Layout from '../constants/Layout';
-import { CategoryType, ContentType, IContentItem, Props } from '../types';
+import { CategoryType, ContentType, IContentItem, ContentProps } from '../types';
 import { useEffect, useState } from 'react';
 import { LoadItem } from '../storage/ContentStorage';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
@@ -17,10 +16,10 @@ import { ScrollView } from 'react-native-gesture-handler';
 import * as Notifications from 'expo-notifications'
 
 
-const ContentScreen = ({ navigation, route }: Props) => {
+const ContentScreen = ({ navigation, route }: ContentProps) => {
   //content screen should allow you to schedule message and delete item.
   const { contentId } = route.params;
-  const [contentItem, setContentItem] = useState<IContentItem>({ category: CategoryType.Joy, id: 'unknown', active:false, contentType: ContentType.Text });
+  const [contentItem, setContentItem] = useState<IContentItem>({ category: CategoryType.Love, id: 'unknown', active:false, contentType: ContentType.Text });
   const [showScheduling, setShowScheduling] = useState<boolean>(false);
   const [showTimePicker, setShowTimePicker] = useState<boolean>(false);
   const [time, setTime] = useState(new Date());
@@ -148,7 +147,7 @@ const ContentScreen = ({ navigation, route }: Props) => {
 
   }
   const unschedule = () => {
-    Notifications.cancelAllScheduledNotificationsAsync();
+    Notifications.cancelAllScheduledNotificationsAsync()
   }
 
   return (
@@ -156,7 +155,7 @@ const ContentScreen = ({ navigation, route }: Props) => {
       <ImageBackground source={require('../assets/images/dashboard_background.png')} style={styles.background}>
         {content}
         {scheduling}
-    
+        <AddButton onPress={unschedule}>Unschedule</AddButton>
         <View style={styles.buttonArea}><AddButton onPress={schedulingShow} width={Layout.window.width * 0.3}>Schedule</AddButton><AddButton width={Layout.window.width * 0.3}>Delete</AddButton><AddButton width={Layout.window.width * 0.3}>Edit</AddButton></View>
       </ImageBackground>
     </View>
