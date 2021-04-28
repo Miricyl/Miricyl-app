@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { Platform, StyleSheet, Image, TextInput, ImageBackground, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import * as Permissions from 'expo-permissions';
 import Colors from '../../constants/Colors'
 import { Text, View } from '../../components/Themed';
-import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group';
 import { useState } from 'react';
-import { CategoryType, ContentSelect, ContentType, IContentItem } from '../../types';
+import { CategoryType, ContentSelect, ContentType, IContentItem, Frequency } from '../types';
 import { LoadJoyItems, AddJoyItem } from '../../storage/ContentStorage';
 import AddButton from '../../components/AddButton'
 import { useNavigation } from '@react-navigation/native';
@@ -14,15 +12,16 @@ import SelectWidget from '../../components/SelectWidget';
 import Layout from '../../constants/Layout';
 import InputField from '../../components/InputField';
 import SelectButton from '../../components/SelectButton';
+import * as Notifications from 'expo-notifications'
 
 
-
-export default function JoyImportScreen() {
+export default function AddContentScreen(categoryType:CategoryType) {
     let joyItemTemplate: IContentItem = {
         contentType: ContentType.Text,
         text: '',
         id: 'test',
-        category: CategoryType.Joy
+        category: CategoryType.Joy,
+        active:false
     }
     const navigation = useNavigation();
     const [contentType, setContentType] = useState(ContentType.Text);
@@ -30,9 +29,13 @@ export default function JoyImportScreen() {
     const [contentTitle, setContentTitle] = useState("");
     const [contentPhoneNumber, setContentPhoneNumber] = useState("");
     const [contentUrl, setContentUrl] = useState("");
-    const [joyItem, setJoyItem] = useState<IContentItem>(joyItemTemplate);
+    const [contentItem, setContentItem] = useState<IContentItem>(joyItemTemplate);
     const [image, setImage] = useState("blank");
     const [selectButtonShow, setSelectButtonShow] = useState(true);
+    const [showScheduling, setShowScheduling] = useState<boolean>(false);
+    const [time, setTime] = useState(new Date());
+    const [day, setDay] = useState(2);
+    const [frequency, setFrequency] = useState(Frequency.Daily);
 
     let urlSelected = false;
     let imageSelected = false;
@@ -40,9 +43,9 @@ export default function JoyImportScreen() {
     let phoneSelected = false;
 
     const updateJoyItemText = (text: string) => {
-        let joyItemNew = joyItem;
-        joyItemNew.text = text;
-        setJoyItem(joyItemNew);
+        let itemNew = contentItem;
+        itemNew.text = text;
+        setContentItem(itemNew);
 
     }
 
@@ -50,18 +53,18 @@ export default function JoyImportScreen() {
         setContentType(type);
     }
 
-    const saveJoyItem = () => {
+    const saveContentItem = () => {
 
-        let joyItemNew = joyItem;
-        joyItemNew.title= contentTitle;
-        joyItemNew.contentType = contentType;
-        joyItemNew.text = contentText;
-        joyItemNew.url = contentUrl;
-        joyItemNew.phoneNumber = contentPhoneNumber;
-        joyItemNew.category = CategoryType.Joy;
-        joyItemNew.imageUri = image;
+        let itemNew = contentItem;
+        itemNew.title= contentTitle;
+        itemNew.contentType = contentType;
+        itemNew.text = contentText;
+        itemNew.url = contentUrl;
+        itemNew.phoneNumber = contentPhoneNumber;
+        itemNew.category = categoryType;
+        itemNew.imageUri = image;
 
-        AddJoyItem(joyItemNew).then(() => navigation.navigate('Joy'));
+        //AddJoyItem(itemNew).then(() => navigation.navigate('Joy'));
 
     }
 
@@ -143,6 +146,31 @@ export default function JoyImportScreen() {
         }
     }
 
+    const scheduleMessage = () => {
+        setShowScheduling(false);
+    
+        let notificationId = Notifications.scheduleNotificationAsync({
+          content: {
+            title: "A reminder",
+            body: contentItem.title,
+            data: { id: contentItem.id },
+          },
+          //this is the weekly repeating one. Use later when id is saved so it can be cancelled
+          //trigger: { repeats: true, weekday:day, hour: time.getHours(), minute: time.getMinutes() },
+          trigger: { repeats: false, day: time.getDay(), hour:time.getHours(), minute:time.getMinutes() },
+        });
+    
+      }
+
+    let scheduling = null;
+
+    if (showScheduling) {
+
+        scheduling = (
+   <AddButton onPress={scheduleMessage}>Schedule message</AddButton>)
+    
+      }
+
     let selectButtons = selectButtonShow ? (<View style={styles.selector}><Text style={styles.whiteText}>What would you like to add?</Text><SelectButton selected={urlSelected} onPress={() => { selectContent(ContentType.Url) }}>Save a video or url</SelectButton>
         <SelectButton selected={imageSelected} onPress={() => { selectContent(ContentType.Image) }}>Save an image</SelectButton>
         <SelectButton selected={phoneSelected} onPress={() => { selectContent(ContentType.PhoneNumber) }}>Add someone to contact</SelectButton>
@@ -157,7 +185,8 @@ export default function JoyImportScreen() {
                         {selectButtons}
                         <Text style={styles.whiteText}>Fill in the details</Text>
                         {controls}
-                        <AddButton width={Layout.window.width * 0.65} onPress={saveJoyItem}>Save</AddButton>
+                        <AddButton width={Layout.window.width * 0.65} onPress={saveContentItem}>Save</AddButton>
+                        
                     </View>
                 </TouchableWithoutFeedback>
             </KeyboardAvoidingView>

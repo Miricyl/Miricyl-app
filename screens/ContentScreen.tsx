@@ -20,7 +20,7 @@ import * as Notifications from 'expo-notifications'
 const ContentScreen = ({ navigation, route }: Props) => {
   //content screen should allow you to schedule message and delete item.
   const { contentId } = route.params;
-  const [contentItem, setContentItem] = useState<IContentItem>({ category: CategoryType.Joy, id: 'unknown', contentType: ContentType.Text });
+  const [contentItem, setContentItem] = useState<IContentItem>({ category: CategoryType.Joy, id: 'unknown', active:false, contentType: ContentType.Text });
   const [showScheduling, setShowScheduling] = useState<boolean>(false);
   const [showTimePicker, setShowTimePicker] = useState<boolean>(false);
   const [time, setTime] = useState(new Date());
@@ -147,13 +147,16 @@ const ContentScreen = ({ navigation, route }: Props) => {
       <View style={styles.button}><AddButton onPress={scheduleMessage}>Schedule message</AddButton></View></View>)
 
   }
-
+  const unschedule = () => {
+    Notifications.cancelAllScheduledNotificationsAsync();
+  }
 
   return (
     <View style={styles.container}>
       <ImageBackground source={require('../assets/images/dashboard_background.png')} style={styles.background}>
         {content}
         {scheduling}
+    
         <View style={styles.buttonArea}><AddButton onPress={schedulingShow} width={Layout.window.width * 0.3}>Schedule</AddButton><AddButton width={Layout.window.width * 0.3}>Delete</AddButton><AddButton width={Layout.window.width * 0.3}>Edit</AddButton></View>
       </ImageBackground>
     </View>

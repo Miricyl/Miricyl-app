@@ -61,8 +61,6 @@ export interface INavigationCardDetails {
   width?:any;
 }
 
-
-
 export interface IContentItem {
   id:string;
   contentType: ContentType;
@@ -72,8 +70,24 @@ export interface IContentItem {
   imageUri?:string;
   phoneNumber?:string;
   category:CategoryType;
+  schedulingDetails?:SchedulingDetails;
+  active:boolean;
+  
   //TODO add image
 
+}
+
+export type SchedulingDetails = {
+  identifyer:string; //comes from expo server at scheduling of the notification
+  day:number; //1 corresponds to Sunday
+  hour:number;
+  minute:number;
+  repeats:Frequency;
+}
+
+export enum Frequency {
+  Daily,
+  Weekly,
 }
 
 export interface IInputFieldDetails {

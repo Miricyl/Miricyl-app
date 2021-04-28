@@ -22,13 +22,16 @@ const scheduleMessage = async () =>{
       });
       console.log(id);
     }
-  
+    const unschedule = () => {
+      Notifications.cancelAllScheduledNotificationsAsync();
+    }
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Add Wellness message</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
      <AddButton onPress={scheduleMessage}>Schedule Message</AddButton>
+     <AddButton onPress={unschedule}>Unschedule</AddButton>
 
     </View>
   );
