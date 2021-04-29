@@ -1,28 +1,69 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
 import Colors from '../constants/Colors';
 import { Text, View } from './Themed';
-import { IContentCardDetails, ContentType } from '../types';
+import { IContentItem, ContentType } from '../types';
+import Layout from '../constants/Layout';
+import { Feather, MaterialIcons } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Platform } from 'react-native';
+import { Linking } from 'react-native';
+import sms from 'react-native-sms-linking';
+import { LinkPreview } from '@flyerhq/react-native-link-preview';
 
 
-
-const ContentCard = ({ text, image, url, contentType, height='100%', width='100%' }: IContentCardDetails) => {
+const ContentCard = (contentItem: IContentItem) => {
   const navigation = useNavigation();
 
+  const goToContentScreen = () => {
+    navigation.navigate('Content', {
+      contentId: contentItem.id
+    });
+  }
+
+  const openPhone = () => {
+    if (contentItem.phoneNumber) {
+      contentItem.phoneNumber = contentItem.phoneNumber.replace(/[^0-9+]/g, '');
+      let link;
+
+      if (Platform.OS === 'ios') {
+        link = 'telprompt:${' + contentItem.phoneNumber + '}';
+      }
+      else {
+        link = 'tel:' + contentItem.phoneNumber;
+      }
+      Linking.openURL(link);
+    }
+
+  }
+
+  const openSMS = () => {
+    if (contentItem.phoneNumber) {
+      contentItem.phoneNumber = contentItem.phoneNumber.replace(/[^0-9+]/g, '');
+      sms(contentItem.phoneNumber, "").catch(console.error);
+    }
+  }
+
   let content;
-  switch (contentType) {
+  switch (contentItem.contentType) {
     case ContentType.Text: {
-      content = <Text style={styles.cardText}>{text}</Text>
+      content = <TouchableOpacity onPress={goToContentScreen}><Text style={styles.textItem}>{contentItem.text}</Text></TouchableOpacity>
       break;
     }
-    case ContentType.Image: {
-      //statements; 
+    case ContentType.PhoneNumber: {
+      content = (<View><TouchableOpacity onPress={goToContentScreen}><Text style={styles.title}>{contentItem.title}</Text></TouchableOpacity>
+        <View style={styles.callIcons}><TouchableOpacity onPress={openPhone}><Feather name="phone-call" size={34} color="green" /></TouchableOpacity><TouchableOpacity onPress={openSMS}><MaterialIcons name="sms" size={34} color="green" /></TouchableOpacity></View>
+      </View>)
       break;
     }
     case ContentType.Url: {
-      //statements; 
+      //TODO see if there is a more stylish way of showing the link preview either with this or a different library
+      content = <View><TouchableOpacity onPress={goToContentScreen}><Text style={styles.title}>{contentItem.text}</Text></TouchableOpacity><LinkPreview text={contentItem.url as string} /></View>
+      break;
+    }
+    case ContentType.Image: {
+      content = <View><TouchableOpacity onPress={goToContentScreen}><Image source={{ uri: contentItem.imageUri }} style={styles.image} /></TouchableOpacity></View>
       break;
     }
     default: {
@@ -33,17 +74,25 @@ const ContentCard = ({ text, image, url, contentType, height='100%', width='100%
 
 
   return (
-    <View style={{...styles.messageCard, height: height, width: width}}>
-      {/* PUT LINK TO CONTENT PAGE <TouchableOpacity onPress={() => navigation.navigate()}> */}
+
+    <View style={styles.messageCard}>
+
       {content}
 
     </View>
+
   );
 }
 
 export default ContentCard;
 
 const styles = StyleSheet.create({
+  image: {
+    width: Layout.window.width * 0.45,
+    height: 350,
+
+
+  },
   messageCard: {
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -52,15 +101,36 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
     elevation: 5,
-    borderRadius: 5,
-    backgroundColor: Colors.primary,
-    margin: '2%',
-    padding: 5
+    borderRadius: 8,
+    backgroundColor: '#fff',
+    width: Layout.window.width * 0.45,
+    height: 350,
+    marginTop: 10,
+    marginBottom: 10,
+    overflow: 'hidden',
+
   },
   cardText: {
-    width:'100%',
     color: 'white',
     textAlign: 'center',
     textAlignVertical: 'center'
+  },
+  textItem: {
+    color: Colors.light.text,
+    padding: 10,
+    fontSize: 20,
+    textAlign: 'center'
+
+  },
+  title: {
+    padding: 10,
+    fontSize: 20,
+    fontWeight: 'bold'
+  },
+  callIcons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    margin: 10
   }
 });

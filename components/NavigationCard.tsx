@@ -1,26 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Image, Platform, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
 import Colors from '../constants/Colors';
 import { Text, View } from './Themed';
-import { INavigationCardDetails, LinkType } from '../types';
+import * as WebBrowser from 'expo-web-browser';
+import { ContentType, INavigationCardDetails, LinkType } from '../types';
 import Layout from '../constants/Layout';
 
 
 
-const NavigationCard = ({ text, link, linkType, height = '100%', width = '100%' }: INavigationCardDetails) => {
+const NavigationCard = ({ text, subheading, link, linkType, CardType = "Dashboard", category, height = '100%', width = '100%' }: INavigationCardDetails) => {
   const navigation = useNavigation();
   var onPressFunction: any;
 
   switch (linkType) {
     case LinkType.Screen:
-      onPressFunction = () => {
-        navigation.navigate(link);
+      if (category) {
+        console.log(category);
+        onPressFunction = () => {
+          console.log('Got category' + category);
+          navigation.navigate(link, {
+            category: category
+          });
+
+        }
       }
+      else {
+        onPressFunction = () => {
+          console.log('Not got category');
+          navigation.navigate(link);
+        }
+      }
+      break;
     case LinkType.Url:
-      //onPressFunction = () => { }//TODO: handle Url links
+      onPressFunction = () => { WebBrowser.openBrowserAsync(link) }
+      break;
 
     default: {
       break;
@@ -28,19 +44,46 @@ const NavigationCard = ({ text, link, linkType, height = '100%', width = '100%' 
   }
 
 
-  return (
+  let card;
 
-      <View style={styles.messageCard}>
+  switch (CardType) {
+    case "Dashboard":
+      card = <><View style={styles.messageCard}>
         <TouchableOpacity style={styles.touchableOpacity} onPress={onPressFunction}>
-            {/* <Text style={{...styles.cardText, height:height, width:width}}> */} 
-            <Text style={styles.cardText}>
-            {text}
-            </Text>
-            <Image 
-              source={require('../assets/icons/navigatorCardArrow.png')} 
-              style={styles.navigatorCardArrow}/>
-      </TouchableOpacity>
-    </View>
+          <Text style={styles.cardText}>{text}</Text>
+          <Image
+            source={require('../assets/icons/navigatorCardArrow.png')}
+            style={styles.navigatorCardArrow} />
+        </TouchableOpacity>
+      </View></>
+      break;
+
+    case "SelfCare":
+      card = <>
+        <View style={styles.messageCardSelfCare}>
+          <TouchableOpacity style={styles.touchableOpacity} onPress={onPressFunction}>
+            <Text style={styles.cardText}>{text}</Text>
+          </TouchableOpacity>
+        </View>
+      </>
+      break;
+
+    case "CreateAMessage":
+      card = <><View style={styles.messageCard}>
+        <TouchableOpacity style={styles.touchableOpacitySubheading} onPress={onPressFunction}>
+          <Text style={styles.cardTextHeader}>{text}</Text>
+          <Text style={styles.subheading}>{subheading}</Text>
+        </TouchableOpacity>
+      </View></>
+      break;
+
+    default: {
+      break;
+    }
+  }
+
+  return (
+    <>{card}</>
   );
 }
 
@@ -60,15 +103,44 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  messageCardSelfCare: {
+    width: Layout.window.width * 0.75,
+    height: Layout.window.height * 0.1,
+    marginTop: 50,
+    shadowColor: 'black',
+    shadowOpacity: 0.26,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
+    elevation: 5,
+    borderRadius: 50,
+    backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   touchableOpacity: {
     flexDirection: 'row',
     alignItems: 'center',
-    margin:10
-
+    margin: 10
   },
-  cardText:{
-    fontSize: 18,
-    color:'#8b2b0f',
+  touchableOpacitySubheading: {
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    padding: 5,
+  },
+  cardText: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: Colors.light.text,
+  },
+  cardTextHeader: {
+    fontSize: 20,
+    color: '#8B2B0F',
+    fontWeight: '700',
+  },
+  subheading: {
+    marginTop: 3,
+    padding: 5,
+    textAlign: 'center',
   },
   navigatorCardArrow: {
     marginLeft: 15,

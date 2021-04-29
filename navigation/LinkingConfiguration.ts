@@ -11,7 +11,7 @@ export default {
               DashboardScreen:'dashboard',
               SelfCareScreen:'self-care',
               JoyScreen: 'joy',
-              JoyImportScreen:'joy-import',
+              ContentImportScreen:'content-import',
               CopingStrategiesScreen:'coping-strategies',
               MoodScreen:'mood',
               PlacesToDistractScreen:'places-to-distract',

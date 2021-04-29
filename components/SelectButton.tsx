@@ -4,12 +4,18 @@ import Colors from '../constants/Colors'
 import Layout from '../constants/Layout';
 
 
-const AddButton = (props: any) => {
+const SelectButton = (props: any) => {
+    let color=Colors.brown;
+    let backgroundcolor='white';
+ if (props.selected){
+     color='white';
+     backgroundcolor = Colors.brown;
 
+ }
     return (
-        <View style={{...styles.messageCard, width: props.width}}>
+        <View style={{...styles.messageCard, backgroundColor:backgroundcolor}}>
             <TouchableOpacity style={styles.touchableOpacity} onPress={props.onPress}>
-                <Text style={styles.cardText}>{props.children}</Text>
+                <Text style={{...styles.cardText, color:color}}>{props.children}</Text>
             </TouchableOpacity>
         </View>
     )
@@ -17,6 +23,7 @@ const AddButton = (props: any) => {
 
 const styles = StyleSheet.create({
     messageCard: {
+        width: Layout.window.width * 0.65,
         height: 40,
         shadowColor: 'black',
         shadowOpacity: 0.26,
@@ -24,11 +31,9 @@ const styles = StyleSheet.create({
         shadowRadius: 8,
         elevation: 5,
         borderRadius: 50,
-        backgroundColor: '#ffb115',
         alignItems: 'center',
         justifyContent: 'center',
-        marginHorizontal:3,
-        marginVertical:10
+        margin:20
     },
     touchableOpacity: {
         flexDirection: 'row',
@@ -37,11 +42,10 @@ const styles = StyleSheet.create({
 
     },
     cardText: {
-        fontSize: 16,
-        color: Colors.light.text,
+        fontSize: 18,
         fontWeight:'bold'
     },
 });
 
 
-export default AddButton;
+export default SelectButton;

@@ -6,7 +6,7 @@ import useColorScheme from '../hooks/useColorScheme';
 import DashboardScreen from '../screens/DashboardScreen';
 import { DashboardParamList } from '../types';
 import ContentScreen from '../screens/ContentScreen';
-import JoyImportScreen from '../screens/Joy/JoyImportScreen';
+import ContentImportScreen from '../screens/ContentImportScreen';
 import JoyScreen from '../screens/Joy/JoyScreen';
 import MoodScreen from '../screens/Mood/MoodScreen';
 import PlacesToDistractScreen from '../screens/PlacesToDistract/PlacesToDistractScreen';
@@ -14,6 +14,7 @@ import SelfCareScreen from '../screens/SelfCareScreen';
 import SelfCheckScreen from '../screens/SelfCheck/SelfCheckScreen';
 import CopingStrategiesScreen from '../screens/Strategies/CopingStrategyScreen';
 import ManageWellnessMessageScreen from '../screens/WellnessMessages/ManageWellnessMessageScreen';
+import CreateAMessageScreen from '../screens/CreateAMessage/CreateAMessageScreen';
 
 
 const Stack = createStackNavigator<DashboardParamList>();
@@ -32,6 +33,11 @@ export default function DashboardStackNavigator() {
                 name="SelfCare"
                 component={SelfCareScreen}
                 options={{ headerTitle: 'SelfCare' }}
+            />
+            <Stack.Screen
+                name="CreateAMessage"
+                component={CreateAMessageScreen}
+                options={{ title: 'How are you today?' }}
             />
             <Stack.Screen
                 name="Mood"
@@ -59,9 +65,9 @@ export default function DashboardStackNavigator() {
                 options={{ title: 'Things that gives me joy' }}
             />
             <Stack.Screen
-                name="JoyImport"
-                component={JoyImportScreen}
-                options={{ title: 'Add new item' }}
+                name="ContentImport"
+                component={ContentImportScreen}
+                options={{ title: 'Add new message' }}
             />
             <Stack.Screen
                 name="ManageWellnessMessage"
@@ -71,7 +77,7 @@ export default function DashboardStackNavigator() {
             <Stack.Screen
                 name="Content"
                 component={ContentScreen}
-                options={{ title: '' }}
+                options={{ title: 'ContentScreen' }}
             />
 
             </Stack.Navigator>
