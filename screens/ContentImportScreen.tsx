@@ -16,7 +16,7 @@ import SelectButton from '../components/SelectButton';
 
 
 export default function ContentImportScreen({ navigation, route }: CategoryProps ) {
-    const { categoryType } = route.params;
+    const { category } = route.params;
     const nav = useNavigation();
     let contentItemTemplate: IContentItem = {
         contentType: ContentType.Text,
@@ -55,7 +55,7 @@ export default function ContentImportScreen({ navigation, route }: CategoryProps
         itemNew.text = contentText;
         itemNew.url = contentUrl;
         itemNew.phoneNumber = contentPhoneNumber;
-        itemNew.category = categoryType;
+        itemNew.category = category;
         itemNew.imageUri = image;
 
 
@@ -117,21 +117,18 @@ export default function ContentImportScreen({ navigation, route }: CategoryProps
         case ContentType.Image:
             imageSelected = true;
             controls = <View style={styles.textAdd}>
-                <InputField height={44} lines={1} placeholder="Title" onChangeText={(title: string) => setContentTitle(title)} value={contentTitle} />
                 <AddButton onPress={chooseImage}>Select photo</AddButton>   
                 <Image source={{ uri: image }} style={styles.image} /></View>
             break;
         case ContentType.Url:
             urlSelected = true;
             controls = <View style={styles.textAdd}>
-                <InputField height={60} lines={1} placeholder="Title" onChangeText={(title: string) => setContentTitle(title)} value={contentTitle} />
                 <InputField height={60} lines={2} placeholder="Paste URL" onChangeText={(text: string) => setContentUrl(text)} value={contentUrl} />
             </View>
             break;
         case ContentType.PhoneNumber:
             phoneSelected = true;
             controls = <View style={styles.textAdd}>
-                <InputField height={60} lines={1} placeholder="Title" onChangeText={(title: string) => setContentTitle(title)} value={contentTitle} />
                 <InputField height={44} lines={1} placeholder="Number of someone to call" onChangeText={(text: string) => setContentPhoneNumber(text)} value={contentPhoneNumber} />
             </View>
             break;
@@ -152,6 +149,7 @@ export default function ContentImportScreen({ navigation, route }: CategoryProps
                 style={styles.container}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <View style={styles.container}>
+                    <InputField height={44} lines={1} placeholder="Title" onChangeText={(title: string) => setContentTitle(title)} value={contentTitle} />
                         {selectButtons}
                         <Text style={styles.whiteText}>Fill in the details</Text>
                         {controls}

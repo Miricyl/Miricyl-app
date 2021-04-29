@@ -4,7 +4,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 export type RootStackParamList = {
   Root: undefined;
   Content:{contentId:string};
-  Category:{categoryType:CategoryType}
+  Category:{category:CategoryType}
   NotFound: undefined;
 };
 
@@ -48,6 +48,7 @@ export enum LinkType {
 
 export enum CategoryType
  {
+   Undefined,
    Love,
    Places,
    Coping,

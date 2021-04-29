@@ -15,19 +15,21 @@ const NavigationCard = ({ text, subheading, link, linkType, CardType = "Dashboar
   const navigation = useNavigation();
   var onPressFunction: any;
 
-
-
   switch (linkType) {
     case LinkType.Screen:
       if (category) {
+        console.log(category);
         onPressFunction = () => {
+          console.log('Got category' + category);
           navigation.navigate(link, {
-            categoryType: category
+            category: category
           });
+
         }
       }
       else {
         onPressFunction = () => {
+          console.log('Not got category');
           navigation.navigate(link);
         }
       }
