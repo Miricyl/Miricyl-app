@@ -1,4 +1,4 @@
-import { CategoryType, ContentType, IContentItem } from '../types';
+import { CategoryType, ContentType, Frequency, IContentItem } from '../types';
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
 import uuid from 'uuid';
 
@@ -43,7 +43,14 @@ export const LoadJoyItems = async () => {
             url:"https://www.bbc.co.uk",
             contentType:ContentType.Url,
             category:CategoryType.Love,
-            active:false
+            active:true,
+            schedulingDetails:{
+                identifyer:'erw452rw3rw3',
+                day:1,
+                hour:8,
+                minute:30,
+                frequency:Frequency.Weekly
+            }
 
             
         }
@@ -53,7 +60,14 @@ export const LoadJoyItems = async () => {
             phoneNumber:"07799416722",
             contentType:ContentType.PhoneNumber,
             category:CategoryType.Love,
-            active:false
+            active:true,
+            schedulingDetails:{
+                identifyer:'erw452rw3rw3',
+                day:1,
+                hour:8,
+                minute:30,
+                frequency:Frequency.Weekly
+            }
 
 
         }
@@ -62,7 +76,14 @@ export const LoadJoyItems = async () => {
             text:"Act as if what you do makes a difference. It does.",
             contentType:ContentType.Text,
             category:CategoryType.Love,
-            active:false
+            active:true,
+            schedulingDetails:{
+                identifyer:'erw452rw3rw3',
+                day:1,
+                hour:8,
+                minute:30,
+                frequency:Frequency.Weekly
+            }
 
 
         }
@@ -73,7 +94,14 @@ export const LoadJoyItems = async () => {
             imageUri:"https://media.bloomandwild.com/v1/trim:15/2160x2160/smart/filters:format(webp)/https://assets-0.bloomandwild.com/letterbox-main/the-quinn-ht/cfe4b3bf-5e6b-4e08-a557-a0ce36704a65.jpeg",
             contentType:ContentType.Image,
             category:CategoryType.Love,
-            active:false
+            active:true,
+            schedulingDetails:{
+                identifyer:'erw452rw3rw3',
+                day:1,
+                hour:8,
+                minute:30,
+                frequency:Frequency.Weekly
+            }
 
         }
 

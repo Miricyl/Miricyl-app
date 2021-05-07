@@ -43,7 +43,7 @@ const Scheduler = (contentItem: IContentItem) => {
             day: day, //1 corresponds to Sunday
             hour: 18,
             minute: 23,
-            repeats: frequency
+            frequency: frequency
         }
 
         updateSchedule(schedulingDetails);

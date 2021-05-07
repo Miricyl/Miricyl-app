@@ -18,7 +18,7 @@ const SelfCareScreen = () => {
             </View>
             <View style={styles.buttons}>
               <NavigationCard CardType='SelfCare' text='Create a Message' link='CreateAMessage' linkType={LinkType.Screen} height={Layout.window.width * 0.2} width={Layout.window.width * 0.8}></NavigationCard>
-              <NavigationCard CardType='SelfCare' text='My Messages' link='' linkType={LinkType.Screen} height={Layout.window.width * 0.2} width={Layout.window.width * 0.8}></NavigationCard>
+              <NavigationCard CardType='SelfCare' text='My Messages' link='Joy' linkType={LinkType.Screen} height={Layout.window.width * 0.2} width={Layout.window.width * 0.8}></NavigationCard>
               <NavigationCard CardType='SelfCare' text='My Plans' link='' linkType={LinkType.Screen} height={Layout.window.width * 0.2} width={Layout.window.width * 0.8}></NavigationCard>
             </View> 
         </ImageBackground>

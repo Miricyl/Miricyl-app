@@ -27,9 +27,7 @@ export default function JoyScreen() {
         <View style={styles.container}>
         <ImageBackground source={require('../../assets/images/dashboard_background.png')} style={styles.background}>
             <View style={styles.flatlist}><FlatList
-                columnWrapperStyle={{ justifyContent: 'space-between' }}
                 data={joyItems}
-                numColumns={2}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => {
                     return (
