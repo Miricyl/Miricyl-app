@@ -17,12 +17,16 @@ export default function JoyScreen() {
     const isFocused = useIsFocused();
     const navigation= useNavigation();
 
+
     useEffect(() => {
 
-        LoadJoyItems().then((data: IContentItem[]) => setJoyItems(data))
+        loadItems();
 
     }, [isFocused]);
 
+    const loadItems=()=>{
+         LoadJoyItems().then((data: IContentItem[]) => setJoyItems(data))
+    }
     return (
         <View style={styles.container}>
         <ImageBackground source={require('../../assets/images/dashboard_background.png')} style={styles.background}>
@@ -31,7 +35,7 @@ export default function JoyScreen() {
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => {
                     return (
-                        <ContentCard {...item}></ContentCard>
+                        <ContentCard item={item} onClose={loadItems}></ContentCard>
                     );
                 }}
             /></View>
