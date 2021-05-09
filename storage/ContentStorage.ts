@@ -4,22 +4,22 @@ import uuid from 'uuid';
 
 //TODO change this to be just AddItem so it can serve for all types (places to distract and coping strategies )
 //extract CategoryType (Joy/places/coping) for displaying on correct screen
-export const AddJoyItem = async (contentItem: IContentItem) => {
+export const AddItem = async (contentItem: IContentItem) => {
     contentItem.id = uuid.v4();
     let contentItemString = await AsyncStorage.getItem('items') as string;
-    let joyitems: IContentItem[] = []
+    let items: IContentItem[] = []
     if (contentItemString) {
 
-        joyitems = JSON.parse(contentItemString) as IContentItem[];
-        joyitems.push(contentItem);
+        items = JSON.parse(contentItemString) as IContentItem[];
+        items.push(contentItem);
 
     }
     else {
 
-        joyitems.push(contentItem);
+        items.push(contentItem);
     }
 
-    AsyncStorage.setItem('items', JSON.stringify(joyitems));
+    AsyncStorage.setItem('items', JSON.stringify(items));
 }
 
 export const UpdateItem = async (contentItem: IContentItem) => {
@@ -52,7 +52,7 @@ export const DeleteItem = async (contentItemId: string) => {
     }
 }
 
-export const LoadJoyItems = async () => {
+export const LoadAllItems = async () => {
 
     let joyitemsString = await AsyncStorage.getItem('items') as string;
     let joyitems: IContentItem[] = []
@@ -146,7 +146,7 @@ export const LoadJoyItems = async () => {
 export const LoadItem = async (id: string) => {
 
     let itemsString = await AsyncStorage.getItem('items') as string;
-    let items: IContentItem[] = []
+    let items: IContentItem[] = [];
     if (itemsString) {
         items = JSON.parse(itemsString) as IContentItem[];
         let item = items.find(o => o.id === id);
@@ -155,4 +155,30 @@ export const LoadItem = async (id: string) => {
     }
     const item: IContentItem = { id: "unknown", category: CategoryType.Love, contentType: ContentType.Text, active: false }
     return item;
+}
+
+export const LoadItemByCategory = async (categoryType: CategoryType) => {
+
+    let itemsString = await AsyncStorage.getItem('items') as string;
+    let items: IContentItem[] = [];
+    if (itemsString) {
+        items = JSON.parse(itemsString) as IContentItem[];
+        let contentItems = items.filter(o => o.category === categoryType);
+        return contentItems;
+    }
+    
+    return items;
+}
+
+export const LoadItemOnActive = async (active: boolean) => {
+
+    let itemsString = await AsyncStorage.getItem('items') as string;
+    let items: IContentItem[] = [];
+    if (itemsString) {
+        items = JSON.parse(itemsString) as IContentItem[];
+        let contentItems = items.filter(o => o.active=== active);
+        return contentItems;
+    }
+    
+    return items;
 }

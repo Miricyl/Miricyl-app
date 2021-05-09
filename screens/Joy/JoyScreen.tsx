@@ -6,7 +6,7 @@ import { Text, View } from '../../components/Themed';
 import Layout from '../../constants/Layout';
 import ContentCard from '../../components/ContentCard';
 import { IContentItem, LinkType } from '../../types';
-import { LoadJoyItems, AddJoyItem } from '../../storage/ContentStorage';
+import { LoadAllItems, AddItem } from '../../storage/ContentStorage';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import AddButton from '../../components/AddButton';
 
@@ -25,7 +25,7 @@ export default function JoyScreen() {
     }, [isFocused]);
 
     const loadItems=()=>{
-         LoadJoyItems().then((data: IContentItem[]) => setJoyItems(data))
+         LoadAllItems().then((data: IContentItem[]) => setJoyItems(data))
     }
     return (
         <View style={styles.container}>

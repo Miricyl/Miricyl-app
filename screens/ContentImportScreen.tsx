@@ -5,7 +5,7 @@ import Colors from '../constants/Colors'
 import { Text, View } from '../components/Themed';
 import { useState } from 'react';
 import { CategoryType, ContentSelect, ContentType, IContentItem, Frequency, CategoryProps, SchedulingDetails } from '../types';
-import { LoadJoyItems, AddJoyItem } from '../storage/ContentStorage';
+import { LoadAllItems, AddItem } from '../storage/ContentStorage';
 import AddButton from '../components/AddButton'
 import { useNavigation } from '@react-navigation/native';
 import SelectWidget from '../components/SelectWidget';
@@ -59,7 +59,7 @@ export default function ContentImportScreen({ navigation, route }: CategoryProps
         itemNew.imageUri = image;
 
 
-        AddJoyItem(itemNew).then(() => nav.navigate('SelfCare'));
+        AddItem(itemNew).then(() => nav.navigate('SelfCare'));
 
     }
 
