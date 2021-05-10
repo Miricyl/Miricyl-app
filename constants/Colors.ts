@@ -3,7 +3,8 @@ const tintColorDark = '#fff';
 
 export default {
   light: {
-    text: '#8b2b0f',
+    text: 'black',
+    subtitle: '#1f0478',
     background: '#fff',
     tint: tintColorLight,
     tabIconDefault: '#ccc',
@@ -17,5 +18,6 @@ export default {
     tabIconSelected: tintColorDark,
   },
   primary: 'orange',
-  brown: '#8b2b0f'
+  brown: '#8b2b0f',
+  grey: '#f2f2f0'
 };

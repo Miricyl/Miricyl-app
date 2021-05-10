@@ -85,15 +85,26 @@ export interface IContentItem {
 
 export type SchedulingDetails = {
   identifyer:string; //comes from expo server at scheduling of the notification
-  day:number; //1 corresponds to Sunday
+  day:Weekday; //1 corresponds to Sunday
   hour:number;
   minute:number;
-  repeats:Frequency;
+  frequency:Frequency;
 }
 
 export enum Frequency {
   Daily,
   Weekly,
+}
+
+export enum Weekday {
+  Undefined,
+  Sunday,
+  Monday,
+  Tuesday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday
 }
 
 export interface IInputFieldDetails {

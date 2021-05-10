@@ -1,19 +1,25 @@
-import React from 'react';
-import { StyleSheet, Image } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Image, Modal, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Colors from '../constants/Colors';
 import { Text, View } from './Themed';
-import { IContentItem, ContentType } from '../types';
+import { IContentItem, ContentType, Weekday, Frequency, CategoryType } from '../types';
 import Layout from '../constants/Layout';
-import { Feather, MaterialIcons } from '@expo/vector-icons';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
+import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 import { Platform } from 'react-native';
 import { Linking } from 'react-native';
 import sms from 'react-native-sms-linking';
 import { LinkPreview } from '@flyerhq/react-native-link-preview';
+import CloseButton from '../components/CloseButton';
+import { DeleteItem, UpdateItem } from '../storage/ContentStorage';
+import * as Notifications from 'expo-notifications';
 
 
-const ContentCard = (contentItem: IContentItem) => {
+const ContentCard = (props: { item: IContentItem, onClose: any }) => {
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [contentItem, setContentItem] = useState<IContentItem>(props.item);
   const navigation = useNavigation();
 
   const goToContentScreen = () => {
@@ -37,6 +43,43 @@ const ContentCard = (contentItem: IContentItem) => {
     }
 
   }
+  const popUpDelete = () => {
+    setModalVisible(true);
+  }
+
+  const unscheduleItem = () => {
+
+    if (contentItem.schedulingDetails) {
+      cancelNotification(contentItem.schedulingDetails.identifyer).then();
+    }
+
+    let item = { ...contentItem };
+    if (item.schedulingDetails) {
+      item.schedulingDetails.identifyer = '';
+      item.active = false;
+    }
+    setContentItem(item);
+    UpdateItem(contentItem).then(() => {
+      props.onClose();
+    });;
+
+  }
+
+  const deleteItem = () => {
+    if (contentItem.schedulingDetails) {
+      //TODO extend this method so it checks for success and only then deletes item, if not successful ask user to try again
+      cancelNotification(contentItem.schedulingDetails.identifyer).then(() => {
+        DeleteItem(contentItem.id).then(() => {
+          props.onClose();
+        });
+      });
+    }
+    else {
+      DeleteItem(contentItem.id).then(() => {
+        props.onClose();
+      });
+    }
+  }
 
   const openSMS = () => {
     if (contentItem.phoneNumber) {
@@ -45,25 +88,21 @@ const ContentCard = (contentItem: IContentItem) => {
     }
   }
 
-  let content;
+  /// TODO this function should be moved to a notification class to be used across all components
+  const cancelNotification = async (id: string) => {
+    await Notifications.cancelScheduledNotificationAsync(id);
+  }
+
+  let thumbnail;
   switch (contentItem.contentType) {
-    case ContentType.Text: {
-      content = <TouchableOpacity onPress={goToContentScreen}><Text style={styles.textItem}>{contentItem.text}</Text></TouchableOpacity>
-      break;
-    }
     case ContentType.PhoneNumber: {
-      content = (<View><TouchableOpacity onPress={goToContentScreen}><Text style={styles.title}>{contentItem.title}</Text></TouchableOpacity>
-        <View style={styles.callIcons}><TouchableOpacity onPress={openPhone}><Feather name="phone-call" size={34} color="green" /></TouchableOpacity><TouchableOpacity onPress={openSMS}><MaterialIcons name="sms" size={34} color="green" /></TouchableOpacity></View>
-      </View>)
+      thumbnail = (
+        <View style={styles.thumbnail}><TouchableOpacity onPress={openPhone}><FontAwesome5 name="phone-square-alt" size={65} color={Colors.light.subtitle} /></TouchableOpacity></View>)
       break;
     }
-    case ContentType.Url: {
-      //TODO see if there is a more stylish way of showing the link preview either with this or a different library
-      content = <View><TouchableOpacity onPress={goToContentScreen}><Text style={styles.title}>{contentItem.text}</Text></TouchableOpacity><LinkPreview text={contentItem.url as string} /></View>
-      break;
-    }
+
     case ContentType.Image: {
-      content = <View><TouchableOpacity onPress={goToContentScreen}><Image source={{ uri: contentItem.imageUri }} style={styles.image} /></TouchableOpacity></View>
+      thumbnail = <View style={styles.thumbnail}><TouchableOpacity onPress={goToContentScreen}><Image source={{ uri: contentItem.imageUri }} style={styles.image} /></TouchableOpacity></View>
       break;
     }
     default: {
@@ -71,13 +110,61 @@ const ContentCard = (contentItem: IContentItem) => {
       break;
     }
   }
-
+  let schedule = "";
+  if (contentItem.active && contentItem.schedulingDetails) {
+    if (contentItem.schedulingDetails.day) {
+      schedule = Weekday[contentItem.schedulingDetails.day] + " " + contentItem.schedulingDetails.hour + " " + Frequency[contentItem.schedulingDetails.frequency];
+    }
+  }
 
   return (
 
     <View style={styles.messageCard}>
-
-      {content}
+      <Modal
+        animationType='slide'
+        transparent={true}
+        visible={modalVisible}>
+        <View style={styles.centeredView}>
+          <View style={styles.rowView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>What would you like to do?</Text>
+              <TouchableHighlight
+                style={{ ...styles.openButton, backgroundColor: Colors.light.subtitle }}
+                onPress={() => {
+                  deleteItem();
+                  setModalVisible(!modalVisible);
+                }}>
+                <Text style={styles.textStyle}>Delete</Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                style={{ ...styles.openButton, backgroundColor: Colors.light.subtitle }}
+                onPress={() => {
+                  unscheduleItem();
+                  setModalVisible(!modalVisible);
+                }}>
+                <Text style={styles.textStyle}>Unschedule</Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                style={{ ...styles.openButton, backgroundColor: Colors.grey }}
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                }}>
+                <Text style={{ ...styles.textStyle, color: 'black' }}>Cancel</Text>
+              </TouchableHighlight>
+            </View>
+            <CloseButton onPress={() => {
+              setModalVisible(!modalVisible);
+            }} />
+          </View>
+        </View>
+      </Modal>
+      <View style={styles.content}>{thumbnail}
+        <View style={styles.textContent}>
+          <View><TouchableOpacity onPress={goToContentScreen}><Text style={styles.title}>{contentItem.text}</Text></TouchableOpacity></View>
+          <View><Text style={styles.schedule}>{schedule}</Text></View>
+        </View>
+      </View>
+      <CloseButton onPress={popUpDelete} />
 
     </View>
 
@@ -88,14 +175,14 @@ export default ContentCard;
 
 const styles = StyleSheet.create({
   image: {
-    width: Layout.window.width * 0.45,
-    height: 350,
+    width: 65,
+    height: 65,
 
 
   },
   messageCard: {
     justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: 'row',
     shadowColor: 'black',
     shadowOpacity: 0.26,
     shadowOffset: { width: 0, height: 2 },
@@ -103,13 +190,26 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderRadius: 8,
     backgroundColor: '#fff',
-    width: Layout.window.width * 0.45,
-    height: 350,
+    width: Layout.window.width * 0.90,
     marginTop: 10,
     marginBottom: 10,
     overflow: 'hidden',
+    padding: 20
 
   },
+  content: {
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+  },
+  thumbnail: {
+    marginRight: 20,
+  },
+
+  textContent: {
+    justifyContent: 'space-between',
+    width: 'auto',
+  },
+
   cardText: {
     color: 'white',
     textAlign: 'center',
@@ -119,18 +219,51 @@ const styles = StyleSheet.create({
     color: Colors.light.text,
     padding: 10,
     fontSize: 20,
-    textAlign: 'center'
+    fontWeight: 'bold'
 
   },
   title: {
-    padding: 10,
     fontSize: 20,
     fontWeight: 'bold'
   },
-  callIcons: {
-    flexDirection: 'row',
+  schedule: {
+    marginVertical: 10,
+    fontSize: 14,
+    color: Colors.light.subtitle,
+    fontWeight: 'bold'
+  },
+  centeredView: {
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    paddingTop: 155,
+   
+  },
+  modalView: {
+    margin: 20,
+    padding: 15,
+    alignItems: 'center',
+
+  },
+  rowView: {
+    flexDirection: 'row',
+     borderRadius: 8,
+     padding:10
+  },
+  openButton: {
+    borderRadius: 5,
+    padding: 10,
+    elevation: 2,
     margin: 10
-  }
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    fontWeight: 'bold'
+  },
 });
