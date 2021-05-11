@@ -46,6 +46,13 @@ export default function CreateQuoteScreen({ navigation, route }: CategoryProps) 
 
     }
 
+    const scheduleMessage = () => {
+    //TODO save contentItem and get id and open in scheduling screen
+        nav.navigate('Scheduling', {
+            contentId: 'id'
+          });
+    }
+
     const setContentTextHandler = (text: string) => {
         setContentText(text);
         setSelectButtonShow(false);
@@ -61,7 +68,7 @@ export default function CreateQuoteScreen({ navigation, route }: CategoryProps) 
                     <View style={styles.headerRow}><Entypo name="quote" size={24} color="black" /><Text style={{ padding: 20 }}>Type a quote</Text></View>
                     <InputField height={44} width={'90%'} lines={1} placeholder="Message Title" onChangeText={(title: string) => setContentTitle(title)} value={contentTitle} />
                     <InputField width={'90%'} height='40%' lines={6} placeholder="Type your quote here" onChangeText={(text: string) => setContentTextHandler(text)} value={contentText} />
-                    <AddButton width={'90%'} borderWidth={1} borderColor={Colors.borderGrey} onPress={saveContentItem}>Schedule</AddButton>
+                    <AddButton width={'90%'} borderWidth={1} borderColor={Colors.borderGrey} onPress={scheduleMessage}>Schedule</AddButton>
                     <AddButton width={'90%'} color={Colors.light.tint} onPress={saveContentItem}>Save</AddButton>
                 </View>
             </View>
@@ -93,35 +100,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly',
         alignItems: 'center'
     },
-
-    background: {
-        flex: 1,
-        justifyContent: 'space-evenly',
-        alignItems: 'center',
-    },
     headerRow: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
         width: '90%'
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
-    selector: {
-        flex: 1,
-        justifyContent: 'space-evenly',
-        alignItems: 'center',
-        backgroundColor: 'transparent'
-    },
-    whiteText: {
-        color: 'white',
-        fontSize: 22,
-        fontWeight: 'bold',
-        margin: 20
-    },
-
-
-
+    }
+   
 });

@@ -24,6 +24,7 @@ export type DashboardParamList = {
   Content:undefined;
   CreateAMessage:undefined;
   CreateQuote:undefined;
+  Scheduling:undefined;
 };
 
 

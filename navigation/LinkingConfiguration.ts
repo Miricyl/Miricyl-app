@@ -18,7 +18,8 @@ export default {
               SelfCheckScreen:'self-check',
               AddWellnessMessageScreen:'wellness-message',
               ContentScreen:'content-screen',
-              CreateQuoteScreen:'create-quote'
+              CreateQuoteScreen:'create-quote',
+              SchedulingMessageScreen:'schedule-message'
             },
           }
         },

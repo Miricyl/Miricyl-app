@@ -20,6 +20,8 @@ export const AddItem = async (contentItem: IContentItem) => {
     }
 
     AsyncStorage.setItem('items', JSON.stringify(items));
+
+    return contentItem.id;
 }
 
 export const UpdateItem = async (contentItem: IContentItem) => {

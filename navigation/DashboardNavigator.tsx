@@ -16,6 +16,7 @@ import CopingStrategiesScreen from '../screens/Strategies/CopingStrategyScreen';
 import ManageWellnessMessageScreen from '../screens/WellnessMessages/ManageWellnessMessageScreen';
 import CreateAMessageScreen from '../screens/CreateAMessage/CreateAMessageScreen';
 import CreateQuoteScreen from '../screens/CreateAMessage/CreateQuoteScreen';
+import ScheduleMessageScreen from '../screens/ScheduleMessageScreen';
 
 
 const Stack = createStackNavigator<DashboardParamList>();
@@ -84,6 +85,11 @@ export default function DashboardStackNavigator() {
                 name="Content"
                 component={ContentScreen}
                 options={{ title: 'ContentScreen' }}
+            />
+                <Stack.Screen
+                name="Scheduling"
+                component={ScheduleMessageScreen}
+                options={{ title: 'Schedule Message' }}
             />
 
             </Stack.Navigator>
