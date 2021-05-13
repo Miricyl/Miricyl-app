@@ -113,7 +113,8 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
   let schedule = "";
   if (contentItem.active && contentItem.schedulingDetails) {
     if (contentItem.schedulingDetails.day) {
-      schedule = Weekday[contentItem.schedulingDetails.day] + " " + contentItem.schedulingDetails.hour + " " + Frequency[contentItem.schedulingDetails.frequency];
+      const weekdays=Object.keys(Weekday);
+      schedule = weekdays[contentItem.schedulingDetails.day] + " " + contentItem.schedulingDetails.hour + " " + Frequency[contentItem.schedulingDetails.frequency];
     }
   }
 
