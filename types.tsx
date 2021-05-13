@@ -23,6 +23,7 @@ export type DashboardParamList = {
   PlacesToDistract:undefined;
   Content:undefined;
   CreateAMessage:undefined;
+  CreateQuote:undefined;
 };
 
 
@@ -111,6 +112,7 @@ export interface IInputFieldDetails {
   placeholder:string;
   lines:number;
   height:any;
+  width:any;
   onChangeText(value:string):any;
   value:string;
 }

@@ -15,6 +15,7 @@ import SelfCheckScreen from '../screens/SelfCheck/SelfCheckScreen';
 import CopingStrategiesScreen from '../screens/Strategies/CopingStrategyScreen';
 import ManageWellnessMessageScreen from '../screens/WellnessMessages/ManageWellnessMessageScreen';
 import CreateAMessageScreen from '../screens/CreateAMessage/CreateAMessageScreen';
+import CreateQuoteScreen from '../screens/CreateAMessage/CreateQuoteScreen';
 
 
 const Stack = createStackNavigator<DashboardParamList>();
@@ -67,6 +68,11 @@ export default function DashboardStackNavigator() {
             <Stack.Screen
                 name="ContentImport"
                 component={ContentImportScreen}
+                options={{ title: 'Add new message' }}
+            />
+              <Stack.Screen
+                name="CreateQuote"
+                component={CreateQuoteScreen}
                 options={{ title: 'Add new message' }}
             />
             <Stack.Screen

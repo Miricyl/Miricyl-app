@@ -112,7 +112,7 @@ export default function ContentImportScreen({ navigation, route }: CategoryProps
         case ContentType.Text:
             textSelected = true;
             controls = <View style={styles.textAdd}>
-                <InputField height='50%' lines={10} placeholder="Type your quote here" onChangeText={(text: string) => setContentTextHandler(text)} value={contentText} /></View>
+                <InputField width={'90%'} height='50%' lines={10} placeholder="Type your quote here" onChangeText={(text: string) => setContentTextHandler(text)} value={contentText} /></View>
             break;
         case ContentType.Image:
             imageSelected = true;
@@ -123,13 +123,13 @@ export default function ContentImportScreen({ navigation, route }: CategoryProps
         case ContentType.Url:
             urlSelected = true;
             controls = <View style={styles.textAdd}>
-                <InputField height={60} lines={2} placeholder="Paste URL" onChangeText={(text: string) => setContentUrl(text)} value={contentUrl} />
+                <InputField width={'90%'} height={60} lines={2} placeholder="Paste URL" onChangeText={(text: string) => setContentUrl(text)} value={contentUrl} />
             </View>
             break;
         case ContentType.PhoneNumber:
             phoneSelected = true;
             controls = <View style={styles.textAdd}>
-                <InputField height={44} lines={1} placeholder="Number of someone to call" onChangeText={(text: string) => setContentPhoneNumber(text)} value={contentPhoneNumber} />
+                <InputField width={'90%'} height={44} lines={1} placeholder="Number of someone to call" onChangeText={(text: string) => setContentPhoneNumber(text)} value={contentPhoneNumber} />
             </View>
             break;
 
@@ -149,7 +149,7 @@ export default function ContentImportScreen({ navigation, route }: CategoryProps
                 style={styles.container}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <View style={styles.container}>
-                    <InputField height={44} lines={1} placeholder="Title" onChangeText={(title: string) => setContentTitle(title)} value={contentTitle} />
+                    <InputField width={'90%'}  height={44} lines={1} placeholder="Title" onChangeText={(title: string) => setContentTitle(title)} value={contentTitle} />
                         {selectButtons}
                         <Text style={styles.whiteText}>Fill in the details</Text>
                         {controls}
