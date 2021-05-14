@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { Image, Platform, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import styled from "styled-components/native";
 
 import Colors from '../constants/Colors';
 import { Text, View } from './Themed';
 import * as WebBrowser from 'expo-web-browser';
 import { ContentType, INavigationCardDetails, LinkType } from '../types';
 import Layout from '../constants/Layout';
-
 
 
 const NavigationCard = ({ text, subheading, link, linkType, CardType = "Dashboard", category, height = '100%', width = '100%' }: INavigationCardDetails) => {
@@ -50,7 +50,7 @@ const NavigationCard = ({ text, subheading, link, linkType, CardType = "Dashboar
           <Text style={styles.cardText}>{text}</Text>
           <Image
             source={require('../assets/icons/navigatorCardArrow.png')}
-            style={styles.navigatorCardArrow} />
+            style={styles.navCardArrow} />
         </TouchableOpacity>
       </View></>
       break;
@@ -88,14 +88,15 @@ export default NavigationCard;
 
 const styles = StyleSheet.create({
   messageCard: {
-    width: Layout.window.width * 0.65,
+    width: Layout.window.width * 0.8,
     height: Layout.window.height * 0.075,
+    marginTop: 50,
     shadowColor: 'black',
     shadowOpacity: 0.26,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
     elevation: 5,
-    borderRadius: 50,
+    borderRadius: 25,
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
@@ -116,7 +117,6 @@ const styles = StyleSheet.create({
   },
   touchableOpacity: {
     flexDirection: 'row',
-    alignItems: 'center',
     margin: 10
   },
   touchableOpacitySubheading: {
@@ -125,9 +125,10 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   cardText: {
-    fontSize: 20,
+    fontSize: 17,
     fontWeight: '700',
-    color: Colors.light.text,
+    color: Colors.light.navCardText,
+    marginRight: 50,
   },
   cardTextHeader: {
     fontSize: 20,
@@ -139,8 +140,8 @@ const styles = StyleSheet.create({
     padding: 5,
     textAlign: 'center',
   },
-  navigatorCardArrow: {
-    marginLeft: 15,
+  navCardArrow: {
+    marginLeft: 25,
     width: 18,
     height: 18,
   }

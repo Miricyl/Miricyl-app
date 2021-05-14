@@ -70,10 +70,6 @@ const DashboardScreen = () => {
       <View style={styles.screen}>
         <ScrollView>
           <ImageBackground source={require('../assets/images/dashboard_background.png')} style={styles.background}>   
-            <View style={styles.imagePlusText}>
-              <Image style={styles.welcomeImage} source={require('../assets/images/welcomeImage.jpg')}/>
-              <Text style={styles.welcomeText}>We are here for you if you need trusted guidance on accessing resources and services that can positively impact your mental health. We will guide you in finding the treatment and help you need.</Text>
-            </View>
             <View style={styles.navigationCards}>
               <NavigationCard  CardType='Dashboard' text='Search Recources' link='https://help.miricyl.org/' linkType={LinkType.Url}></NavigationCard>
               <NavigationCard  CardType='Dashboard' text='Info &#38; Advice' link='https://help.miricyl.org/' linkType={LinkType.Url}></NavigationCard>
@@ -99,30 +95,12 @@ const styles = StyleSheet.create({
     height: Layout.window.height,
     width: Layout.window.width,
   },
-  imagePlusText: {
-    flex: 1,
-    backgroundColor: 'transparent',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
   navigationCards: {
     flex: 1,
-    justifyContent: 'space-evenly',
+    marginTop: 50,
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
   },
-  welcomeText: {
-    marginLeft: 70,
-    marginRight: 70,
-    textAlign: 'center',
-    fontSize: 15,
-    color: '#8b2b0f',
-    marginBottom: 30,
-    lineHeight: 20,
-  },
-  welcomeImage: {
-    borderRadius: 100,
-    marginBottom: 30,
-    height: Layout.window.height * 0.15,
-    width: Layout.window.width * 0.30,
-  }
 });
+
+

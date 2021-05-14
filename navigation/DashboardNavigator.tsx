@@ -24,11 +24,28 @@ export default function DashboardStackNavigator() {
     const colorScheme = useColorScheme();
 
     return (
-            <Stack.Navigator initialRouteName="Dashboard">
+            <Stack.Navigator 
+                initialRouteName="Dashboard"
+                screenOptions={{
+                    headerStyle: {
+                        backgroundColor: 'rgb(245, 123, 47)',
+                        height: 150,
+                    },
+                    headerTintColor: 'rgb(44,47,145)',
+                    headerTitleStyle: {
+                        fontWeight: '800', 
+                    }
+                }}
+            >
+                
+
                 <Stack.Screen
                     name="Dashboard"
                     component={DashboardScreen}
-                    options={{headerShown:false}}/>
+                    options={{
+                        title: 'Miricyl',
+                        }}
+                />
                    
                 <Stack.Screen
                 name="SelfCare"
