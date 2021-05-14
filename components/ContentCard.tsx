@@ -3,7 +3,7 @@ import { StyleSheet, Image, Modal, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Colors from '../constants/Colors';
 import { Text, View } from './Themed';
-import { IContentItem, ContentType, Weekday, Frequency, CategoryType } from '../types';
+import { IContentItem, ContentType, Weekday, Intervals, CategoryType } from '../types';
 import Layout from '../constants/Layout';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
@@ -49,7 +49,7 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
 
   const unscheduleItem = () => {
 
-    if (contentItem.schedulingDetails) {
+    if (contentItem.schedulingDetails.identifyer!==undefined) {
       cancelNotification(contentItem.schedulingDetails.identifyer).then();
     }
 
@@ -66,7 +66,7 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
   }
 
   const deleteItem = () => {
-    if (contentItem.schedulingDetails) {
+    if (contentItem.schedulingDetails.identifyer!==undefined) {
       //TODO extend this method so it checks for success and only then deletes item, if not successful ask user to try again
       cancelNotification(contentItem.schedulingDetails.identifyer).then(() => {
         DeleteItem(contentItem.id).then(() => {
@@ -114,7 +114,7 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
   if (contentItem.active && contentItem.schedulingDetails) {
     if (contentItem.schedulingDetails.day) {
       const weekdays=Object.keys(Weekday);
-      schedule = weekdays[contentItem.schedulingDetails.day] + " " + contentItem.schedulingDetails.hour + " " + Frequency[contentItem.schedulingDetails.frequency];
+      schedule = weekdays[contentItem.schedulingDetails.day] + " " + contentItem.schedulingDetails.hour + " " + contentItem.schedulingDetails.frequency;
     }
   }
 

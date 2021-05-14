@@ -1,4 +1,4 @@
-import { CategoryType, ContentType, Frequency, IContentItem } from '../types';
+import { CategoryType, ContentType, IContentItem, Intervals, ScheduleMode } from '../types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'uuid';
 
@@ -78,7 +78,8 @@ export const LoadAllItems = async () => {
                 day: 1,
                 hour: 8,
                 minute: 30,
-                frequency: Frequency.Weekly
+                frequency: Intervals.Weekly,
+                scheduleMode:ScheduleMode.Scheduled,
             }
 
 
@@ -95,7 +96,8 @@ export const LoadAllItems = async () => {
                 day: 1,
                 hour: 8,
                 minute: 30,
-                frequency: Frequency.Weekly
+                frequency: Intervals.Weekly,
+                scheduleMode:ScheduleMode.Scheduled,
             }
 
 
@@ -111,7 +113,8 @@ export const LoadAllItems = async () => {
                 day: 1,
                 hour: 8,
                 minute: 30,
-                frequency: Frequency.Weekly
+                frequency: Intervals.Weekly,
+                scheduleMode:ScheduleMode.Scheduled,
             }
 
 
@@ -129,7 +132,8 @@ export const LoadAllItems = async () => {
                 day: 1,
                 hour: 8,
                 minute: 30,
-                frequency: Frequency.Weekly
+                frequency: Intervals.Weekly,
+                scheduleMode:ScheduleMode.Scheduled,
             }
 
         }
@@ -155,7 +159,16 @@ export const LoadItem = async (id: string) => {
         return item;
 
     }
-    const item: IContentItem = { id: "unknown", category: CategoryType.Love, contentType: ContentType.Text, active: false }
+    //TODO define a good example message to be present if the user hasn't added anything themselves, could even be scheduled to send them a message?
+    const item: IContentItem = { id: "unknown", category: CategoryType.Love, contentType: ContentType.Text, active: false, schedulingDetails:{
+        identifyer:undefined,
+        minute:0,
+        hour:12,
+        day:2,
+        frequency: Intervals.Daily,
+        scheduleMode:ScheduleMode.Interval,
+
+    }}
     return item;
 }
 

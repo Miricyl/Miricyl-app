@@ -1,15 +1,14 @@
 import * as React from 'react';
-import { Platform, StyleSheet, Image, TextInput, ImageBackground, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { Platform, StyleSheet, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import Colors from '../../constants/Colors'
 import { Text, View } from '../../components/Themed';
 import { useState } from 'react';
-import { CategoryType, ContentSelect, ContentType, IContentItem, Frequency, CategoryProps, SchedulingDetails } from '../../types';
-import { LoadAllItems, AddItem } from '../../storage/ContentStorage';
+import { CategoryType, ContentSelect, ContentType, IContentItem, CategoryProps, SchedulingDetails, Intervals, ScheduleMode } from '../../types';
+import { AddItem } from '../../storage/ContentStorage';
 import AddButton from '../../components/AddButton'
 import { useNavigation } from '@react-navigation/native';
 import Layout from '../../constants/Layout';
 import InputField from '../../components/InputField';
-import SelectButton from '../../components/SelectButton';
 import { Entypo } from '@expo/vector-icons';
 import HeaderMessage from '../../components/HeaderMessage';
 
@@ -23,7 +22,15 @@ export default function CreateQuoteScreen({ navigation, route }: CategoryProps) 
         text: '',
         id: '',
         category: category,
-        active: false
+        active: false,
+        schedulingDetails:{
+            identifyer:undefined,
+            minute:0,
+            hour:12,
+            day:2,
+            frequency: Intervals.Daily,
+            scheduleMode:ScheduleMode.Interval,
+        }
 
     }
     const [contentType, setContentType] = useState(ContentType.Text);

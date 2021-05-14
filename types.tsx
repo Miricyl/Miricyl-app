@@ -77,7 +77,7 @@ export interface IContentItem {
   imageUri?: string;
   phoneNumber?: string;
   category: CategoryType;
-  schedulingDetails?: SchedulingDetails;
+  schedulingDetails: SchedulingDetails;
   active: boolean;
 
   //TODO add image
@@ -85,16 +85,24 @@ export interface IContentItem {
 }
 
 export type SchedulingDetails = {
-  identifyer: string; //comes from expo server at scheduling of the notification
+  identifyer: string|undefined; //comes from expo server at scheduling of the notification
   day: number; //1 corresponds to Sunday
   hour: number;
   minute: number;
-  frequency: Frequency;
+  frequency: Intervals;
+  scheduleMode:ScheduleMode;
 }
 
-export enum Frequency {
-  Daily,
-  Weekly,
+export enum Intervals {
+  Minutes="Minutes",
+  Hour="Hours",
+  Daily="Days",
+  Weekly="Weeks",
+}
+
+export enum ScheduleMode {
+  Scheduled="Scheduled",
+  Interval="Interval"
 }
 
 export enum Weekday {
