@@ -68,13 +68,15 @@ const DashboardScreen = () => {
 
   return (
       <View style={styles.screen}>
-        <ScrollView contentContainerStyle={styles.ScrollViewContainer}> 
+        <ScrollView>
+          <ImageBackground source={require('../assets/images/dashboard_background.png')} style={styles.background}>   
             <View style={styles.navigationCards}>
-              <NavigationCard  CardType='rectNavCard' text='Search Recources' link='https://help.miricyl.org/' linkType={LinkType.Url}></NavigationCard>
-              <NavigationCard  CardType='rectNavCard' text='Info &#38; Advice' link='https://help.miricyl.org/' linkType={LinkType.Url}></NavigationCard>
-              <NavigationCard  CardType='rectNavCard' text='Register for counselling' link='https://help.miricyl.org/' linkType={LinkType.Url}></NavigationCard>
-              <NavigationCard  CardType='rectNavCard' text='Self care' link='SelfCare' linkType={LinkType.Screen}></NavigationCard>
+              <NavigationCard  CardType='Dashboard' text='Search Recources' link='https://help.miricyl.org/' linkType={LinkType.Url}></NavigationCard>
+              <NavigationCard  CardType='Dashboard' text='Info &#38; Advice' link='https://help.miricyl.org/' linkType={LinkType.Url}></NavigationCard>
+              <NavigationCard  CardType='Dashboard' text='Register for counselling' link='https://help.miricyl.org/' linkType={LinkType.Url}></NavigationCard>
+              <NavigationCard  CardType='Dashboard' text='Self care' link='SelfCare' linkType={LinkType.Screen}></NavigationCard>
             </View>
+          </ImageBackground>
         </ScrollView>
       </View>
   );
@@ -84,18 +86,21 @@ export default DashboardScreen;
 
 const styles = StyleSheet.create({
   screen: {
-    height: '100%',
     flex: 1,
   },
-  ScrollViewContainer: {
-    backgroundColor:'rgb(162, 232, 209)',
+  background: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: Layout.window.height,
+    width: Layout.window.width,
   },
   navigationCards: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
+    marginTop: 50,
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
   },
-
 });
+
+

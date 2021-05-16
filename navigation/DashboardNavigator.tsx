@@ -25,11 +25,29 @@ export default function DashboardStackNavigator() {
     const colorScheme = useColorScheme();
 
     return (
-            <Stack.Navigator initialRouteName="Dashboard">
+            <Stack.Navigator 
+                initialRouteName="Dashboard"
+                screenOptions={{
+                    headerStyle: {
+                        backgroundColor: 'rgb(252,212,49)',
+                        height: 170,
+                    },
+                    headerTintColor: 'rgb(44,47,145)',
+                    headerTitleStyle: {
+                        fontSize: 22,
+                        fontWeight: '800', 
+                    }
+                }}
+            >
+                
+
                 <Stack.Screen
                     name="Dashboard"
                     component={DashboardScreen}
-                    options={{headerShown:false}}/>
+                    options={{
+                        title: 'Miricyl',
+                        }}
+                />
                    
                 <Stack.Screen
                 name="SelfCare"
@@ -39,7 +57,7 @@ export default function DashboardStackNavigator() {
             <Stack.Screen
                 name="CreateAMessage"
                 component={CreateAMessageScreen}
-                options={{ title: 'How are you today?' }}
+                options={{ title: 'Select Message Category' }}
             />
             <Stack.Screen
                 name="Mood"

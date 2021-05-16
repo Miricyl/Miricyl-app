@@ -9,6 +9,7 @@ export default {
     tint: tintColorLight,
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorLight,
+    navCardText: 'rgb(44,47,145)',
   },
   dark: {
     text: '#8b2b0f',
