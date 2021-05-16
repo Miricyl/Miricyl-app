@@ -68,19 +68,13 @@ const DashboardScreen = () => {
 
   return (
       <View style={styles.screen}>
-        <ScrollView>
-          <ImageBackground source={require('../assets/images/dashboard_background.png')} style={styles.background}>   
-            <View style={styles.imagePlusText}>
-              <Image style={styles.welcomeImage} source={require('../assets/images/welcomeImage.jpg')}/>
-              <Text style={styles.welcomeText}>We are here for you if you need trusted guidance on accessing resources and services that can positively impact your mental health. We will guide you in finding the treatment and help you need.</Text>
-            </View>
+        <ScrollView contentContainerStyle={styles.ScrollViewContainer}> 
             <View style={styles.navigationCards}>
               <NavigationCard  CardType='Dashboard' text='Search Recources' link='https://help.miricyl.org/' linkType={LinkType.Url}></NavigationCard>
               <NavigationCard  CardType='Dashboard' text='Info &#38; Advice' link='https://help.miricyl.org/' linkType={LinkType.Url}></NavigationCard>
               <NavigationCard  CardType='Dashboard' text='Register for counselling' link='https://help.miricyl.org/' linkType={LinkType.Url}></NavigationCard>
               <NavigationCard  CardType='Dashboard' text='Self care' link='SelfCare' linkType={LinkType.Screen}></NavigationCard>
             </View>
-          </ImageBackground>
         </ScrollView>
       </View>
   );
@@ -90,39 +84,18 @@ export default DashboardScreen;
 
 const styles = StyleSheet.create({
   screen: {
+    height: '100%',
     flex: 1,
   },
-  background: {
+  ScrollViewContainer: {
+    backgroundColor:'rgb(162, 232, 209)',
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: Layout.window.height,
-    width: Layout.window.width,
-  },
-  imagePlusText: {
-    flex: 1,
-    backgroundColor: 'transparent',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
   },
   navigationCards: {
     flex: 1,
+    alignItems: 'center',
     justifyContent: 'space-evenly',
     backgroundColor: 'transparent',
   },
-  welcomeText: {
-    marginLeft: 70,
-    marginRight: 70,
-    textAlign: 'center',
-    fontSize: 15,
-    color: '#8b2b0f',
-    marginBottom: 30,
-    lineHeight: 20,
-  },
-  welcomeImage: {
-    borderRadius: 100,
-    marginBottom: 30,
-    height: Layout.window.height * 0.15,
-    width: Layout.window.width * 0.30,
-  }
+
 });

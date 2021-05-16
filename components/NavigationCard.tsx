@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Image, Platform, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
-import styled from "styled-components/native";
 
 import Colors from '../constants/Colors';
+import { AntDesign } from '@expo/vector-icons';
 import { Text, View } from './Themed';
 import * as WebBrowser from 'expo-web-browser';
 import { ContentType, INavigationCardDetails, LinkType } from '../types';
@@ -45,20 +45,19 @@ const NavigationCard = ({ text, subheading, link, linkType, CardType = "Dashboar
 
   switch (CardType) {
     case "Dashboard":
-      card = <><View style={styles.messageCard}>
-        <TouchableOpacity style={styles.touchableOpacity} onPress={onPressFunction}>
+      card =
+       <>
+        <TouchableOpacity style={styles.rectCard} onPress={onPressFunction}>
           <Text style={styles.cardText}>{text}</Text>
-          <Image
-            source={require('../assets/icons/navigatorCardArrow.png')}
-            style={styles.navCardArrow} />
+          <AntDesign style={styles.rightArrow} name="right" size={24} color={Colors.light.navCardText} />
         </TouchableOpacity>
-      </View></>
+      </>
       break;
 
     case "SelfCare":
       card = <>
         <View style={styles.messageCardSelfCare}>
-          <TouchableOpacity style={styles.touchableOpacity} onPress={onPressFunction}>
+          <TouchableOpacity style={styles.rectCard} onPress={onPressFunction}>
             <Text style={styles.cardText}>{text}</Text>
           </TouchableOpacity>
         </View>
@@ -89,17 +88,16 @@ export default NavigationCard;
 const styles = StyleSheet.create({
   messageCard: {
     width: Layout.window.width * 0.8,
-    height: Layout.window.height * 0.075,
-    marginTop: 50,
+    height: Layout.window.height * 0.1,
     shadowColor: 'black',
     shadowOpacity: 0.26,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
     elevation: 5,
     borderRadius: 25,
-    backgroundColor: 'white',
-    alignItems: 'center',
+    backgroundColor: 'radial-gradient(circle, rgba(238,178,47,1) 0%, rgba(252,212,49,1) 56%)',
     justifyContent: 'center',
+    alignItems: 'flex-start',
   },
   messageCardSelfCare: {
     width: Layout.window.width * 0.75,
@@ -115,9 +113,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  touchableOpacity: {
+  rectCard: {
     flexDirection: 'row',
-    margin: 10
+    width: Layout.window.width * 0.8,
+    height: Layout.window.height * 0.1,
+    shadowColor: 'black',
+    shadowOpacity: 0.26,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
+    elevation: 5,
+    borderRadius: 25,
+    backgroundColor: 'radial-gradient(circle, rgba(238,178,47,1) 0%, rgba(252,212,49,1) 56%)',
+    alignItems: 'center',
+    justifyContent: 'space-around',
   },
   touchableOpacitySubheading: {
     justifyContent: 'space-evenly',
@@ -125,10 +133,10 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   cardText: {
-    fontSize: 17,
+    fontSize: 20,
     fontWeight: '700',
     color: Colors.light.navCardText,
-    marginRight: 50,
+    marginLeft: 25,
   },
   cardTextHeader: {
     fontSize: 20,
@@ -140,10 +148,8 @@ const styles = StyleSheet.create({
     padding: 5,
     textAlign: 'center',
   },
-  navCardArrow: {
-    marginLeft: 25,
-    width: 18,
-    height: 18,
-  }
-
+  rightArrow: {
+    marginLeft: 'auto',
+    marginRight: 15,
+  },
 });

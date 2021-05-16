@@ -28,7 +28,7 @@ export default function DashboardStackNavigator() {
                 initialRouteName="Dashboard"
                 screenOptions={{
                     headerStyle: {
-                        backgroundColor: 'rgb(245, 123, 47)',
+                        backgroundColor: 'rgb(252,212,49)',
                         height: 150,
                     },
                     headerTintColor: 'rgb(44,47,145)',
