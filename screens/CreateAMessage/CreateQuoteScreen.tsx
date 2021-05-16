@@ -3,7 +3,7 @@ import { Platform, StyleSheet, KeyboardAvoidingView, Keyboard, TouchableWithoutF
 import Colors from '../../constants/Colors'
 import { Text, View } from '../../components/Themed';
 import { useState } from 'react';
-import { CategoryType, ContentSelect, ContentType, IContentItem, CategoryProps, SchedulingDetails, Intervals, ScheduleMode } from '../../types';
+import { CategoryType, ContentSelect, ContentType, IContentItem, CategoryProps, Schedule, Intervals, ScheduleMode, Weekday } from '../../types';
 import { AddItem } from '../../storage/ContentStorage';
 import AddButton from '../../components/AddButton'
 import { useNavigation } from '@react-navigation/native';
@@ -23,12 +23,12 @@ export default function CreateQuoteScreen({ navigation, route }: CategoryProps) 
         id: '',
         category: category,
         active: false,
-        schedulingDetails:{
+        schedule:{
             identifyer:undefined,
-            minute:0,
-            hour:12,
-            day:2,
-            frequency: Intervals.Daily,
+            minute:'0',
+            hour:'12',
+            day:Weekday.Saturday,
+            frequency: Intervals.Days,
             scheduleMode:ScheduleMode.Interval,
         }
 

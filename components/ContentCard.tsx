@@ -49,13 +49,13 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
 
   const unscheduleItem = () => {
 
-    if (contentItem.schedulingDetails.identifyer!==undefined) {
-      cancelNotification(contentItem.schedulingDetails.identifyer).then();
+    if (contentItem.schedule.identifyer!==undefined) {
+      cancelNotification(contentItem.schedule.identifyer).then();
     }
 
     let item = { ...contentItem };
-    if (item.schedulingDetails) {
-      item.schedulingDetails.identifyer = '';
+    if (item.schedule) {
+      item.schedule.identifyer = '';
       item.active = false;
     }
     setContentItem(item);
@@ -66,9 +66,9 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
   }
 
   const deleteItem = () => {
-    if (contentItem.schedulingDetails.identifyer!==undefined) {
+    if (contentItem.schedule.identifyer!==undefined) {
       //TODO extend this method so it checks for success and only then deletes item, if not successful ask user to try again
-      cancelNotification(contentItem.schedulingDetails.identifyer).then(() => {
+      cancelNotification(contentItem.schedule.identifyer).then(() => {
         DeleteItem(contentItem.id).then(() => {
           props.onClose();
         });
@@ -111,10 +111,10 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
     }
   }
   let schedule = "";
-  if (contentItem.active && contentItem.schedulingDetails) {
-    if (contentItem.schedulingDetails.day) {
+  if (contentItem.active && contentItem.schedule) {
+    if (contentItem.schedule.day) {
       const weekdays=Object.keys(Weekday);
-      schedule = weekdays[contentItem.schedulingDetails.day] + " " + contentItem.schedulingDetails.hour + " " + contentItem.schedulingDetails.frequency;
+      schedule = contentItem.schedule.day + " " + contentItem.schedule.hour + " " + contentItem.schedule.frequency;
     }
   }
 

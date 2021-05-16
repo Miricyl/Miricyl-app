@@ -4,7 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import Colors from '../constants/Colors'
 import { Text, View } from '../components/Themed';
 import { useState } from 'react';
-import { CategoryType, ContentSelect, ContentType, IContentItem, CategoryProps, SchedulingDetails, ScheduleMode, Intervals } from '../types';
+import { CategoryType, ContentSelect, ContentType, IContentItem, CategoryProps, Schedule, ScheduleMode, Intervals, Weekday } from '../types';
 import { LoadAllItems, AddItem } from '../storage/ContentStorage';
 import AddButton from '../components/AddButton'
 import { useNavigation } from '@react-navigation/native';
@@ -24,12 +24,12 @@ export default function ContentImportScreen({ navigation, route }: CategoryProps
         id: 'test',
         category: CategoryType.Love,
         active:false,
-        schedulingDetails:{
+        schedule:{
             identifyer:undefined,
-            minute:0,
-            hour:12,
-            day:2,
-            frequency: Intervals.Daily,
+            minute:'0',
+            hour:'12',
+            day:Weekday.Monday,
+            frequency: Intervals.Days,
             scheduleMode:ScheduleMode.Interval,
 
         }

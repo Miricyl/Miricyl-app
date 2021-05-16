@@ -3,7 +3,7 @@ import { Platform, StyleSheet, Image, TextInput, ImageBackground, KeyboardAvoidi
 import Colors from '../constants/Colors'
 import { View } from '../components/Themed';
 import { useEffect, useState } from 'react';
-import { CategoryType, ContentSelect, ContentType, IContentItem, CategoryProps, SchedulingDetails, Weekday, ScheduleMode, Intervals } from '../types';
+import { CategoryType, ContentSelect, ContentType, IContentItem, CategoryProps, Schedule, Weekday, ScheduleMode, Intervals } from '../types';
 import { LoadItem } from '../storage/ContentStorage';
 import AddButton from '../components/AddButton'
 import { useNavigation } from '@react-navigation/native';
@@ -23,33 +23,43 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
     const [hour, setHour] = useState('00');
     const [minute, setMinute] = useState('00')
     const [day, setDay] = useState("Monday");
-    const [scheduleMode, setScheduleMode] = useState(ScheduleMode.Interval);
+    const [scheduleMode, setScheduleMode] = useState(ScheduleMode.Scheduled);
     const [firstDigit, setFirstDigit] = useState('0');
     const [secondDigit, setSecondDigit] = useState('0');
     const [interval, setInterval] = useState('Day');
 
     useEffect(() => {
 
-        LoadItem(contentId).then((data) => setContentItem(data as IContentItem));
+        LoadItem(contentId).then((data) => {
+            setContentItem(data as IContentItem);
+            if (data !== undefined)
+                setDay(data.schedule.day)
+        });
         //TODO set properties based on existing scheduling details
 
 
     }, []);
 
+    const weekdays = Object.values(Weekday);
+    const hours = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'];
+    const minutes = ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'];
+    const upToTen = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    const intervals = Object.values(Intervals);
     const goToPlanScreen = () => {
 
     }
 
     const scheduleMessage = async () => {
         //if notificationId isn't null the old notification needs to be unscheduled first.
-        if (contentItem?.schedulingDetails.identifyer !== undefined) {
-            const result = await Notifications.cancelScheduledNotificationAsync(contentItem.schedulingDetails.identifyer);
+        if (contentItem?.schedule.identifyer !== undefined) {
+            const result = await Notifications.cancelScheduledNotificationAsync(contentItem.schedule.identifyer);
             console.log(result);
             //TODO set to blank if successful
         }
 
         let notificationId;
-        if (scheduleMode === ScheduleMode.Scheduled) {
+        if (scheduleMode === ScheduleMode.Scheduled) {    
+            const dayNumber = weekdays.indexOf(day as Weekday);
             notificationId = Notifications.scheduleNotificationAsync({
                 content: {
                     title: "A reminder",
@@ -59,12 +69,28 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
                 //this is the weekly repeating one. Use later when id is saved so it can be cancelled
                 //trigger: { repeats: true, weekday:day, hour: time.getHours(), minute: time.getMinutes() },
                 //TODO fix weekday from name to number
-                trigger: { repeats: false, weekday: 1, hour: Number(hour), minute: Number(minute) },
+           
+                trigger: { repeats: false, weekday: dayNumber, hour: Number(hour), minute: Number(minute) },
             });
         }
         if (scheduleMode === ScheduleMode.Interval) {
-            const multiplier = 10;//TODO calculate seconds for each interval type
-            const seconds = Number(firstDigit as unknown as string + secondDigit as string) * multiplier;
+            let multiplier = 60; //corresponds to minute
+            switch (interval) {
+                case Intervals.Hours:
+                    multiplier = 60 * 60;
+                    break;
+                case Intervals.Days:
+                    multiplier = 60 * 60 * 24;
+                    break;
+                case Intervals.Weeks:
+                    multiplier = 60 * 60 * 24 * 7;
+                    break;
+                case Intervals.Months:
+                    multiplier = 60 * 60 * 24 * 7 * 30;
+                    break;
+            }
+
+            const seconds = Number('' + firstDigit + secondDigit) * multiplier;
             notificationId = Notifications.scheduleNotificationAsync({
                 content: {
                     title: "A reminder",
@@ -85,45 +111,10 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
 
     }
 
-    const weekdays = Object.values(Weekday);
-    const hours = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'];
-    const minutes = ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'];
-    const upToTen = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-    const intervals = Object.values(Intervals);
+
 
     let dateContainer;
-
     let picker;
-
-    let pickerInterval = (<View style={styles.pickers}>
-        <Picker selectedValue={firstDigit} style={styles.picker} onValueChange={(itemValue: string, itemIndex: Number) =>
-            setFirstDigit(itemValue)}>
-            {upToTen.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
-        </Picker>
-        <Picker selectedValue={secondDigit} style={styles.picker} onValueChange={(itemValue: string, itemIndex) =>
-            setSecondDigit(itemValue)}>
-            {upToTen.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
-        </Picker>
-        <Picker selectedValue={interval} style={{ ...styles.picker, width: 100 }} onValueChange={(itemValue: string, itemIndex) =>
-            setInterval(itemValue)}>
-            {intervals.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
-        </Picker>
-    </View>)
-
-    let pickerSchedule = (<View style={styles.pickers}>
-        <Picker selectedValue={day} style={{ ...styles.picker, width: 100 }} onValueChange={(itemValue: string, itemIndex: Number) =>
-            setDay(itemValue)}>
-            {weekdays.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
-        </Picker>
-        <Picker selectedValue={hour} style={styles.picker} onValueChange={(itemValue: string, itemIndex) =>
-            setHour(itemValue)}>
-            {hours.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
-        </Picker>
-        <Picker selectedValue={minute} style={{ ...styles.picker, width: 60 }} onValueChange={(itemValue: string, itemIndex) =>
-            setMinute(itemValue)}>
-            {minutes.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
-        </Picker>
-    </View>)
 
     if (scheduleMode === ScheduleMode.Scheduled) {
 
@@ -132,13 +123,39 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
             <View style={styles.dateRow}><AntDesign name="clockcircleo" size={24} color={Colors.borderGrey} /><View style={styles.dateItem}><Text>{hour as string + ':' + minute as string}</Text></View></View>
         </View>)
 
-        picker = pickerSchedule;
+        picker = (<View style={styles.pickers}>
+            <Picker selectedValue={day} style={{ ...styles.picker, width: 100 }} onValueChange={(itemValue: string, itemIndex: Number) =>
+                setDay(itemValue)}>
+                {weekdays.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
+            </Picker>
+            <Picker selectedValue={hour} style={styles.picker} onValueChange={(itemValue: string, itemIndex) =>
+                setHour(itemValue)}>
+                {hours.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
+            </Picker>
+            <Picker selectedValue={minute} style={{ ...styles.picker, width: 60 }} onValueChange={(itemValue: string, itemIndex) =>
+                setMinute(itemValue)}>
+                {minutes.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
+            </Picker>
+        </View>);
     }
     if (scheduleMode === ScheduleMode.Interval) {
         dateContainer = (<View style={styles.dateInfo}>
             <View style={styles.dateRow}><Feather name="repeat" size={24} color={Colors.borderGrey} /><View style={styles.dateItem}><Text>Every {firstDigit as unknown as string + secondDigit as string} {interval}</Text></View></View>
         </View>)
-        picker = pickerInterval;
+        picker = (<View style={styles.pickers}>
+            <Picker selectedValue={firstDigit} style={styles.picker} onValueChange={(itemValue: string, itemIndex: Number) =>
+                setFirstDigit(itemValue)}>
+                {upToTen.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
+            </Picker>
+            <Picker selectedValue={secondDigit} style={styles.picker} onValueChange={(itemValue: string, itemIndex) =>
+                setSecondDigit(itemValue)}>
+                {upToTen.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
+            </Picker>
+            <Picker selectedValue={interval} style={{ ...styles.picker, width: 100 }} onValueChange={(itemValue: string, itemIndex) =>
+                setInterval(itemValue)}>
+                {intervals.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
+            </Picker>
+        </View>);
     }
 
 

@@ -77,27 +77,26 @@ export interface IContentItem {
   imageUri?: string;
   phoneNumber?: string;
   category: CategoryType;
-  schedulingDetails: SchedulingDetails;
+  schedule: Schedule;
   active: boolean;
-
-  //TODO add image
 
 }
 
-export type SchedulingDetails = {
+export type Schedule = {
   identifyer: string|undefined; //comes from expo server at scheduling of the notification
-  day: number; //1 corresponds to Sunday
-  hour: number;
-  minute: number;
+  day: Weekday; 
+  hour: string;
+  minute: string;
   frequency: Intervals;
   scheduleMode:ScheduleMode;
 }
 
 export enum Intervals {
   Minutes="Minutes",
-  Hour="Hours",
-  Daily="Days",
-  Weekly="Weeks",
+  Hours="Hours",
+  Days="Days",
+  Weeks="Weeks",
+  Months="Months"
 }
 
 export enum ScheduleMode {
