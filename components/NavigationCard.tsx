@@ -44,33 +44,23 @@ const NavigationCard = ({ text, subheading, link, linkType, CardType = "Dashboar
   let card;
 
   switch (CardType) {
-    case "Dashboard":
+    case "rectNavCard":
       card =
        <>
         <TouchableOpacity style={styles.rectCard} onPress={onPressFunction}>
-          <Text style={styles.cardText}>{text}</Text>
+          <Text style={styles.rectCardText}>{text}</Text>
           <AntDesign style={styles.rightArrow} name="right" size={24} color={Colors.light.navCardText} />
         </TouchableOpacity>
       </>
       break;
 
-    case "SelfCare":
-      card = <>
-        <View style={styles.messageCardSelfCare}>
-          <TouchableOpacity style={styles.rectCard} onPress={onPressFunction}>
-            <Text style={styles.cardText}>{text}</Text>
+    case "square":
+      card = 
+        <>
+          <TouchableOpacity style={styles.squareCard} onPress={onPressFunction}>
+            <Text style={styles.squareCardText}>{text}</Text>
           </TouchableOpacity>
-        </View>
-      </>
-      break;
-
-    case "CreateAMessage":
-      card = <><View style={styles.messageCard}>
-        <TouchableOpacity style={styles.touchableOpacitySubheading} onPress={onPressFunction}>
-          <Text style={styles.cardTextHeader}>{text}</Text>
-          <Text style={styles.subheading}>{subheading}</Text>
-        </TouchableOpacity>
-      </View></>
+        </>
       break;
 
     default: {
@@ -86,30 +76,17 @@ const NavigationCard = ({ text, subheading, link, linkType, CardType = "Dashboar
 export default NavigationCard;
 
 const styles = StyleSheet.create({
-  messageCard: {
-    width: Layout.window.width * 0.8,
-    height: Layout.window.height * 0.1,
-    shadowColor: 'black',
-    shadowOpacity: 0.26,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
-    elevation: 5,
-    borderRadius: 25,
-    backgroundColor: 'radial-gradient(circle, rgba(238,178,47,1) 0%, rgba(252,212,49,1) 56%)',
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-  },
-  messageCardSelfCare: {
-    width: Layout.window.width * 0.75,
-    height: Layout.window.height * 0.1,
-    marginTop: 50,
+
+  squareCard: {
+    width: Layout.window.width * 0.42,
+    height: Layout.window.height * 0.23,
     shadowColor: 'black',
     shadowOpacity: 0.26,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
     elevation: 5,
     borderRadius: 50,
-    backgroundColor: 'white',
+    backgroundColor: 'radial-gradient(circle, rgba(238,178,47,1) 0%, rgba(252,212,49,1) 56%)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -127,29 +104,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
   },
-  touchableOpacitySubheading: {
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-    padding: 5,
-  },
-  cardText: {
+  rectCardText: {
     fontSize: 20,
     fontWeight: '700',
     color: Colors.light.navCardText,
     marginLeft: 25,
   },
-  cardTextHeader: {
-    fontSize: 20,
-    color: '#8B2B0F',
-    fontWeight: '700',
-  },
-  subheading: {
-    marginTop: 3,
-    padding: 5,
-    textAlign: 'center',
-  },
   rightArrow: {
     marginLeft: 'auto',
     marginRight: 15,
+  },
+  squareCardText: {
+    fontSize: 18,
+    color: Colors.light.navCardText,
   },
 });

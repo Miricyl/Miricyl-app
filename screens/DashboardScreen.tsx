@@ -70,10 +70,10 @@ const DashboardScreen = () => {
       <View style={styles.screen}>
         <ScrollView contentContainerStyle={styles.ScrollViewContainer}> 
             <View style={styles.navigationCards}>
-              <NavigationCard  CardType='Dashboard' text='Search Recources' link='https://help.miricyl.org/' linkType={LinkType.Url}></NavigationCard>
-              <NavigationCard  CardType='Dashboard' text='Info &#38; Advice' link='https://help.miricyl.org/' linkType={LinkType.Url}></NavigationCard>
-              <NavigationCard  CardType='Dashboard' text='Register for counselling' link='https://help.miricyl.org/' linkType={LinkType.Url}></NavigationCard>
-              <NavigationCard  CardType='Dashboard' text='Self care' link='SelfCare' linkType={LinkType.Screen}></NavigationCard>
+              <NavigationCard  CardType='rectNavCard' text='Search Recources' link='https://help.miricyl.org/' linkType={LinkType.Url}></NavigationCard>
+              <NavigationCard  CardType='rectNavCard' text='Info &#38; Advice' link='https://help.miricyl.org/' linkType={LinkType.Url}></NavigationCard>
+              <NavigationCard  CardType='rectNavCard' text='Register for counselling' link='https://help.miricyl.org/' linkType={LinkType.Url}></NavigationCard>
+              <NavigationCard  CardType='rectNavCard' text='Self care' link='SelfCare' linkType={LinkType.Screen}></NavigationCard>
             </View>
         </ScrollView>
       </View>

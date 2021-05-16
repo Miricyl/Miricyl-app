@@ -29,10 +29,11 @@ export default function DashboardStackNavigator() {
                 screenOptions={{
                     headerStyle: {
                         backgroundColor: 'rgb(252,212,49)',
-                        height: 150,
+                        height: 170,
                     },
                     headerTintColor: 'rgb(44,47,145)',
                     headerTitleStyle: {
+                        fontSize: 22,
                         fontWeight: '800', 
                     }
                 }}
@@ -55,7 +56,7 @@ export default function DashboardStackNavigator() {
             <Stack.Screen
                 name="CreateAMessage"
                 component={CreateAMessageScreen}
-                options={{ title: 'How are you today?' }}
+                options={{ title: 'Select Message Category' }}
             />
             <Stack.Screen
                 name="Mood"
