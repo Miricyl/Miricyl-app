@@ -87,6 +87,7 @@ export type Schedule = {
   day: Weekday; 
   hour: string;
   minute: string;
+  deltaTime:number;
   frequency: Intervals;
   scheduleMode:ScheduleMode;
 }

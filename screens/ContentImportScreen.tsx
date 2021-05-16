@@ -29,6 +29,7 @@ export default function ContentImportScreen({ navigation, route }: CategoryProps
             minute:'0',
             hour:'12',
             day:Weekday.Monday,
+            deltaTime:2,
             frequency: Intervals.Days,
             scheduleMode:ScheduleMode.Interval,
 

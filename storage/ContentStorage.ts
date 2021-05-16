@@ -78,6 +78,7 @@ export const LoadAllItems = async () => {
                 minute:'0',
                 hour:'12',
                 day:Weekday.Saturday,
+                deltaTime:2,
                 frequency: Intervals.Weeks,
                 scheduleMode:ScheduleMode.Scheduled,
             }
@@ -96,6 +97,7 @@ export const LoadAllItems = async () => {
                 minute:'0',
                 hour:'12',
                 day:Weekday.Saturday,
+                deltaTime:2,
                 frequency: Intervals.Weeks,
                 scheduleMode:ScheduleMode.Scheduled,
             }
@@ -113,6 +115,7 @@ export const LoadAllItems = async () => {
                 minute:'0',
                 hour:'12',
                 day:Weekday.Saturday,
+                deltaTime:2,
                 frequency: Intervals.Weeks,
                 scheduleMode:ScheduleMode.Scheduled,
             }
@@ -132,6 +135,7 @@ export const LoadAllItems = async () => {
                 minute:'0',
                 hour:'12',
                 day:Weekday.Saturday,
+                deltaTime:2,
                 frequency: Intervals.Days,
                 scheduleMode:ScheduleMode.Interval,
     
@@ -166,6 +170,7 @@ export const LoadItem = async (id: string) => {
         minute:'0',
         hour:'12',
         day:Weekday.Saturday,
+        deltaTime:2,
         frequency: Intervals.Days,
         scheduleMode:ScheduleMode.Interval,
 

@@ -23,13 +23,14 @@ export default function CreateQuoteScreen({ navigation, route }: CategoryProps) 
         id: '',
         category: category,
         active: false,
-        schedule:{
-            identifyer:undefined,
-            minute:'0',
-            hour:'12',
-            day:Weekday.Saturday,
+        schedule: {
+            identifyer: undefined,
+            minute: '0',
+            hour: '12',
+            day: Weekday.Saturday,
+            deltaTime: 2,
             frequency: Intervals.Days,
-            scheduleMode:ScheduleMode.Interval,
+            scheduleMode: ScheduleMode.Interval,
         }
 
     }
@@ -41,23 +42,36 @@ export default function CreateQuoteScreen({ navigation, route }: CategoryProps) 
 
 
 
-    const saveContentItem = () => {
+    const saveContentItem = async () => {
 
         let itemNew = contentItem;
+        itemNew.active = false;
         itemNew.title = contentTitle;
         itemNew.contentType = contentType;
         itemNew.text = contentText;
         itemNew.category = category;
+        itemNew.schedule = {
+            identifyer: "",
+            scheduleMode: ScheduleMode.Scheduled,
+            day: Weekday.Monday,
+            hour: '20',
+            minute: '00',
+            frequency: Intervals.Weeks,
+            deltaTime: 2
 
-        AddItem(itemNew).then(() => nav.navigate('SelfCare'));
+        }
+
+        const id = await AddItem(itemNew);
+        return id;
 
     }
 
-    const scheduleMessage = () => {
-    //TODO save contentItem and get id and open in scheduling screen
+    const scheduleMessage = async () => {
+        const id = await saveContentItem();
         nav.navigate('Scheduling', {
-            contentId: 'id'
-          });
+            contentId: id
+        })
+
     }
 
     const setContentTextHandler = (text: string) => {
@@ -65,7 +79,7 @@ export default function CreateQuoteScreen({ navigation, route }: CategoryProps) 
         setSelectButtonShow(false);
 
     }
-    {/* //TODO fix keyboard avoiding view */}
+    {/* //TODO fix keyboard avoiding view */ }
     return (<KeyboardAvoidingView style={styles.screen} behavior={Platform.OS === "ios" ? "padding" : "height"}
     ><TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             {/* //TODO set the correct category for the header */}
@@ -113,5 +127,5 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         width: '90%'
     }
-   
+
 });
