@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import { IContentItem, Weekday, ScheduleMode, Intervals } from '../types';
 import { LoadItem, UpdateItem } from '../storage/ContentStorage';
 import AddButton from '../components/AddButton'
-import { useNavigation } from '@react-navigation/native';
 import Layout from '../constants/Layout';
 import { ContentProps } from '../types';
 import * as Notifications from 'expo-notifications';
@@ -69,7 +68,6 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
                     },
                     //this is the weekly repeating one. Use later when id is saved so it can be cancelled
                     //trigger: { repeats: true, weekday:day, hour: time.getHours(), minute: time.getMinutes() },
-                    //TODO fix weekday from name to number
 
                     trigger: { repeats: false, weekday: dayNumber, hour: Number(hour), minute: Number(minute) },
                 });
