@@ -11,6 +11,7 @@ import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handl
 import CloseButton from './CloseButton';
 import { DeleteItem, UpdateItem } from '../storage/ContentStorage';
 import * as Notifications from 'expo-notifications';
+import AddButton from './AddButton';
 
 
 const ScheduleInfo = (props: { item: IContentItem, onClose: any }) => {
@@ -38,7 +39,7 @@ const ScheduleInfo = (props: { item: IContentItem, onClose: any }) => {
                 })});
         }
 
-
+  setModalVisible(!modalVisible);
 
     }
 
@@ -62,9 +63,7 @@ const ScheduleInfo = (props: { item: IContentItem, onClose: any }) => {
         </View>)
     }
 
-
     return (
-
         <View style={styles.messageCard}>
             <Modal
                 animationType='slide'
@@ -74,21 +73,22 @@ const ScheduleInfo = (props: { item: IContentItem, onClose: any }) => {
                     <View style={styles.rowView}>
                         <View style={styles.modalView}>
                             <Text style={styles.modalText}>Stop sending this message?</Text>
-                            <TouchableHighlight
-                                style={{ ...styles.openButton, backgroundColor: Colors.light.subtitle }}
+                            <View>
+                            <AddButton
+                                color={Colors.light.subtitle}
                                 onPress={() => {
                                     unscheduleItem();
                                    
                                 }}>
                                 <Text style={styles.textStyle}>Unschedule</Text>
-                            </TouchableHighlight>
-                            <TouchableHighlight
-                                style={{ ...styles.openButton, backgroundColor: Colors.grey }}
+                            </AddButton></View>
+                            <AddButton
+                                color={Colors.grey}
                                 onPress={() => {
                                     setModalVisible(!modalVisible);
                                 }}>
                                 <Text style={{ ...styles.textStyle, color: 'black' }}>Cancel</Text>
-                            </TouchableHighlight>
+                            </AddButton>
                         </View>
                         <CloseButton onPress={() => {
                             setModalVisible(!modalVisible);

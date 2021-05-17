@@ -30,7 +30,7 @@ export default function DashboardStackNavigator() {
                 screenOptions={{
                     headerStyle: {
                         backgroundColor: 'rgb(252,212,49)',
-                        height: 170,
+                        height: 100,
                     },
                     headerTintColor: 'rgb(44,47,145)',
                     headerTitleStyle: {

@@ -3,7 +3,7 @@ import { StyleSheet, Image, Modal, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Colors from '../constants/Colors';
 import { Text, View } from './Themed';
-import { IContentItem, ContentType, Weekday, Intervals, CategoryType } from '../types';
+import { IContentItem, ContentType, Weekday, Intervals, CategoryType, ScheduleMode } from '../types';
 import Layout from '../constants/Layout';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
@@ -14,6 +14,8 @@ import { LinkPreview } from '@flyerhq/react-native-link-preview';
 import CloseButton from '../components/CloseButton';
 import { DeleteItem, UpdateItem } from '../storage/ContentStorage';
 import * as Notifications from 'expo-notifications';
+import ScheduleInfo from './ScheduleInfo';
+import AddButton from './AddButton';
 
 
 const ContentCard = (props: { item: IContentItem, onClose: any }) => {
@@ -110,13 +112,17 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
       break;
     }
   }
-  let schedule = "";
+  let schedule;
   if (contentItem.active && contentItem.schedule) {
-    if (contentItem.schedule.day) {
-      const weekdays=Object.keys(Weekday);
-      schedule = contentItem.schedule.day + " " + contentItem.schedule.hour + " " + contentItem.schedule.frequency;
+
+    if (contentItem.schedule.scheduleMode==ScheduleMode.Scheduled) {
+      schedule = contentItem.schedule.day + " " + contentItem.schedule.hour + ":" + contentItem.schedule.minute;
+    }
+    if (contentItem.schedule.scheduleMode==ScheduleMode.Interval) {
+      schedule = "Every " +contentItem.schedule.deltaTime +" "+ contentItem.schedule.frequency;
     }
   }
+
 
   return (
 
@@ -129,29 +135,28 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
           <View style={styles.rowView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>What would you like to do?</Text>
-              <TouchableHighlight
-                style={{ ...styles.openButton, backgroundColor: Colors.light.subtitle }}
+              <AddButton color={Colors.light.subtitle}
                 onPress={() => {
                   deleteItem();
                   setModalVisible(!modalVisible);
                 }}>
                 <Text style={styles.textStyle}>Delete</Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                style={{ ...styles.openButton, backgroundColor: Colors.light.subtitle }}
+              </AddButton>
+              <AddButton
+                color={Colors.light.subtitle}
                 onPress={() => {
                   unscheduleItem();
                   setModalVisible(!modalVisible);
                 }}>
                 <Text style={styles.textStyle}>Unschedule</Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                style={{ ...styles.openButton, backgroundColor: Colors.grey }}
+              </AddButton>
+              <AddButton
+                color={Colors.grey}
                 onPress={() => {
                   setModalVisible(!modalVisible);
                 }}>
                 <Text style={{ ...styles.textStyle, color: 'black' }}>Cancel</Text>
-              </TouchableHighlight>
+              </AddButton>
             </View>
             <CloseButton onPress={() => {
               setModalVisible(!modalVisible);

@@ -59,6 +59,8 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
             let notificationId;
             if (scheduleMode === ScheduleMode.Scheduled) {
                 const dayNumber = weekdays.indexOf(day as Weekday);
+                var startDate = new Date();
+                //TODO the trigger doesn't work. Calculated a time in second and schedule that as a one off and repeat scheduling when user picks up the notification
                 notificationId = await Notifications.scheduleNotificationAsync({
                     content: {
                         title: "A reminder",
@@ -107,12 +109,11 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
                 }
                 const timeUnits = Number('' + firstDigit + secondDigit);
                 const seconds = timeUnits * multiplier;
-                console.log(timeUnits);
                 notificationId = await Notifications.scheduleNotificationAsync({
                     content: {
                         title: "A reminder",
-                        body: contentItem?.title,
-                        data: { id: contentItem?.id },
+                        body: contentItem.title,
+                        data: { id: contentItem.id },
                     },
                     //this is the weekly repeating one. Use later when id is saved so it can be cancelled
                     //trigger: { repeats: true, weekday:day, hour: time.getHours(), minute: time.getMinutes() },
@@ -154,31 +155,36 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
 
         if (scheduleMode === ScheduleMode.Scheduled) {
             picker = (<View style={styles.pickers}>
-                <Picker selectedValue={day} style={{ ...styles.picker, width: 100 }} onValueChange={(itemValue: string, itemIndex: Number) =>
+                <Picker selectedValue={day} style={{ ...styles.picker, width: 150 }} onValueChange={(itemValue: any, itemIndex: Number) =>
                     setDay(itemValue)}>
                     {weekdays.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
                 </Picker>
-                <Picker selectedValue={hour} style={styles.picker} onValueChange={(itemValue: string, itemIndex) =>
-                    setHour(itemValue)}>
-                    {hours.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
-                </Picker>
-                <Picker selectedValue={minute} style={{ ...styles.picker, width: 60 }} onValueChange={(itemValue: string, itemIndex) =>
-                    setMinute(itemValue)}>
-                    {minutes.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
-                </Picker>
+                <View style={styles.digits}>
+                    <Picker selectedValue={hour} style={{ ...styles.picker, width: 90 }} onValueChange={(itemValue: any, itemIndex) =>
+                        setHour(itemValue)}>
+                        {hours.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
+                    </Picker>
+                    <Picker selectedValue={minute} style={{ ...styles.picker, width: 90 }} onValueChange={(itemValue: any, itemIndex) =>
+                        setMinute(itemValue)}>
+                        {minutes.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
+                    </Picker>
+                </View>
             </View>);
         }
         if (scheduleMode === ScheduleMode.Interval) {
             picker = (<View style={styles.pickers}>
-                <Picker selectedValue={firstDigit} style={styles.picker} onValueChange={(itemValue: string, itemIndex: Number) =>
-                    setFirstDigit(itemValue)}>
-                    {upToTen.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
-                </Picker>
-                <Picker selectedValue={secondDigit} style={styles.picker} onValueChange={(itemValue: string, itemIndex) =>
-                    setSecondDigit(itemValue)}>
-                    {upToTen.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
-                </Picker>
-                <Picker selectedValue={interval} style={{ ...styles.picker, width: 100 }} onValueChange={(itemValue: string, itemIndex) =>
+                <View style={styles.digits}>
+                {/* TODO for android make a Picker from 0 to 60 */}
+                    <Picker selectedValue={firstDigit} style={{ ...styles.picker, width:80, paddingRight: 0, marginRight: -10 }} onValueChange={(itemValue: any, itemIndex: Number) =>
+                        setFirstDigit(itemValue)}>
+                        {upToTen.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
+                    </Picker>
+                    <Picker selectedValue={secondDigit} style={{...styles.picker,width:80}} onValueChange={(itemValue: any, itemIndex) =>
+                        setSecondDigit(itemValue)}>
+                        {upToTen.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
+                    </Picker>
+                </View>
+                <Picker selectedValue={interval} style={{ ...styles.picker, width: 150 }} onValueChange={(itemValue: any, itemIndex) =>
                     setInterval(itemValue)}>
                     {intervals.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
                 </Picker>
@@ -217,7 +223,6 @@ export default ScheduleMessageScreen;
 
 const styles = StyleSheet.create({
     screen: {
-        flex: 1,
         alignItems: 'center',
         backgroundColor: Colors.grey,
 
@@ -229,13 +234,13 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     container: {
-        flex: 1,
+        height: 400,
         width: Layout.window.width * 0.9,
         margin: 10,
         padding: 20,
         backgroundColor: 'white',
         borderRadius: 5,
-        justifyContent: 'flex-start',
+        justifyContent: 'space-between',
         alignItems: 'center'
     },
     dateContainer: {
@@ -247,8 +252,24 @@ const styles = StyleSheet.create({
         borderRadius: 5,
     },
     pickers: {
+
+        ...Platform.select({
+            ios: {
+                flexDirection: 'row',
+                padding: 4,
+                marginTop:-160
+
+            },
+            android: {
+                flexDirection: 'column',
+                padding: 6,
+
+            },
+        }),
+    },
+    digits: {
         flexDirection: 'row',
-        paddingBottom: 200
+        alignItems: 'center'
     },
     picker: {
         padding: 10,

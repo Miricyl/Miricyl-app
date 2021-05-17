@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Platform, StyleSheet, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { Platform, StyleSheet, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, ScrollView } from 'react-native';
 import Colors from '../../constants/Colors'
 import { Text, View } from '../../components/Themed';
 import { useState } from 'react';
@@ -43,7 +43,7 @@ export default function CreateQuoteScreen({ navigation, route }: CategoryProps) 
 
 
     const saveContentItem = async () => {
-
+ //TODO check that content has been added, if not prompt user to fill in fields
         let itemNew = contentItem;
         itemNew.active = false;
         itemNew.title = contentTitle;
@@ -67,6 +67,7 @@ export default function CreateQuoteScreen({ navigation, route }: CategoryProps) 
     }
 
     const scheduleMessage = async () => {
+        //TODO check that content has been added, if not prompt user to fill in fields
         const id = await saveContentItem();
         nav.navigate('Scheduling', {
             contentId: id
@@ -79,8 +80,8 @@ export default function CreateQuoteScreen({ navigation, route }: CategoryProps) 
         setSelectButtonShow(false);
 
     }
-    {/* //TODO fix keyboard avoiding view */ }
-    return (<KeyboardAvoidingView style={styles.screen} behavior={Platform.OS === "ios" ? "padding" : "height"}
+    {/* //TODO fix keyboard avoiding view and add scrollview */ }
+    return (<ScrollView><KeyboardAvoidingView style={styles.screen} behavior={Platform.OS === "ios" ? "padding" : "height"}
     ><TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             {/* //TODO set the correct category for the header */}
             <View style={styles.transparent}>
@@ -94,7 +95,7 @@ export default function CreateQuoteScreen({ navigation, route }: CategoryProps) 
                 </View>
             </View>
         </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+    </KeyboardAvoidingView></ScrollView>
 
 
     );
