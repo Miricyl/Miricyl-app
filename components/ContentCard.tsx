@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import { StyleSheet, Image, Modal, Alert } from 'react-native';
+import { StyleSheet, Image, Modal } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Colors from '../constants/Colors';
 import { Text, View } from './Themed';
-import { IContentItem, ContentType, Weekday, Frequency, CategoryType } from '../types';
+import { IContentItem, ContentType, ScheduleMode } from '../types';
 import Layout from '../constants/Layout';
-import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
-import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
+import { FontAwesome5, } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Platform } from 'react-native';
 import { Linking } from 'react-native';
 import sms from 'react-native-sms-linking';
-import { LinkPreview } from '@flyerhq/react-native-link-preview';
 import CloseButton from '../components/CloseButton';
 import { DeleteItem, UpdateItem } from '../storage/ContentStorage';
 import * as Notifications from 'expo-notifications';
+import AddButton from './AddButton';
 
 
 const ContentCard = (props: { item: IContentItem, onClose: any }) => {
@@ -49,13 +49,13 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
 
   const unscheduleItem = () => {
 
-    if (contentItem.schedulingDetails) {
-      cancelNotification(contentItem.schedulingDetails.identifyer).then();
+    if (contentItem.schedule.identifyer!==undefined) {
+      cancelNotification(contentItem.schedule.identifyer).then();
     }
 
     let item = { ...contentItem };
-    if (item.schedulingDetails) {
-      item.schedulingDetails.identifyer = '';
+    if (item.schedule) {
+      item.schedule.identifyer = '';
       item.active = false;
     }
     setContentItem(item);
@@ -66,9 +66,9 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
   }
 
   const deleteItem = () => {
-    if (contentItem.schedulingDetails) {
+    if (contentItem.schedule.identifyer!==undefined) {
       //TODO extend this method so it checks for success and only then deletes item, if not successful ask user to try again
-      cancelNotification(contentItem.schedulingDetails.identifyer).then(() => {
+      cancelNotification(contentItem.schedule.identifyer).then(() => {
         DeleteItem(contentItem.id).then(() => {
           props.onClose();
         });
@@ -110,12 +110,17 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
       break;
     }
   }
-  let schedule = "";
-  if (contentItem.active && contentItem.schedulingDetails) {
-    if (contentItem.schedulingDetails.day) {
-      schedule = Weekday[contentItem.schedulingDetails.day] + " " + contentItem.schedulingDetails.hour + " " + Frequency[contentItem.schedulingDetails.frequency];
+  let schedule;
+  if (contentItem.active && contentItem.schedule) {
+
+    if (contentItem.schedule.scheduleMode==ScheduleMode.Scheduled) {
+      schedule = contentItem.schedule.day + " " + contentItem.schedule.hour + ":" + contentItem.schedule.minute;
+    }
+    if (contentItem.schedule.scheduleMode==ScheduleMode.Interval) {
+      schedule = "Every " +contentItem.schedule.deltaTime +" "+ contentItem.schedule.frequency;
     }
   }
+
 
   return (
 
@@ -128,29 +133,28 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
           <View style={styles.rowView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>What would you like to do?</Text>
-              <TouchableHighlight
-                style={{ ...styles.openButton, backgroundColor: Colors.light.subtitle }}
+              <AddButton color={Colors.light.subtitle}
                 onPress={() => {
                   deleteItem();
                   setModalVisible(!modalVisible);
                 }}>
                 <Text style={styles.textStyle}>Delete</Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                style={{ ...styles.openButton, backgroundColor: Colors.light.subtitle }}
+              </AddButton>
+              <AddButton
+                color={Colors.light.subtitle}
                 onPress={() => {
                   unscheduleItem();
                   setModalVisible(!modalVisible);
                 }}>
                 <Text style={styles.textStyle}>Unschedule</Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                style={{ ...styles.openButton, backgroundColor: Colors.grey }}
+              </AddButton>
+              <AddButton
+                color={Colors.grey}
                 onPress={() => {
                   setModalVisible(!modalVisible);
                 }}>
                 <Text style={{ ...styles.textStyle, color: 'black' }}>Cancel</Text>
-              </TouchableHighlight>
+              </AddButton>
             </View>
             <CloseButton onPress={() => {
               setModalVisible(!modalVisible);

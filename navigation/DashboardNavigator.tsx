@@ -16,6 +16,7 @@ import CopingStrategiesScreen from '../screens/Strategies/CopingStrategyScreen';
 import ManageWellnessMessageScreen from '../screens/WellnessMessages/ManageWellnessMessageScreen';
 import CreateAMessageScreen from '../screens/CreateAMessage/CreateAMessageScreen';
 import CreateQuoteScreen from '../screens/CreateAMessage/CreateQuoteScreen';
+import ScheduleMessageScreen from '../screens/ScheduleMessageScreen';
 
 
 const Stack = createStackNavigator<DashboardParamList>();
@@ -29,7 +30,7 @@ export default function DashboardStackNavigator() {
                 screenOptions={{
                     headerStyle: {
                         backgroundColor: 'rgb(252,212,49)',
-                        height: 170,
+                        height: 100,
                     },
                     headerTintColor: 'rgb(44,47,145)',
                     headerTitleStyle: {
@@ -102,6 +103,11 @@ export default function DashboardStackNavigator() {
                 name="Content"
                 component={ContentScreen}
                 options={{ title: 'ContentScreen' }}
+            />
+                <Stack.Screen
+                name="Scheduling"
+                component={ScheduleMessageScreen}
+                options={{ title: 'Schedule Message' }}
             />
 
             </Stack.Navigator>

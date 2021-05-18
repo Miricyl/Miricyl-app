@@ -1,15 +1,14 @@
 import * as React from 'react';
-import { Platform, StyleSheet, Image, TextInput, ImageBackground, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { Platform, StyleSheet, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, ScrollView } from 'react-native';
 import Colors from '../../constants/Colors'
 import { Text, View } from '../../components/Themed';
 import { useState } from 'react';
-import { CategoryType, ContentSelect, ContentType, IContentItem, Frequency, CategoryProps, SchedulingDetails } from '../../types';
-import { LoadAllItems, AddItem } from '../../storage/ContentStorage';
+import { CategoryType, ContentSelect, ContentType, IContentItem, CategoryProps, Schedule, Intervals, ScheduleMode, Weekday } from '../../types';
+import { AddItem } from '../../storage/ContentStorage';
 import AddButton from '../../components/AddButton'
 import { useNavigation } from '@react-navigation/native';
 import Layout from '../../constants/Layout';
 import InputField from '../../components/InputField';
-import SelectButton from '../../components/SelectButton';
 import { Entypo } from '@expo/vector-icons';
 import HeaderMessage from '../../components/HeaderMessage';
 
@@ -23,7 +22,16 @@ export default function CreateQuoteScreen({ navigation, route }: CategoryProps) 
         text: '',
         id: '',
         category: category,
-        active: false
+        active: false,
+        schedule: {
+            identifyer: undefined,
+            minute: '0',
+            hour: '12',
+            day: Weekday.Saturday,
+            deltaTime: 2,
+            frequency: Intervals.Days,
+            scheduleMode: ScheduleMode.Interval,
+        }
 
     }
     const [contentType, setContentType] = useState(ContentType.Text);
@@ -34,15 +42,36 @@ export default function CreateQuoteScreen({ navigation, route }: CategoryProps) 
 
 
 
-    const saveContentItem = () => {
-
+    const saveContentItem = async () => {
+ //TODO check that content has been added, if not prompt user to fill in fields
         let itemNew = contentItem;
+        itemNew.active = false;
         itemNew.title = contentTitle;
         itemNew.contentType = contentType;
         itemNew.text = contentText;
         itemNew.category = category;
+        itemNew.schedule = {
+            identifyer: "",
+            scheduleMode: ScheduleMode.Scheduled,
+            day: Weekday.Monday,
+            hour: '20',
+            minute: '00',
+            frequency: Intervals.Weeks,
+            deltaTime: 2
 
-        AddItem(itemNew).then(() => nav.navigate('SelfCare'));
+        }
+
+        const id = await AddItem(itemNew);
+        return id;
+
+    }
+
+    const scheduleMessage = async () => {
+        //TODO check that content has been added, if not prompt user to fill in fields
+        const id = await saveContentItem();
+        nav.navigate('Scheduling', {
+            contentId: id
+        })
 
     }
 
@@ -51,8 +80,8 @@ export default function CreateQuoteScreen({ navigation, route }: CategoryProps) 
         setSelectButtonShow(false);
 
     }
-    {/* //TODO fix keyboard avoiding view */}
-    return (<KeyboardAvoidingView style={styles.screen} behavior={Platform.OS === "ios" ? "padding" : "height"}
+    {/* //TODO fix keyboard avoiding view and add scrollview */ }
+    return (<ScrollView><KeyboardAvoidingView style={styles.screen} behavior={Platform.OS === "ios" ? "padding" : "height"}
     ><TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             {/* //TODO set the correct category for the header */}
             <View style={styles.transparent}>
@@ -61,12 +90,12 @@ export default function CreateQuoteScreen({ navigation, route }: CategoryProps) 
                     <View style={styles.headerRow}><Entypo name="quote" size={24} color="black" /><Text style={{ padding: 20 }}>Type a quote</Text></View>
                     <InputField height={44} width={'90%'} lines={1} placeholder="Message Title" onChangeText={(title: string) => setContentTitle(title)} value={contentTitle} />
                     <InputField width={'90%'} height='40%' lines={6} placeholder="Type your quote here" onChangeText={(text: string) => setContentTextHandler(text)} value={contentText} />
-                    <AddButton width={'90%'} borderWidth={1} borderColor={Colors.borderGrey} onPress={saveContentItem}>Schedule</AddButton>
+                    <AddButton width={'90%'} borderWidth={1} borderColor={Colors.borderGrey} onPress={scheduleMessage}>Schedule</AddButton>
                     <AddButton width={'90%'} color={Colors.light.tint} onPress={saveContentItem}>Save</AddButton>
                 </View>
             </View>
         </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+    </KeyboardAvoidingView></ScrollView>
 
 
     );
@@ -93,35 +122,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly',
         alignItems: 'center'
     },
-
-    background: {
-        flex: 1,
-        justifyContent: 'space-evenly',
-        alignItems: 'center',
-    },
     headerRow: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
         width: '90%'
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
-    selector: {
-        flex: 1,
-        justifyContent: 'space-evenly',
-        alignItems: 'center',
-        backgroundColor: 'transparent'
-    },
-    whiteText: {
-        color: 'white',
-        fontSize: 22,
-        fontWeight: 'bold',
-        margin: 20
-    },
-
-
+    }
 
 });

@@ -4,7 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import Colors from '../constants/Colors'
 import { Text, View } from '../components/Themed';
 import { useState } from 'react';
-import { CategoryType, ContentSelect, ContentType, IContentItem, Frequency, CategoryProps, SchedulingDetails } from '../types';
+import { CategoryType, ContentSelect, ContentType, IContentItem, CategoryProps, Schedule, ScheduleMode, Intervals, Weekday } from '../types';
 import { LoadAllItems, AddItem } from '../storage/ContentStorage';
 import AddButton from '../components/AddButton'
 import { useNavigation } from '@react-navigation/native';
@@ -23,7 +23,17 @@ export default function ContentImportScreen({ navigation, route }: CategoryProps
         text: '',
         id: 'test',
         category: CategoryType.Love,
-        active:false
+        active:false,
+        schedule:{
+            identifyer:undefined,
+            minute:'0',
+            hour:'12',
+            day:Weekday.Monday,
+            deltaTime:2,
+            frequency: Intervals.Days,
+            scheduleMode:ScheduleMode.Interval,
+
+        }
 
     }
     const [contentType, setContentType] = useState(ContentType.Text);

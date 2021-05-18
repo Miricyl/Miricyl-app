@@ -1,4 +1,4 @@
-import { CategoryType, ContentType, Frequency, IContentItem } from '../types';
+import { CategoryType, ContentType, IContentItem, Intervals, ScheduleMode, Weekday } from '../types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'uuid';
 
@@ -20,6 +20,8 @@ export const AddItem = async (contentItem: IContentItem) => {
     }
 
     AsyncStorage.setItem('items', JSON.stringify(items));
+
+    return contentItem.id;
 }
 
 export const UpdateItem = async (contentItem: IContentItem) => {
@@ -71,12 +73,14 @@ export const LoadAllItems = async () => {
             contentType: ContentType.Url,
             category: CategoryType.Love,
             active: true,
-            schedulingDetails: {
+            schedule: {
                 identifyer: 'erw452rw3rw3',
-                day: 1,
-                hour: 8,
-                minute: 30,
-                frequency: Frequency.Weekly
+                minute:'0',
+                hour:'12',
+                day:Weekday.Saturday,
+                deltaTime:2,
+                frequency: Intervals.Weeks,
+                scheduleMode:ScheduleMode.Scheduled,
             }
 
 
@@ -88,12 +92,14 @@ export const LoadAllItems = async () => {
             contentType: ContentType.PhoneNumber,
             category: CategoryType.Love,
             active: true,
-            schedulingDetails: {
+            schedule: {
                 identifyer: 'erw452rw3rw3',
-                day: 1,
-                hour: 8,
-                minute: 30,
-                frequency: Frequency.Weekly
+                minute:'0',
+                hour:'12',
+                day:Weekday.Saturday,
+                deltaTime:2,
+                frequency: Intervals.Weeks,
+                scheduleMode:ScheduleMode.Scheduled,
             }
 
 
@@ -104,12 +110,14 @@ export const LoadAllItems = async () => {
             contentType: ContentType.Text,
             category: CategoryType.Love,
             active: true,
-            schedulingDetails: {
+            schedule: {
                 identifyer: 'erw452rw3rw3',
-                day: 1,
-                hour: 8,
-                minute: 30,
-                frequency: Frequency.Weekly
+                minute:'0',
+                hour:'12',
+                day:Weekday.Saturday,
+                deltaTime:2,
+                frequency: Intervals.Weeks,
+                scheduleMode:ScheduleMode.Scheduled,
             }
 
 
@@ -122,12 +130,15 @@ export const LoadAllItems = async () => {
             contentType: ContentType.Image,
             category: CategoryType.Love,
             active: true,
-            schedulingDetails: {
+            schedule: {
                 identifyer: 'erw452rw3rw3',
-                day: 1,
-                hour: 8,
-                minute: 30,
-                frequency: Frequency.Weekly
+                minute:'0',
+                hour:'12',
+                day:Weekday.Saturday,
+                deltaTime:2,
+                frequency: Intervals.Days,
+                scheduleMode:ScheduleMode.Interval,
+    
             }
 
         }
@@ -153,7 +164,17 @@ export const LoadItem = async (id: string) => {
         return item;
 
     }
-    const item: IContentItem = { id: "unknown", category: CategoryType.Love, contentType: ContentType.Text, active: false }
+    //TODO define a good example message to be present if the user hasn't added anything themselves, could even be scheduled to send them a message?
+    const item: IContentItem = { id: "unknown", category: CategoryType.Love, contentType: ContentType.Text, active: false, schedule:{
+        identifyer:undefined,
+        minute:'0',
+        hour:'12',
+        day:Weekday.Saturday,
+        deltaTime:2,
+        frequency: Intervals.Days,
+        scheduleMode:ScheduleMode.Interval,
+
+    }}
     return item;
 }
 
