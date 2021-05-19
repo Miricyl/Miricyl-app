@@ -6,6 +6,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import NavigationCard from '../components/NavigationCard';
 import { Text, View } from '../components/Themed';
 import Layout from '../constants/Layout';
+import Colors from '../constants/Colors';
 import { LinkType } from '../types'
 import { StorePushToken } from './storage/pushNotificationStorage';
 import * as Notifications from 'expo-notifications'
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   ScrollViewContainer: {
-    backgroundColor:'rgb(162, 232, 209)',
+    backgroundColor: Colors.light.secondary,
     flex: 1,
   },
   navigationCards: {
