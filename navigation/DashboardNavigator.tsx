@@ -15,7 +15,7 @@ import SelfCheckScreen from '../screens/SelfCheck/SelfCheckScreen';
 import CopingStrategiesScreen from '../screens/Strategies/CopingStrategyScreen';
 import ManageWellnessMessageScreen from '../screens/WellnessMessages/ManageWellnessMessageScreen';
 import CreateAMessageScreen from '../screens/CreateAMessage/CreateAMessageScreen';
-import CreateQuoteScreen from '../screens/CreateAMessage/CreateQuoteScreen';
+import CreateMessageScreen from '../screens/CreateAMessage/CreateMessageScreen';
 import ScheduleMessageScreen from '../screens/ScheduleMessageScreen';
 
 
@@ -90,8 +90,8 @@ export default function DashboardStackNavigator() {
                 options={{ title: 'Add new message' }}
             />
               <Stack.Screen
-                name="CreateQuote"
-                component={CreateQuoteScreen}
+                name="CreateMessage"
+                component={CreateMessageScreen}
                 options={{ title: 'Add new message' }}
             />
             <Stack.Screen

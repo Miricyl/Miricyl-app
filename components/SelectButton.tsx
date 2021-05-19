@@ -4,7 +4,7 @@ import Colors from '../constants/Colors'
 import Layout from '../constants/Layout';
 
 
-const SelectButton = (props: any) => {
+const SelectButton = (props: {icon:any, onPress:any, selected:boolean}) => {
     let color=Colors.brown;
     let backgroundcolor='white';
  if (props.selected){
@@ -15,7 +15,7 @@ const SelectButton = (props: any) => {
     return (
         <View style={{...styles.messageCard, backgroundColor:backgroundcolor}}>
             <TouchableOpacity style={styles.touchableOpacity} onPress={props.onPress}>
-                <Text style={{...styles.cardText, color:color}}>{props.children}</Text>
+            {props.icon} 
             </TouchableOpacity>
         </View>
     )

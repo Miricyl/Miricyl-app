@@ -23,7 +23,7 @@ export type DashboardParamList = {
   PlacesToDistract: undefined;
   Content: undefined;
   CreateAMessage: undefined;
-  CreateQuote: undefined;
+  CreateMessage: undefined;
   Scheduling: undefined;
 };
 

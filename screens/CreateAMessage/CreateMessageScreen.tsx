@@ -9,12 +9,12 @@ import AddButton from '../../components/AddButton'
 import { useNavigation } from '@react-navigation/native';
 import Layout from '../../constants/Layout';
 import InputField from '../../components/InputField';
-import { Entypo } from '@expo/vector-icons';
+import { Entypo, FontAwesome,  Foundation  } from '@expo/vector-icons';
 import HeaderMessage from '../../components/HeaderMessage';
+import SelectButton from '../../com ponents/SelectButton';
 
 
-
-export default function CreateQuoteScreen({ navigation, route }: CategoryProps) {
+export default function CreateMessageScreen({ navigation, route }: CategoryProps) {
     const { category } = route.params;
     const nav = useNavigation();
     let contentItemTemplate: IContentItem = {
@@ -37,13 +37,24 @@ export default function CreateQuoteScreen({ navigation, route }: CategoryProps) 
     const [contentType, setContentType] = useState(ContentType.Text);
     const [contentText, setContentText] = useState("");
     const [contentTitle, setContentTitle] = useState("");
+    const [contentImage, setContentImage] = useState("");
+    const [contentPhoneNumber, setContentPhoneNumber] = useState("");
+    const [contentUrl, setContentUrl] = useState("");
     const [contentItem, setContentItem] = useState<IContentItem>(contentItemTemplate);
     const [selectButtonShow, setSelectButtonShow] = useState(true);
 
 
 
+    let urlSelected = false;
+    let imageSelected = false;
+    let textSelected = false;
+    let phoneSelected = false;
+
+    const selectContent = (type: ContentType) => {
+        setContentType(type);
+    }
     const saveContentItem = async () => {
- //TODO check that content has been added, if not prompt user to fill in fields
+        //TODO check that content has been added, if not prompt user to fill in fields
         let itemNew = contentItem;
         itemNew.active = false;
         itemNew.title = contentTitle;
@@ -85,7 +96,12 @@ export default function CreateQuoteScreen({ navigation, route }: CategoryProps) 
     ><TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             {/* //TODO set the correct category for the header */}
             <View style={styles.transparent}>
-                <HeaderMessage text="Category Type Message" />
+                <View style={styles.selector}>
+                    <SelectButton icon={<FontAwesome name="video-camera" size={24} color="black" />} selected={urlSelected} onPress={() => { selectContent(ContentType.Url) }}/>
+                    <SelectButton icon={<FontAwesome name="camera" size={24} color="black" />} selected={imageSelected} onPress={() => { selectContent(ContentType.Image) }}/>
+                    <SelectButton selected={phoneSelected} onPress={() => { selectContent(ContentType.PhoneNumber) }}>Add someone to contact</SelectButton>
+                    <SelectButton selected={textSelected} onPress={() => { selectContent(ContentType.Text) }}>Type a quote</SelectButton>
+                </View>
                 <View style={styles.container}>
                     <View style={styles.headerRow}><Entypo name="quote" size={24} color="black" /><Text style={{ padding: 20 }}>Type a quote</Text></View>
                     <InputField height={44} width={'90%'} lines={1} placeholder="Message Title" onChangeText={(title: string) => setContentTitle(title)} value={contentTitle} />
@@ -127,6 +143,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         width: '90%'
-    }
+    },
+    selector: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        backgroundColor: 'transparent'
+    },
 
 });
