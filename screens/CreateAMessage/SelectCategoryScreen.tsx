@@ -5,8 +5,9 @@ import NavigationCard from '../../components/NavigationCard';
 import { Text, View } from '../../components/Themed';
 import Layout from '../../constants/Layout';
 import { CategoryType, LinkType } from '../../types';
+import Colors from '../../constants/Colors';
 
-const CreateAMessageScreen = () => {
+const SelectCategoryScreen = () => {
 
   return (
     <View style={styles.screen}>
@@ -24,14 +25,14 @@ const CreateAMessageScreen = () => {
   );
 }
 
-export default CreateAMessageScreen;
+export default SelectCategoryScreen;
 
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
   },
   ScrollViewContainer: {
-    backgroundColor:'rgb(162, 232, 209)',
+    backgroundColor: Colors.light.secondary,
     flex: 1,
   },
   navigationCards: {

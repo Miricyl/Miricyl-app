@@ -11,7 +11,7 @@ import { ContentType, INavigationCardDetails, LinkType } from '../types';
 import Layout from '../constants/Layout';
 
 
-const NavigationCard = ({ text, subheading, link, linkType, CardType = "Dashboard", category, height = '100%', width = '100%' }: INavigationCardDetails) => {
+const NavigationCard = ({ text, link, children, linkType, CardType = "rectNavCard", category, height = '100%', width = '100%' }: INavigationCardDetails) => {
   const navigation = useNavigation();
   var onPressFunction: any;
 
@@ -49,7 +49,7 @@ const NavigationCard = ({ text, subheading, link, linkType, CardType = "Dashboar
        <>
         <TouchableOpacity style={styles.rectCard} onPress={onPressFunction}>
           <Text style={styles.rectCardText}>{text}</Text>
-          <AntDesign style={styles.rightArrow} name="right" size={24} color={Colors.light.navCardText} />
+          <AntDesign style={styles.rightArrow} name="right" size={24} color={Colors.light.text} />
         </TouchableOpacity>
       </>
       break;
@@ -59,6 +59,7 @@ const NavigationCard = ({ text, subheading, link, linkType, CardType = "Dashboar
         <>
           <TouchableOpacity style={styles.squareCard} onPress={onPressFunction}>
             <Text style={styles.squareCardText}>{text}</Text>
+            {children}
           </TouchableOpacity>
         </>
       break;
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
   rectCardText: {
     fontSize: 20,
     fontWeight: '700',
-    color: Colors.light.navCardText,
+    color: Colors.light.text,
     marginLeft: 25,
   },
   rightArrow: {
@@ -116,6 +117,8 @@ const styles = StyleSheet.create({
   },
   squareCardText: {
     fontSize: 18,
-    color: Colors.light.navCardText,
+    color: Colors.light.text,
+    marginTop: 70,
+    textAlign: 'center',
   },
 });

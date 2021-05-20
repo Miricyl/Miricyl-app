@@ -60,7 +60,7 @@ export enum CategoryType {
 export interface INavigationCardDetails {
   CardType?: string,
   text: string;
-  subheading?: string,
+  children?:JSX.Element;
   link: any;
   linkType: LinkType;
   height?: any;
