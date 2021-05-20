@@ -5,8 +5,13 @@ import NavigationCard from '../components/NavigationCard';
 import { Text, View } from '../components/Themed';
 import Layout from '../constants/Layout';
 import { LinkType } from '../types';
+import Colors from '../constants/Colors';
 
-import { AntDesign } from '@expo/vector-icons';
+//ICONS LIBRARIES
+import { FontAwesome } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons'; 
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
 
 const SelfCareScreen = () => {
 
@@ -15,12 +20,20 @@ const SelfCareScreen = () => {
       <ScrollView contentContainerStyle={styles.ScrollViewContainer}>
           <View style={styles.rowsContainer}>
             <View style={styles.navCardsRow}>
-              <NavigationCard CardType='square' text='Create a Message' link='CreateAMessage' linkType={LinkType.Screen}></NavigationCard>
-              <NavigationCard CardType='square' text='Choose from Community' link='' linkType={LinkType.Screen} height={Layout.window.width * 0.2} width={Layout.window.width * 0.8}></NavigationCard>
+              <NavigationCard CardType='square' text='Create a Message' link='CreateAMessage'linkType={LinkType.Screen}>
+                <AntDesign style={styles.cardIcon} name="message1" size={50} color={Colors.light.text}  />
+              </NavigationCard>
+              <NavigationCard CardType='square' text='Choose from Community' link='' linkType={LinkType.Screen}>
+                <FontAwesome style={styles.cardIcon} name="group"  size={45} color={Colors.light.text} />
+              </NavigationCard>
             </View>
             <View style={styles.navCardsRow}>
-              <NavigationCard CardType='square' text='My Messages' link='Joy' linkType={LinkType.Screen} height={Layout.window.width * 0.2} width={Layout.window.width * 0.8}></NavigationCard>
-              <NavigationCard CardType='square' text='My Plans' link='' linkType={LinkType.Screen}></NavigationCard>
+              <NavigationCard CardType='square' text='My Messages'link='Joy' linkType={LinkType.Screen}>
+                <FontAwesome style={styles.cardIcon} name="envelope" size={50} color={Colors.light.text}  />
+              </NavigationCard>
+              <NavigationCard CardType='square' text='My Plans' link='' linkType={LinkType.Screen}>
+                <MaterialCommunityIcons style={styles.cardIcon} name="file-document-outline" size={50} color={Colors.light.text}  />
+              </NavigationCard>
             </View> 
             </View>  
       </ScrollView>
@@ -36,20 +49,26 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   ScrollViewContainer: {
-    backgroundColor:'rgb(162, 232, 209)',
+    backgroundColor: Colors.light.secondary,
     flex: 1,
   },
   rowsContainer: {
-    marginTop: 'auto',
     marginBottom: 1,
-    flex: 0.65,
+    flex: 1,
     backgroundColor: 'transparent',
-    justifyContent:'space-around',
+    justifyContent: 'center',
   },
   navCardsRow: {
     flexDirection: 'row',
+    marginBottom: 60,
     alignItems: 'center',
     justifyContent: 'space-evenly',
     backgroundColor: 'transparent',
+  },
+  cardIcon: {
+    position: "absolute",
+    top: 40,
+    margin: 'auto',
+    marginTop: 10,
   },
 });

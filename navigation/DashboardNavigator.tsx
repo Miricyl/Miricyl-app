@@ -14,8 +14,8 @@ import SelfCareScreen from '../screens/SelfCareScreen';
 import SelfCheckScreen from '../screens/SelfCheck/SelfCheckScreen';
 import CopingStrategiesScreen from '../screens/Strategies/CopingStrategyScreen';
 import ManageWellnessMessageScreen from '../screens/WellnessMessages/ManageWellnessMessageScreen';
-import CreateAMessageScreen from '../screens/CreateAMessage/CreateAMessageScreen';
-import CreateMessageScreen from '../screens/CreateAMessage/CreateMessageScreen';
+import SelectCategoryScreen from '../screens/CreateAMessage/SelectCategoryScreen';
+import CreateQuoteScreen from '../screens/CreateAMessage/CreateQuoteScreen';
 import ScheduleMessageScreen from '../screens/ScheduleMessageScreen';
 
 
@@ -29,10 +29,10 @@ export default function DashboardStackNavigator() {
                 initialRouteName="Dashboard"
                 screenOptions={{
                     headerStyle: {
-                        backgroundColor: 'rgb(252,212,49)',
+                        backgroundColor: Colors.light.primary,
                         height: 100,
                     },
-                    headerTintColor: 'rgb(44,47,145)',
+                    headerTintColor: Colors.light.text,
                     headerTitleStyle: {
                         fontSize: 22,
                         fontWeight: '800', 
@@ -56,7 +56,7 @@ export default function DashboardStackNavigator() {
             />
             <Stack.Screen
                 name="CreateAMessage"
-                component={CreateAMessageScreen}
+                component={SelectCategoryScreen}
                 options={{ title: 'Select Message Category' }}
             />
             <Stack.Screen
