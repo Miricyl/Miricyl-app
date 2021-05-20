@@ -41,7 +41,7 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
     const [contentPhoneNumber, setContentPhoneNumber] = useState("");
     const [contentUrl, setContentUrl] = useState("");
     const [contentItem, setContentItem] = useState<IContentItem>(contentItemTemplate);
-    const [selectButtonShow, setSelectButtonShow] = useState(true);
+
 
     let urlSelected = false;
     let imageSelected = false;
@@ -90,20 +90,12 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
     }
 
     const scheduleMessage = async () => {
-        //TODO check that content has been added, if not prompt user to fill in fields
         const id = await saveContentItem();
         nav.navigate('Scheduling', {
             contentId: id
         })
 
     }
-
-    const setContentTextHandler = (text: string) => {
-        setContentText(text);
-        setSelectButtonShow(false);
-
-    }
-
 
     const chooseImage = async () => {
         (async () => {
@@ -144,7 +136,7 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
             textSelected = true;
             controls = (<><View style={styles.headerRow}><Entypo name="quote" size={24} color="black" /><Text style={styles.contentType}>Quote</Text></View>
                 <InputField height={44} width={'90%'} lines={1} placeholder="Message Title" onChangeText={(title: string) => setContentTitle(title)} value={contentTitle} />
-                <InputField height='40%' width={'90%'} lines={6} placeholder="Type any text here" onChangeText={(text: string) => setContentTextHandler(text)} value={contentText} /></>)
+                <InputField height='40%' width={'90%'} lines={6} placeholder="Type any text here" onChangeText={(text: string) => setContentText(text)} value={contentText} /></>)
             break;
         case ContentType.Image:
             imageSelected = true;
@@ -154,20 +146,20 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
                     <SelectButton icon={<FontAwesome name="camera" size={24} color="black" />} selected={false} onPress={chooseImage} />
                     {imageControl}
                 </View>
-                <InputField height='30%' width={'90%'} lines={6} placeholder="Type description here" onChangeText={(text: string) => setContentTextHandler(text)} value={contentText} />
+                <InputField height='30%' width={'90%'} lines={6} placeholder="Type description here" onChangeText={(text: string) => setContentText(text)} value={contentText} />
             </>
             break;
         case ContentType.Url:
             urlSelected = true;
             controls = (<><View style={styles.headerRow}><FontAwesome name="video-camera" size={24} color="black" /><Text style={styles.contentType}>Web-link</Text></View>
                 <InputField height={44} width={'90%'} lines={1} placeholder="Message Title" onChangeText={(title: string) => setContentTitle(title)} value={contentTitle} />
-                <InputField height={44} width={'90%'} lines={1} placeholder="Copy and paste a link" onChangeText={(text: string) => setContentTextHandler(text)} value={contentText} /></>)
+                <InputField height={44} width={'90%'} lines={1} placeholder="Copy and paste a link" onChangeText={(text: string) => setContentUrl(text)} value={contentUrl} /></>)
             break;
         case ContentType.PhoneNumber:
             phoneSelected = true;
             controls = (<><View style={styles.headerRow}><Entypo name="phone" size={24} color="black" /><Text style={styles.contentType}>Phone number</Text></View>
                 <InputField height={44} width={'90%'} lines={1} placeholder="Message Title" onChangeText={(title: string) => setContentTitle(title)} value={contentTitle} />
-                <InputField height={44} width={'90%'} lines={1} placeholder="Type the number of someone to call" onChangeText={(text: string) => setContentTextHandler(text)} value={contentText} /></>)
+                <InputField height={44} width={'90%'} lines={1} placeholder="Type the number of someone to call" onChangeText={(text: string) => setContentPhoneNumber(text)} value={contentPhoneNumber} /></>)
             break;
 
         default: {
@@ -177,7 +169,6 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
     {/* //TODO fix keyboard avoiding view and add scrollview */ }
     return (<ScrollView><KeyboardAvoidingView style={styles.screen} behavior={Platform.OS === "ios" ? "padding" : "height"}
     ><TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            {/* //TODO set the correct category for the header */}
             <View style={styles.transparent}>
                 <View style={styles.selector}>
                     <SelectButton icon={<FontAwesome name="video-camera" size={24} color="black" />} selected={urlSelected} onPress={() => { selectContent(ContentType.Url) }} />
