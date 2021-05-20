@@ -9,7 +9,7 @@ const SelectButton = (props: {icon:any, onPress:any, selected:boolean}) => {
     let backgroundcolor='white';
  if (props.selected){
      color='white';
-     backgroundcolor = Colors.brown;
+     backgroundcolor = Colors.light.primary;
 
  }
     return (
@@ -23,17 +23,17 @@ const SelectButton = (props: {icon:any, onPress:any, selected:boolean}) => {
 
 const styles = StyleSheet.create({
     messageCard: {
-        width: Layout.window.width * 0.65,
-        height: 40,
+        width: 60,
+        height: 60,
         shadowColor: 'black',
-        shadowOpacity: 0.26,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 8,
-        elevation: 5,
-        borderRadius: 50,
+        shadowOpacity: 0.10,
+        shadowOffset: { width: 0, height: 1 },
+        shadowRadius: 5,
+        elevation: 3,
+        borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
-        margin:20
+        margin:10
     },
     touchableOpacity: {
         flexDirection: 'row',

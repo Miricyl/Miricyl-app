@@ -15,7 +15,7 @@ import SelfCheckScreen from '../screens/SelfCheck/SelfCheckScreen';
 import CopingStrategiesScreen from '../screens/Strategies/CopingStrategyScreen';
 import ManageWellnessMessageScreen from '../screens/WellnessMessages/ManageWellnessMessageScreen';
 import SelectCategoryScreen from '../screens/CreateAMessage/SelectCategoryScreen';
-import CreateQuoteScreen from '../screens/CreateAMessage/CreateQuoteScreen';
+import CreateMessageScreen from '../screens/CreateAMessage/CreateMessageScreen';
 import ScheduleMessageScreen from '../screens/ScheduleMessageScreen';
 
 
