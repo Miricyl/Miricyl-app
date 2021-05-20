@@ -120,36 +120,40 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
     };
 
     let controls;
+    let imageControl;
+    if(contentImage){
+        imageControl = <Image source={{ uri: contentImage }} style={styles.image} />
+    }
 
     switch (contentType) {
         case ContentType.Text:
             textSelected = true;
-            controls = (<><View style={styles.headerRow}><Entypo name="quote" size={24} color="black" /><Text style={{ padding: 20 }}>Quote</Text></View>
+            controls = (<><View style={styles.headerRow}><Entypo name="quote" size={24} color="black" /><Text style={styles.contentType}>Quote</Text></View>
                 <InputField height={44} width={'90%'} lines={1} placeholder="Message Title" onChangeText={(title: string) => setContentTitle(title)} value={contentTitle} />
-                <InputField width={'90%'} height='40%' lines={6} placeholder="Type any text here" onChangeText={(text: string) => setContentTextHandler(text)} value={contentText} /></>)
+                <InputField height='40%' width={'90%'} lines={6} placeholder="Type any text here" onChangeText={(text: string) => setContentTextHandler(text)} value={contentText} /></>)
             break;
         case ContentType.Image:
             imageSelected = true;
-            controls = <><View style={styles.headerRow}><FontAwesome name="camera" size={18} color="black" /><Text style={{ padding: 20 }}>Photo</Text></View>
+            controls = <><View style={styles.headerRow}><FontAwesome name="camera" size={18} color="black" /><Text style={styles.contentType}>Photo</Text></View>
                 <InputField height={44} width={'90%'} lines={1} placeholder="Message Title" onChangeText={(title: string) => setContentTitle(title)} value={contentTitle} />
                 <View style={styles.imageRow}>
                     <SelectButton icon={<FontAwesome name="camera" size={24} color="black" />} selected={false} onPress={chooseImage} />
-                    <Image source={{ uri: contentImage }} style={styles.image} />
+                    {imageControl}
                 </View>
-                <InputField width={'90%'} height='40%' lines={6} placeholder="Type description here" onChangeText={(text: string) => setContentTextHandler(text)} value={contentText} />
+                <InputField  height='30%' width={'90%'} lines={6} placeholder="Type description here" onChangeText={(text: string) => setContentTextHandler(text)} value={contentText} />
             </>
             break;
         case ContentType.Url:
             urlSelected = true;
             controls = (<><View style={styles.headerRow}><FontAwesome name="video-camera" size={24} color="black" /><Text style={styles.contentType}>Web-link</Text></View>
                 <InputField height={44} width={'90%'} lines={1} placeholder="Message Title" onChangeText={(title: string) => setContentTitle(title)} value={contentTitle} />
-                <InputField width={'90%'} height='10%' lines={1} placeholder="Copy and paste a link" onChangeText={(text: string) => setContentTextHandler(text)} value={contentText} /></>)
+                <InputField height={44} width={'90%'}  lines={1} placeholder="Copy and paste a link" onChangeText={(text: string) => setContentTextHandler(text)} value={contentText} /></>)
             break;
         case ContentType.PhoneNumber:
             phoneSelected = true;
-            controls = (<><View style={styles.headerRow}><Entypo name="phone" size={24} color="black" /><Text style={{ padding: 20 }}>Phone number</Text></View>
+            controls = (<><View style={styles.headerRow}><Entypo name="phone" size={24} color="black" /><Text style={styles.contentType}>Phone number</Text></View>
                 <InputField height={44} width={'90%'} lines={1} placeholder="Message Title" onChangeText={(title: string) => setContentTitle(title)} value={contentTitle} />
-                <InputField width={'90%'} height='10%' lines={1} placeholder="Type the number of someone to call" onChangeText={(text: string) => setContentTextHandler(text)} value={contentText} /></>)
+                <InputField height={44} width={'90%'}  lines={1} placeholder="Type the number of someone to call" onChangeText={(text: string) => setContentTextHandler(text)} value={contentText} /></>)
             break;
 
         default: {
@@ -191,14 +195,13 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
     },
     container: {
-        height: 550,
         width: Layout.window.width * 0.9,
         margin: 10,
         marginTop: 20,
         padding: 20,
         backgroundColor: 'white',
         borderRadius: 5,
-        justifyContent: 'space-evenly',
+        justifyContent: 'flex-start',
         alignItems: 'center'
     },
     headerRow: {
@@ -224,7 +227,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems:'center',
-        marginVertical: 20,
         width:'95%',
 
     },
