@@ -4,7 +4,7 @@ import Colors from '../../constants/Colors'
 import { Text, View } from '../../components/Themed';
 import { useState } from 'react';
 import { CategoryType, ContentSelect, ContentType, IContentItem, CategoryProps, Schedule, Intervals, ScheduleMode, Weekday } from '../../types';
-import { AddItem } from '../../storage/ContentStorage';
+import { AddItem, LoadItem, UpdateItem } from '../../storage/ContentStorage';
 import AddButton from '../../components/AddButton'
 import { useNavigation } from '@react-navigation/native';
 import Layout from '../../constants/Layout';
@@ -52,27 +52,41 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
         setContentType(type);
     }
     const saveContentItem = async () => {
-        //TODO check that content has been added, if not prompt user to fill in fields
-        let itemNew = contentItem;
-        itemNew.active = false;
-        itemNew.title = contentTitle;
-        itemNew.contentType = contentType;
-        itemNew.text = contentText;
-        itemNew.category = category;
-        itemNew.schedule = {
-            identifyer: "",
-            scheduleMode: ScheduleMode.Scheduled,
-            day: Weekday.Monday,
-            hour: '20',
-            minute: '00',
-            frequency: Intervals.Weeks,
-            deltaTime: 2
-
+        //TODO check that content has been added, if not prompt user to fill in fields      
+        console.log(contentItem.id);
+        if (contentItem.id!==undefined && contentItem.id!=="") {
+            LoadItem(contentItem.id).then((item) => {
+                if (item) {
+                    item.contentType = contentType;
+                    item.imageUri = contentImage;
+                    item.phoneNumber = contentPhoneNumber;
+                    item.text = contentText;
+                    item.title = contentTitle;
+                    console.log(item);
+                    UpdateItem(item);
+                }
+            })
+            return contentItem.id;
         }
-
-        const id = await AddItem(itemNew);
-        return id;
-
+        else {
+            let itemNew = contentItem;
+            itemNew.active = false;
+            itemNew.title = contentTitle;
+            itemNew.contentType = contentType;
+            itemNew.text = contentText;
+            itemNew.category = category;
+            itemNew.schedule = {
+                identifyer: "",
+                scheduleMode: ScheduleMode.Scheduled,
+                day: Weekday.Monday,
+                hour: '20',
+                minute: '00',
+                frequency: Intervals.Weeks,
+                deltaTime: 2
+            }
+            const id = await AddItem(itemNew);
+            return id;
+        }
     }
 
     const scheduleMessage = async () => {
@@ -121,7 +135,7 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
 
     let controls;
     let imageControl;
-    if(contentImage){
+    if (contentImage) {
         imageControl = <Image source={{ uri: contentImage }} style={styles.image} />
     }
 
@@ -140,20 +154,20 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
                     <SelectButton icon={<FontAwesome name="camera" size={24} color="black" />} selected={false} onPress={chooseImage} />
                     {imageControl}
                 </View>
-                <InputField  height='30%' width={'90%'} lines={6} placeholder="Type description here" onChangeText={(text: string) => setContentTextHandler(text)} value={contentText} />
+                <InputField height='30%' width={'90%'} lines={6} placeholder="Type description here" onChangeText={(text: string) => setContentTextHandler(text)} value={contentText} />
             </>
             break;
         case ContentType.Url:
             urlSelected = true;
             controls = (<><View style={styles.headerRow}><FontAwesome name="video-camera" size={24} color="black" /><Text style={styles.contentType}>Web-link</Text></View>
                 <InputField height={44} width={'90%'} lines={1} placeholder="Message Title" onChangeText={(title: string) => setContentTitle(title)} value={contentTitle} />
-                <InputField height={44} width={'90%'}  lines={1} placeholder="Copy and paste a link" onChangeText={(text: string) => setContentTextHandler(text)} value={contentText} /></>)
+                <InputField height={44} width={'90%'} lines={1} placeholder="Copy and paste a link" onChangeText={(text: string) => setContentTextHandler(text)} value={contentText} /></>)
             break;
         case ContentType.PhoneNumber:
             phoneSelected = true;
             controls = (<><View style={styles.headerRow}><Entypo name="phone" size={24} color="black" /><Text style={styles.contentType}>Phone number</Text></View>
                 <InputField height={44} width={'90%'} lines={1} placeholder="Message Title" onChangeText={(title: string) => setContentTitle(title)} value={contentTitle} />
-                <InputField height={44} width={'90%'}  lines={1} placeholder="Type the number of someone to call" onChangeText={(text: string) => setContentTextHandler(text)} value={contentText} /></>)
+                <InputField height={44} width={'90%'} lines={1} placeholder="Type the number of someone to call" onChangeText={(text: string) => setContentTextHandler(text)} value={contentText} /></>)
             break;
 
         default: {
@@ -210,11 +224,11 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         width: '90%'
     },
-    contentType:{
-        padding:20,
-        color:Colors.light.subtitle,
-        fontSize:14,
-        fontWeight:'bold'
+    contentType: {
+        padding: 20,
+        color: Colors.light.subtitle,
+        fontSize: 14,
+        fontWeight: 'bold'
 
     },
     selector: {
@@ -226,8 +240,8 @@ const styles = StyleSheet.create({
     imageRow: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        alignItems:'center',
-        width:'95%',
+        alignItems: 'center',
+        width: '95%',
 
     },
     image: {
