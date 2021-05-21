@@ -7,7 +7,7 @@ import DashboardScreen from '../screens/DashboardScreen';
 import { DashboardParamList } from '../types';
 import ContentScreen from '../screens/ContentScreen';
 import ContentImportScreen from '../screens/ContentImportScreen';
-import JoyScreen from '../screens/Joy/JoyScreen';
+import MyMessagesScreen from '../screens/MyMessages/MyMessagesScreen';
 import MoodScreen from '../screens/Mood/MoodScreen';
 import PlacesToDistractScreen from '../screens/PlacesToDistract/PlacesToDistractScreen';
 import SelfCareScreen from '../screens/SelfCareScreen';
@@ -80,9 +80,9 @@ export default function DashboardStackNavigator() {
                 options={{ title: 'Places to Distract' }}
             />
             <Stack.Screen
-                name="Joy"
-                component={JoyScreen}
-                options={{ title: 'Things that gives me joy' }}
+                name="MyMessages"
+                component={MyMessagesScreen}
+                options={{ title: 'My Messages' }}
             />
             <Stack.Screen
                 name="ContentImport"

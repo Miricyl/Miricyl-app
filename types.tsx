@@ -14,7 +14,7 @@ export type CategoryProps = StackScreenProps<RootStackParamList, 'Category'>;
 export type DashboardParamList = {
   Dashboard: undefined;
   SelfCare: undefined;
-  Joy: undefined;
+  MyMessages: undefined;
   ContentImport: undefined;
   CopingStrategies: undefined;
   Mood: undefined;

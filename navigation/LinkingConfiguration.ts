@@ -10,7 +10,7 @@ export default {
             screens: {
               DashboardScreen:'dashboard',
               SelfCareScreen:'self-care',
-              JoyScreen: 'joy',
+              MyMessagesScreen: 'my-messages',
               ContentImportScreen:'content-import',
               CopingStrategiesScreen:'coping-strategies',
               MoodScreen:'mood',

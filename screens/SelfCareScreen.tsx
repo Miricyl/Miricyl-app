@@ -28,7 +28,7 @@ const SelfCareScreen = () => {
               </NavigationCard>
             </View>
             <View style={styles.navCardsRow}>
-              <NavigationCard CardType='square' text='My Messages'link='Joy' linkType={LinkType.Screen}>
+              <NavigationCard CardType='square' text='My Messages'link='MyMessages' linkType={LinkType.Screen}>
                 <FontAwesome style={styles.cardIcon} name="envelope" size={50} color={Colors.light.text}  />
               </NavigationCard>
               <NavigationCard CardType='square' text='My Plans' link='' linkType={LinkType.Screen}>

@@ -18,7 +18,7 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
     const { category } = route.params;
     const nav = useNavigation();
     let contentItemTemplate: IContentItem = {
-        contentType: ContentType.Text,
+        contentType: ContentType.Url,
         text: '',
         id: '',
         category: category,
@@ -69,21 +69,10 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
             return contentItem.id;
         }
         else {
-            let itemNew = contentItem;
-            itemNew.active = false;
+            let itemNew = {...contentItem};
             itemNew.title = contentTitle;
             itemNew.contentType = contentType;
             itemNew.text = contentText;
-            itemNew.category = category;
-            itemNew.schedule = {
-                identifyer: "",
-                scheduleMode: ScheduleMode.Scheduled,
-                day: Weekday.Monday,
-                hour: '20',
-                minute: '00',
-                frequency: Intervals.Weeks,
-                deltaTime: 2
-            }
             const id = await AddItem(itemNew);
             return id;
         }
