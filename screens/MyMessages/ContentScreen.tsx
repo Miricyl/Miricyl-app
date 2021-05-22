@@ -110,10 +110,10 @@ const ContentScreen = ({ navigation, route }: ContentProps) => {
 
   return (
     <View style={styles.container}>
-      <ImageBackground source={require('../assets/images/dashboard_background.png')} style={styles.background}>
+      
         {content}
         <View style={styles.buttonArea}><AddButton onPress={goToScheduling} width={Layout.window.width * 0.3}>Schedule</AddButton><AddButton width={Layout.window.width * 0.3}>Delete</AddButton><AddButton width={Layout.window.width * 0.3} onPress={goToEditing}>Edit</AddButton></View>
-      </ImageBackground>
+ 
     </View>
 
   );
@@ -125,7 +125,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-evenly',
+    backgroundColor:Colors.grey
   },
   contentContainer: {
     flex: 1,
