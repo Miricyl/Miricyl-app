@@ -121,8 +121,9 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
     }
   }
   let schedule;
+  let unscheduleButton;
   if (contentItem.active && contentItem.schedule) {
-
+    unscheduleButton = (<AddButton color={Colors.light.subtitle} onPress={() => { unscheduleItem(); setModalVisible(!modalVisible);}}><Text style={styles.textStyle}>Unschedule</Text></AddButton>)
     if (contentItem.schedule.scheduleMode == ScheduleMode.Scheduled) {
       schedule = contentItem.schedule.day + " " + contentItem.schedule.hour + ":" + contentItem.schedule.minute;
     }
@@ -150,14 +151,7 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
                 }}>
                 <Text style={styles.textStyle}>Delete</Text>
               </AddButton>
-              <AddButton
-                color={Colors.light.subtitle}
-                onPress={() => {
-                  unscheduleItem();
-                  setModalVisible(!modalVisible);
-                }}>
-                <Text style={styles.textStyle}>Unschedule</Text>
-              </AddButton>
+              {unscheduleButton}
               <AddButton
                 color={Colors.grey}
                 onPress={() => {
@@ -191,7 +185,7 @@ const styles = StyleSheet.create({
   image: {
     width: 85,
     height: 85,
-    borderRadius:8
+    borderRadius: 8
 
 
   },
