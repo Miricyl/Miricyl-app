@@ -73,9 +73,15 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
             itemNew.title = contentTitle;
             itemNew.contentType = contentType;
             itemNew.text = contentText;
+            itemNew.imageUri=contentImage;
             const id = await AddItem(itemNew);
             return id;
         }
+    }
+
+    const save = () => {
+        saveContentItem();
+        nav.navigate('MyMessages');
     }
 
     const scheduleMessage = async () => {
@@ -168,7 +174,7 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
                 <View style={styles.container}>
                     {controls}
                     <AddButton width={'90%'} borderWidth={1} borderColor={Colors.borderGrey} onPress={scheduleMessage}>Schedule</AddButton>
-                    <AddButton width={'90%'} color={Colors.light.tint} onPress={saveContentItem}>Save</AddButton>
+                    <AddButton width={'90%'} color={Colors.light.tint} onPress={save}>Save</AddButton>
                 </View>
             </View>
         </TouchableWithoutFeedback>
