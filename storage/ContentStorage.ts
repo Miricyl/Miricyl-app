@@ -56,10 +56,10 @@ export const DeleteItem = async (contentItemId: string) => {
 
 export const LoadAllItems = async () => {
 
-    let joyitemsString = await AsyncStorage.getItem('items') as string;
-    let joyitems: IContentItem[] = []
-    if (joyitemsString) {
-        joyitems = JSON.parse(joyitemsString) as IContentItem[];
+    let itemsString = await AsyncStorage.getItem('items') as string;
+    let items: IContentItem[] = []
+    if (itemsString) {
+        items = JSON.parse(itemsString) as IContentItem[];
 
     }
 
@@ -143,15 +143,15 @@ export const LoadAllItems = async () => {
 
         }
 
-        joyitems.push(joyItem1);
-        joyitems.push(joyItem2);
-        joyitems.push(joyItem3);
-        joyitems.push(joyItem4);
-        AsyncStorage.setItem('items', JSON.stringify(joyitems));
+        items.push(joyItem1);
+        items.push(joyItem2);
+        items.push(joyItem3);
+        items.push(joyItem4);
+        AsyncStorage.setItem('items', JSON.stringify(items));
 
     }
 
-    return joyitems;
+    return items;
 }
 
 export const LoadItem = async (id: string) => {

@@ -5,7 +5,7 @@ import Colors from '../constants/Colors';
 import { Text, View } from './Themed';
 import { IContentItem, ContentType, ScheduleMode } from '../types';
 import Layout from '../constants/Layout';
-import { FontAwesome5, } from '@expo/vector-icons';
+import { Entypo, FontAwesome, FontAwesome5, } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Platform } from 'react-native';
 import { Linking } from 'react-native';
@@ -49,7 +49,7 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
 
   const unscheduleItem = () => {
 
-    if (contentItem.schedule.identifyer!==undefined) {
+    if (contentItem.schedule.identifyer !== undefined) {
       cancelNotification(contentItem.schedule.identifyer).then();
     }
 
@@ -66,7 +66,7 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
   }
 
   const deleteItem = () => {
-    if (contentItem.schedule.identifyer!==undefined) {
+    if (contentItem.schedule.identifyer !== undefined) {
       //TODO extend this method so it checks for success and only then deletes item, if not successful ask user to try again
       cancelNotification(contentItem.schedule.identifyer).then(() => {
         DeleteItem(contentItem.id).then(() => {
@@ -97,12 +97,22 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
   switch (contentItem.contentType) {
     case ContentType.PhoneNumber: {
       thumbnail = (
-        <View style={styles.thumbnail}><TouchableOpacity onPress={openPhone}><FontAwesome5 name="phone-square-alt" size={65} color={Colors.light.subtitle} /></TouchableOpacity></View>)
+        <View style={styles.thumbnail}><Entypo name="phone" size={85} color={Colors.grey} /></View>)
       break;
     }
-
+    case ContentType.Text: {
+      thumbnail = (
+        <View style={styles.thumbnail}><Entypo name="quote" size={85} color={Colors.grey} /></View>)
+      break;
+    }
+    case ContentType.Url: {
+      thumbnail = (
+        <View style={styles.thumbnail}><FontAwesome name="video-camera" size={85} color={Colors.grey} /></View>)
+      break;
+    }
     case ContentType.Image: {
-      thumbnail = <View style={styles.thumbnail}><TouchableOpacity onPress={goToContentScreen}><Image source={{ uri: contentItem.imageUri }} style={styles.image} /></TouchableOpacity></View>
+      thumbnail = (
+        <View style={styles.thumbnail}><Image source={{ uri: contentItem.imageUri }} style={styles.image} /></View>)
       break;
     }
     default: {
@@ -111,13 +121,14 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
     }
   }
   let schedule;
+  let unscheduleButton;
   if (contentItem.active && contentItem.schedule) {
-
-    if (contentItem.schedule.scheduleMode==ScheduleMode.Scheduled) {
+    unscheduleButton = (<AddButton color={Colors.light.subtitle} onPress={() => { unscheduleItem(); setModalVisible(!modalVisible);}}><Text style={styles.textStyle}>Unschedule</Text></AddButton>)
+    if (contentItem.schedule.scheduleMode == ScheduleMode.Scheduled) {
       schedule = contentItem.schedule.day + " " + contentItem.schedule.hour + ":" + contentItem.schedule.minute;
     }
-    if (contentItem.schedule.scheduleMode==ScheduleMode.Interval) {
-      schedule = "Every " +contentItem.schedule.deltaTime +" "+ contentItem.schedule.frequency;
+    if (contentItem.schedule.scheduleMode == ScheduleMode.Interval) {
+      schedule = "Every " + contentItem.schedule.deltaTime + " " + contentItem.schedule.frequency;
     }
   }
 
@@ -140,14 +151,7 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
                 }}>
                 <Text style={styles.textStyle}>Delete</Text>
               </AddButton>
-              <AddButton
-                color={Colors.light.subtitle}
-                onPress={() => {
-                  unscheduleItem();
-                  setModalVisible(!modalVisible);
-                }}>
-                <Text style={styles.textStyle}>Unschedule</Text>
-              </AddButton>
+              {unscheduleButton}
               <AddButton
                 color={Colors.grey}
                 onPress={() => {
@@ -162,12 +166,12 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
           </View>
         </View>
       </Modal>
-      <View style={styles.content}>{thumbnail}
+      <TouchableOpacity onPress={goToContentScreen}><View style={styles.content}>{thumbnail}
         <View style={styles.textContent}>
-          <View><TouchableOpacity onPress={goToContentScreen}><Text style={styles.title}>{contentItem.text}</Text></TouchableOpacity></View>
+          <View><Text style={styles.title}>{contentItem.title}</Text></View>
           <View><Text style={styles.schedule}>{schedule}</Text></View>
         </View>
-      </View>
+      </View></TouchableOpacity>
       <CloseButton onPress={popUpDelete} />
 
     </View>
@@ -179,8 +183,9 @@ export default ContentCard;
 
 const styles = StyleSheet.create({
   image: {
-    width: 65,
-    height: 65,
+    width: 85,
+    height: 85,
+    borderRadius: 8
 
 
   },
@@ -228,7 +233,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    color: 'black'
   },
   schedule: {
     marginVertical: 10,
@@ -241,7 +247,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: 155,
-   
+
   },
   modalView: {
     margin: 20,
@@ -251,8 +257,8 @@ const styles = StyleSheet.create({
   },
   rowView: {
     flexDirection: 'row',
-     borderRadius: 8,
-     padding:10
+    borderRadius: 8,
+    padding: 10
   },
   openButton: {
     borderRadius: 5,

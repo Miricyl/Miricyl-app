@@ -13,11 +13,11 @@ const SelectCategoryScreen = () => {
     <View style={styles.screen}>
        <ScrollView contentContainerStyle={styles.ScrollViewContainer}>
        <View style={styles.navigationCards}>
-            <NavigationCard CardType="rectNavCard" text='Staying Well Messages' link='ContentImport' linkType={LinkType.Screen} category={CategoryType.StayingWell}></NavigationCard>
-            <NavigationCard CardType="rectNavCard" text='Early Warning Signs' link="CreateQuote"  linkType={LinkType.Screen} category={CategoryType.EarlyWarning}></NavigationCard>
-            <NavigationCard CardType="rectNavCard" text='Places to Go' link="CreateQuote"  linkType={LinkType.Screen} category={CategoryType.Places}></NavigationCard>
-            <NavigationCard CardType="rectNavCard" text='Things I love' link="CreateQuote"  linkType={LinkType.Screen} category={CategoryType.Love} height={Layout.window.width * 0.2} width={Layout.window.width * 0.8}></NavigationCard>
-            <NavigationCard CardType="rectNavCard" text='Coping strategies'  link='ContentImport' linkType={LinkType.Screen} category={CategoryType.Coping} height={Layout.window.width * 0.2} width={Layout.window.width * 0.8}></NavigationCard>
+            <NavigationCard CardType="rectNavCard" text='Staying Well Messages' link='CreateMessage' linkType={LinkType.Screen} category={CategoryType.StayingWell}></NavigationCard>
+            <NavigationCard CardType="rectNavCard" text='Early Warning Signs' link="CreateMessage"  linkType={LinkType.Screen} category={CategoryType.EarlyWarning}></NavigationCard>
+            <NavigationCard CardType="rectNavCard" text='Places to Go' link="CreateMessage"  linkType={LinkType.Screen} category={CategoryType.Places}></NavigationCard>
+            <NavigationCard CardType="rectNavCard" text='Things I love' link="CreateMessage"  linkType={LinkType.Screen} category={CategoryType.Love} height={Layout.window.width * 0.2} width={Layout.window.width * 0.8}></NavigationCard>
+            <NavigationCard CardType="rectNavCard" text='Coping strategies'  link='CreateMessage' linkType={LinkType.Screen} category={CategoryType.Coping} height={Layout.window.width * 0.2} width={Layout.window.width * 0.8}></NavigationCard>
         </View>
       </ScrollView>
     </View>

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, ImageBackground, Platform, StatusBar, StyleSheet } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import NavigationCard from '../../components/NavigationCard';
+import { FlatList, ScrollView, ImageBackground, Platform, StatusBar, StyleSheet } from 'react-native';
 import { Text, View } from '../../components/Themed';
 import Layout from '../../constants/Layout';
 import ContentCard from '../../components/ContentCard';
@@ -11,9 +9,9 @@ import { useIsFocused, useNavigation } from '@react-navigation/native';
 import AddButton from '../../components/AddButton';
 
 
-export default function JoyScreen() {
+export default function MyMessagesScreen() {
 
-    const [joyItems, setJoyItems] = useState<IContentItem[]>([]);
+    const [contentItems, setContentItems] = useState<IContentItem[]>([]);
     const isFocused = useIsFocused();
     const navigation= useNavigation();
 
@@ -25,13 +23,13 @@ export default function JoyScreen() {
     }, [isFocused]);
 
     const loadItems=()=>{
-         LoadAllItems().then((data: IContentItem[]) => setJoyItems(data))
+         LoadAllItems().then((data: IContentItem[]) => setContentItems(data))
     }
     return (
         <View style={styles.container}>
         <ImageBackground source={require('../../assets/images/dashboard_background.png')} style={styles.background}>
             <View style={styles.flatlist}><FlatList
-                data={joyItems}
+                data={contentItems}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => {
                     return (
