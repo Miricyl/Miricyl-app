@@ -20,10 +20,6 @@ const ContentScreen = ({ navigation, route }: ContentProps) => {
   //content screen should allow you to schedule message and delete item.
   const { contentId } = route.params;
   const [contentItem, setContentItem] = useState<IContentItem>();
-  const [showScheduling, setShowScheduling] = useState<boolean>(false);
-  const [showTimePicker, setShowTimePicker] = useState<boolean>(false);
-  const [time, setTime] = useState(new Date());
-  const [day, setDay] = useState(2);
 
   const nav = useNavigation();
 
@@ -35,6 +31,7 @@ const ContentScreen = ({ navigation, route }: ContentProps) => {
 
 
   const openPhone = () => {
+    console.log(contentItem);
     if (contentItem) {
       if (contentItem.phoneNumber) {
         contentItem.phoneNumber = contentItem.phoneNumber.replace(/[^0-9+]/g, '');
@@ -42,11 +39,12 @@ const ContentScreen = ({ navigation, route }: ContentProps) => {
 
         if (Platform.OS === 'ios') {
           link = 'telprompt:${' + contentItem.phoneNumber + '}';
+         
         }
         else {
           link = 'tel:' + contentItem.phoneNumber;
         }
-        Linking.openURL(link);
+        Linking.openURL(link).catch(() => null);
       }
     }
 
@@ -63,7 +61,8 @@ const ContentScreen = ({ navigation, route }: ContentProps) => {
 
   const goToEditing = () => {
     if (contentItem) {
-      nav.navigate('CreateMessage', {
+      nav.navigate('CreateMessage', {    
+        category:contentItem.category,
         contentId: contentItem.id
       })
     }
@@ -82,23 +81,26 @@ const ContentScreen = ({ navigation, route }: ContentProps) => {
   if (contentItem) {
     switch (contentItem.contentType) {
       case ContentType.Text: {
-        content = <View style={styles.contentContainer}><View style={styles.contentHolder}><Text style={styles.textItem}>{contentItem.text}</Text></View></View>
+        content = <View style={styles.contentContainer}>
+          <Text style={styles.title}>{contentItem.title}</Text>
+          <View style={styles.contentHolder}><Text style={styles.textItem}>{contentItem.text}</Text></View>
+          </View>
         break;
       }
       case ContentType.PhoneNumber: {
-        content = (<View style={styles.contentContainer}><View style={styles.contentHolder}><Text style={styles.title}>{contentItem.text}</Text>
-          <View style={styles.callIcons}><TouchableOpacity onPress={openPhone}><Feather name="phone-call" size={34} color="green" /></TouchableOpacity><TouchableOpacity onPress={openSMS}><MaterialIcons name="sms" size={34} color="green" /></TouchableOpacity></View>
+        content = (<View style={styles.contentContainer}><Text style={styles.title}>{contentItem.title}</Text><View style={styles.contentHolder}>
+          <View style={styles.callIcons}><TouchableOpacity onPress={openPhone}><Feather name="phone-call" size={55} color={Colors.light.subtitle} /></TouchableOpacity><TouchableOpacity onPress={openSMS}><MaterialIcons name="sms" size={55} color={Colors.light.subtitle} /></TouchableOpacity></View>
         </View></View>)
         break;
       }
       case ContentType.Url: {
-        content = <View style={styles.contentContainer}><View style={styles.contentHolder}><Text style={styles.title}>{contentItem.text}</Text><LinkPreview text={contentItem.url as string} /></View></View>
+        content = <View style={styles.contentContainer}><Text style={styles.title}>{contentItem.title}</Text><View style={styles.contentHolder}><Text style={styles.title}>{contentItem.text}</Text><LinkPreview text={contentItem.url as string}/></View></View>
         break;
       }
       case ContentType.Image: {
-        content = <View style={styles.contentContainer}><View style={styles.contentHolder}><Image style={styles.image} source={{
+        content = <View style={styles.contentContainer}><Text style={styles.title}>{contentItem.title}</Text><View style={styles.contentHolder}><Image style={styles.image} source={{
           uri: contentItem.imageUri
-        }}></Image></View><Text style={styles.title}>{contentItem.title}</Text></View>
+        }}></Image></View><Text style={styles.textItem}>{contentItem.text}</Text></View>
         break;
       }
       default: {
@@ -131,8 +133,9 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-evenly',
-    backgroundColor: 'transparent'
+    justifyContent: 'flex-start',
+    backgroundColor: 'transparent',
+    marginVertical: 30
   },
 
   contentHolder: {
@@ -174,8 +177,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   textItem: {
-    backgroundColor: 'white',
-    color: Colors.brown,
+    backgroundColor: 'transparent',
+    color: 'black',
     padding: 40,
     fontSize: 20,
     textAlign: 'center'
@@ -189,15 +192,18 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     backgroundColor: 'transparent',
-    color: Colors.brown
+    color: 'black',
+    margin:20
 
 
   },
   callIcons: {
+    width:Layout.window.width*0.7,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    margin: 10
+    margin: 30,
+    paddingHorizontal:30
   },
   image: {
     width: Layout.window.width * 0.9,

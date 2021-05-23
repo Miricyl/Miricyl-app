@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Platform, StyleSheet, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, Image, ScrollView } from 'react-native';
 import Colors from '../../constants/Colors'
 import { Text, View } from '../../components/Themed';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CategoryType, ContentSelect, ContentType, IContentItem, CategoryProps, Schedule, Intervals, ScheduleMode, Weekday } from '../../types';
 import { AddItem, LoadItem, UpdateItem } from '../../storage/ContentStorage';
 import AddButton from '../../components/AddButton'
@@ -15,33 +15,71 @@ import * as ImagePicker from 'expo-image-picker';
 
 
 export default function CreateMessageScreen({ navigation, route }: CategoryProps) {
-    const { category } = route.params;
-    const nav = useNavigation();
-    let contentItemTemplate: IContentItem = {
-        contentType: ContentType.Url,
-        text: '',
-        id: '',
-        category: category,
-        active: false,
-        schedule: {
-            identifyer: undefined,
-            minute: '0',
-            hour: '12',
-            day: Weekday.Saturday,
-            deltaTime: 2,
-            frequency: Intervals.Days,
-            scheduleMode: ScheduleMode.Interval,
-        }
+    const { category, contentId } = route.params;
 
-    }
     const [contentType, setContentType] = useState(ContentType.Url);
     const [contentText, setContentText] = useState("");
     const [contentTitle, setContentTitle] = useState("");
     const [contentImage, setContentImage] = useState("");
     const [contentPhoneNumber, setContentPhoneNumber] = useState("");
     const [contentUrl, setContentUrl] = useState("");
-    const [contentItem, setContentItem] = useState<IContentItem>(contentItemTemplate);
+    const [contentItem, setContentItem] = useState<IContentItem>();
 
+    useEffect(() => {
+        if (contentId) {
+            LoadItem(contentId).then((data) => {
+                console.log(data)
+                if (data) {
+                    setContentItem(data as IContentItem);
+                    if(data.contentType){
+                        setContentType(data.contentType as ContentType);
+                    }
+                    if (data.phoneNumber) {
+                        setContentPhoneNumber(data.phoneNumber);
+                    }
+                    if (data.url){
+                        setContentUrl(data.url);
+                    }
+                    if (data.text){
+                        setContentText(data.text);
+                    }
+                    if(data.title){
+                        setContentTitle(data.title);
+                    }
+                    if(data.imageUri){
+                        setContentImage(data.imageUri);
+                    }
+                }
+            })
+        }
+
+        else {
+            let contentItemTemplate: IContentItem = {
+                contentType: ContentType.Url,
+                text: '',
+                id: '',
+                category: category,
+                active: false,
+                schedule: {
+                    identifyer: undefined,
+                    minute: '0',
+                    hour: '12',
+                    day: Weekday.Saturday,
+                    deltaTime: 2,
+                    frequency: Intervals.Days,
+                    scheduleMode: ScheduleMode.Interval,
+                }
+
+            }
+
+            setContentItem(contentItemTemplate);
+
+        };
+
+    }, []);
+
+
+    const nav = useNavigation();
 
     let urlSelected = false;
     let imageSelected = false;
@@ -53,29 +91,30 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
     }
     const saveContentItem = async () => {
         //TODO check that content has been added, if not prompt user to fill in fields      
-        console.log(contentItem.id);
-        if (contentItem.id!==undefined && contentItem.id!=="") {
-            LoadItem(contentItem.id).then((item) => {
-                if (item) {
-                    item.contentType = contentType;
-                    item.imageUri = contentImage;
-                    item.phoneNumber = contentPhoneNumber;
-                    item.text = contentText;
-                    item.title = contentTitle;
-                    console.log(item);
-                    UpdateItem(item);
-                }
-            })
-            return contentItem.id;
-        }
-        else {
-            let itemNew = {...contentItem};
-            itemNew.title = contentTitle;
-            itemNew.contentType = contentType;
-            itemNew.text = contentText;
-            itemNew.imageUri=contentImage;
-            const id = await AddItem(itemNew);
-            return id;
+        if (contentItem) {
+            if (contentItem.id !== undefined && contentItem.id !== "") {
+                LoadItem(contentItem.id).then((item) => {
+                    if (item) {
+                        item.contentType = contentType;
+                        item.imageUri = contentImage;
+                        item.phoneNumber = contentPhoneNumber;
+                        item.text = contentText;
+                        item.title = contentTitle;
+                        console.log(item);
+                        UpdateItem(item);
+                    }
+                })
+                return contentItem.id;
+            }
+            else {
+                let itemNew = { ...contentItem };
+                itemNew.title = contentTitle;
+                itemNew.contentType = contentType;
+                itemNew.text = contentText;
+                itemNew.imageUri = contentImage;
+                const id = await AddItem(itemNew);
+                return id;
+            }
         }
     }
 

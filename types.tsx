@@ -4,7 +4,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 export type RootStackParamList = {
   Root: undefined;
   Content: { contentId: string };
-  Category: { category: CategoryType }
+  Category: { category: CategoryType, contentId?:string }
   NotFound: undefined;
 };
 
@@ -30,6 +30,7 @@ export type DashboardParamList = {
 
 
 export enum ContentType {
+  Undefined,
   PhoneNumber,
   Text,
   Url,
