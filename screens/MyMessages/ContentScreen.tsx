@@ -164,7 +164,8 @@ const styles = StyleSheet.create({
   buttonArea: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
+    paddingVertical:30
   },
   contentCards: {
     flex: 1,
