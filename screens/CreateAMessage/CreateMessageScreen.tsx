@@ -31,22 +31,22 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
                 console.log(data)
                 if (data) {
                     setContentItem(data as IContentItem);
-                    if(data.contentType){
+                    if (data.contentType) {
                         setContentType(data.contentType as ContentType);
                     }
                     if (data.phoneNumber) {
                         setContentPhoneNumber(data.phoneNumber);
                     }
-                    if (data.url){
+                    if (data.url) {
                         setContentUrl(data.url);
                     }
-                    if (data.text){
+                    if (data.text) {
                         setContentText(data.text);
                     }
-                    if(data.title){
+                    if (data.title) {
                         setContentTitle(data.title);
                     }
-                    if(data.imageUri){
+                    if (data.imageUri) {
                         setContentImage(data.imageUri);
                     }
                 }
@@ -93,15 +93,16 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
         //TODO check that content has been added, if not prompt user to fill in fields      
         if (contentItem) {
             if (contentItem.id !== undefined && contentItem.id !== "") {
-                LoadItem(contentItem.id).then((item) => {
+                await LoadItem(contentItem.id).then(async (item) => {
                     if (item) {
                         item.contentType = contentType;
                         item.imageUri = contentImage;
                         item.phoneNumber = contentPhoneNumber;
                         item.text = contentText;
                         item.title = contentTitle;
-                        console.log(item);
-                        UpdateItem(item);
+                        await UpdateItem(item);
+
+                        nav.navigate('MyMessages');
                     }
                 })
                 return contentItem.id;
@@ -120,7 +121,6 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
 
     const save = () => {
         saveContentItem();
-        nav.navigate('MyMessages');
     }
 
     const scheduleMessage = async () => {
