@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
 
   squareCard: {
     width: Layout.window.width * 0.42,
-    height: Layout.window.height * 0.23,
+    height:Layout.window.width * 0.42,
     shadowColor: 'black',
     shadowOpacity: 0.26,
     shadowOffset: { width: 0, height: 2 },
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
   squareCardText: {
-    fontSize: 18,
+    fontSize: Layout.isSmallDevice?12:18,
     color: Colors.light.text,
     marginTop: 70,
     textAlign: 'center',

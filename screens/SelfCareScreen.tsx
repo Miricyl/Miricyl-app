@@ -67,8 +67,7 @@ const styles = StyleSheet.create({
   },
   cardIcon: {
     position: "absolute",
-    top: 40,
-    margin: 'auto',
-    marginTop: 10,
+    top: 20,
+    paddingVertical: 10,
   },
 });
