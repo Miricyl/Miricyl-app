@@ -35,7 +35,27 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
 
     const LoadContentItem = () => {
         LoadItem(contentId).then((data) => {
-            setContentItem(data as IContentItem);
+            if (data) {
+                setContentItem(data as IContentItem);
+                setHour(data.schedule.hour);
+                setMinute(data.schedule.minute);
+
+                setDay(data.schedule.day);
+                setScheduleMode(data.schedule.scheduleMode);
+                setInterval(data.schedule.frequency);
+                let time;
+                if (data.schedule.deltaTime) {
+                    if (data.schedule.deltaTime > 9) {
+                        time = data.schedule.deltaTime.toString().split('');
+                        setFirstDigit(time[0]);
+                        setSecondDigit(time[1]);
+                    }
+                    if (data.schedule.deltaTime < 9) {
+                        setFirstDigit('0');
+                        setSecondDigit(data.schedule.deltaTime.toString());
+                    }
+                }
+            }
         });
     }
 
@@ -172,12 +192,12 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
         if (scheduleMode === ScheduleMode.Interval) {
             picker = (<View style={styles.pickers}>
                 <View style={styles.digits}>
-                {/* TODO for android make a Picker from 0 to 60 */}
-                    <Picker selectedValue={firstDigit} style={{ ...styles.picker, width:80, paddingRight: 0, marginRight: -10 }} onValueChange={(itemValue: any, itemIndex: Number) =>
+                    {/* TODO for android make a Picker from 0 to 60 */}
+                    <Picker selectedValue={firstDigit} style={{ ...styles.picker, width: 80, paddingRight: 0, marginRight: -10 }} onValueChange={(itemValue: any, itemIndex: Number) =>
                         setFirstDigit(itemValue)}>
                         {upToTen.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
                     </Picker>
-                    <Picker selectedValue={secondDigit} style={{...styles.picker,width:80}} onValueChange={(itemValue: any, itemIndex) =>
+                    <Picker selectedValue={secondDigit} style={{ ...styles.picker, width: 80 }} onValueChange={(itemValue: any, itemIndex) =>
                         setSecondDigit(itemValue)}>
                         {upToTen.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
                     </Picker>
@@ -255,7 +275,7 @@ const styles = StyleSheet.create({
             ios: {
                 flexDirection: 'row',
                 padding: 4,
-                marginTop:-160
+                marginTop: -160
 
             },
             android: {

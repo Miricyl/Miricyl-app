@@ -38,8 +38,9 @@ const ContentScreen = ({ navigation, route }: ContentProps) => {
         let link;
 
         if (Platform.OS === 'ios') {
-          link = 'telprompt:${' + contentItem.phoneNumber + '}';
-         
+          //TODO not sure why either of these don't work
+          //link = 'telprompt:${' + contentItem.phoneNumber + '}';
+          link = 'tel:+' + contentItem.phoneNumber;
         }
         else {
           link = 'tel:' + contentItem.phoneNumber;
@@ -135,7 +136,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     backgroundColor: 'transparent',
-    marginVertical: 30
+    marginVertical: 30,
+   
   },
 
   contentHolder: {
@@ -151,7 +153,8 @@ const styles = StyleSheet.create({
     width: Layout.window.width * 0.9,
     marginTop: 10,
     marginBottom: 10,
-    overflow: 'hidden',
+    overflow: 'hidden', 
+    padding:20
 
   },
   background: {

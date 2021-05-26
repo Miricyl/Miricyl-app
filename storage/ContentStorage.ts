@@ -19,7 +19,7 @@ export const AddItem = async (contentItem: IContentItem) => {
         items.push(contentItem);
     }
 
-    AsyncStorage.setItem('items', JSON.stringify(items));
+    await AsyncStorage.setItem('items', JSON.stringify(items));
 
     return contentItem.id;
 }
@@ -34,8 +34,10 @@ export const UpdateItem = async (contentItem: IContentItem) => {
 
         if (index !== -1) {
             items[index] = contentItem;
-            AsyncStorage.setItem('items', JSON.stringify(items));
+            await AsyncStorage.setItem('items', JSON.stringify(items));
         }
+
+        return contentItem.id;
     }
 }
 
@@ -50,7 +52,7 @@ export const DeleteItem = async (contentItemId: string) => {
             return obj.id !== contentItemId;
         });
 
-        AsyncStorage.setItem('items', JSON.stringify(items));
+        await AsyncStorage.setItem('items', JSON.stringify(items));
     }
 }
 
@@ -119,8 +121,6 @@ export const LoadAllItems = async () => {
                 frequency: Intervals.Weeks,
                 scheduleMode:ScheduleMode.Scheduled,
             }
-
-
         }
 
         const joyItem4: IContentItem = {
