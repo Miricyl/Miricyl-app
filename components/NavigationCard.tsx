@@ -5,9 +5,10 @@ import { useNavigation } from '@react-navigation/native';
 
 import Colors from '../constants/Colors';
 import { AntDesign } from '@expo/vector-icons';
-import { Text, View } from './Themed';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Text} from './Themed';
 import * as WebBrowser from 'expo-web-browser';
-import { ContentType, INavigationCardDetails, LinkType } from '../types';
+import { INavigationCardDetails, LinkType } from '../types';
 import Layout from '../constants/Layout';
 
 
@@ -47,9 +48,16 @@ const NavigationCard = ({ text, link, children, linkType, CardType = "rectNavCar
     case "rectNavCard":
       card =
        <>
-        <TouchableOpacity style={styles.rectCard} onPress={onPressFunction}>
-          <Text style={styles.rectCardText}>{text}</Text>
-          <AntDesign style={styles.rightArrow} name="right" size={24} color={Colors.light.text} />
+        
+        <TouchableOpacity  onPress={onPressFunction}>
+          <LinearGradient 
+            colors={['#faba15', '#fcd12f']}
+            start={{x: 0.2, y: 0.3}}
+            end={{x: 0.8, y: 0.7}}
+            style={styles.rectCard}>
+              <Text style={styles.rectCardText}>{text}</Text>
+              <AntDesign style={styles.rightArrow} name="right" size={24} color={Colors.light.text} />
+          </LinearGradient>
         </TouchableOpacity>
       </>
       break;
@@ -57,9 +65,15 @@ const NavigationCard = ({ text, link, children, linkType, CardType = "rectNavCar
     case "square":
       card = 
         <>
-          <TouchableOpacity style={styles.squareCard} onPress={onPressFunction}>
-            <Text style={styles.squareCardText}>{text}</Text>
-            {children}
+          <TouchableOpacity onPress={onPressFunction}>
+            <LinearGradient 
+              colors={['#faba15', '#fcd12f']}
+              start={{x: 0.2, y: 0.3}}
+              end={{x: 0.8, y: 0.7}}
+              style={styles.squareCard}>
+                <Text style={styles.squareCardText}>{text}</Text>
+                 {children}
+            </LinearGradient>
           </TouchableOpacity>
         </>
       break;
@@ -87,7 +101,6 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 5,
     borderRadius: 50,
-    backgroundColor: 'radial-gradient(circle, rgba(238,178,47,1) 0%, rgba(252,212,49,1) 56%)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -101,7 +114,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 5,
     borderRadius: 25,
-    backgroundColor: 'radial-gradient(circle, rgba(238,178,47,1) 0%, rgba(252,212,49,1) 56%)',
+    backgroundColor: "#fc472f",
     alignItems: 'center',
     justifyContent: 'space-around',
   },
