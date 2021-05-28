@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   },
   cardIcon: {
     position: "absolute",
-    top: 40,
+    top: Layout.isSmallDevice?20:10,
     margin: 'auto',
     marginTop: 10,
   },
