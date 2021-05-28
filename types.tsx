@@ -25,6 +25,7 @@ export type DashboardParamList = {
   CreateAMessage: undefined;
   CreateMessage: undefined;
   Scheduling: undefined;
+  FeatureNotAvailable: undefined;
 };
 
 

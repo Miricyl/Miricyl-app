@@ -11,6 +11,7 @@ import SelfCareScreen from '../screens/SelfCareScreen';
 import SelectCategoryScreen from '../screens/CreateAMessage/SelectCategoryScreen';
 import CreateMessageScreen from '../screens/CreateAMessage/CreateMessageScreen';
 import ScheduleMessageScreen from '../screens/ScheduleMessageScreen';
+import FeatureNotAvailableScreen from '../screens/FeatureNotAvailbleScreen';
 
 
 const Stack = createStackNavigator<DashboardParamList>();
@@ -74,6 +75,11 @@ export default function DashboardStackNavigator() {
                 name="Scheduling"
                 component={ScheduleMessageScreen}
                 options={{ title: 'Schedule Message' }}
+            />
+            <Stack.Screen
+                name="FeatureNotAvailable"
+                component={FeatureNotAvailableScreen}
+                options={{ title: 'Feature Not Available Yet' }}
             />
 
         </Stack.Navigator>

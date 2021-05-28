@@ -65,7 +65,7 @@ const NavigationCard = ({ text, link, children, linkType, CardType = "rectNavCar
     case "square":
       card = 
         <>
-          <TouchableOpacity onPress={onPressFunction}>
+          {/* <TouchableOpacity onPress={onPressFunction}>
             <LinearGradient 
               colors={['#faba15', '#fcd12f']}
               start={{x: 0.2, y: 0.3}}
@@ -74,6 +74,10 @@ const NavigationCard = ({ text, link, children, linkType, CardType = "rectNavCar
                 <Text style={styles.squareCardText}>{text}</Text>
                  {children}
             </LinearGradient>
+          </TouchableOpacity> */}
+          <TouchableOpacity style={styles.squareCard} onPress={onPressFunction}>
+                <Text style={styles.squareCardText}>{text}</Text>
+                 {children}
           </TouchableOpacity>
         </>
       break;
@@ -95,6 +99,7 @@ const styles = StyleSheet.create({
   squareCard: {
     width: Layout.window.width * 0.42,
     height: Layout.window.height * 0.23,
+    backgroundColor: 'green',
     shadowColor: 'black',
     shadowOpacity: 0.26,
     shadowOffset: { width: 0, height: 2 },
