@@ -20,10 +20,10 @@ const SelfCareScreen = () => {
       <ScrollView contentContainerStyle={styles.ScrollViewContainer}>
           <View style={styles.rowsContainer}>
             <View style={styles.navCardsRow}>
-              <NavigationCard CardType='square' text='Create a Message' link='CreateAMessage'linkType={LinkType.Screen}>
+              <NavigationCard CardType='square' text='Create a Message' link='CreateAMessage' linkType={LinkType.Screen}>
                 <AntDesign style={styles.cardIcon} name="message1" size={50} color={Colors.light.text}  />
               </NavigationCard>
-              <NavigationCard CardType='square' text='Choose from Community' link='' linkType={LinkType.Screen}>
+              <NavigationCard CardType='square' text='Choose from Community' link='FeatureNotAvailable' linkType={LinkType.Screen}>
                 <FontAwesome style={styles.cardIcon} name="group"  size={45} color={Colors.light.text} />
               </NavigationCard>
             </View>
@@ -31,7 +31,7 @@ const SelfCareScreen = () => {
               <NavigationCard CardType='square' text='My Messages'link='MyMessages' linkType={LinkType.Screen}>
                 <FontAwesome style={styles.cardIcon} name="envelope" size={50} color={Colors.light.text}  />
               </NavigationCard>
-              <NavigationCard CardType='square' text='My Plans' link='' linkType={LinkType.Screen}>
+              <NavigationCard CardType='square' text='My Plans' link='FeatureNotAvailable' linkType={LinkType.Screen}>
                 <MaterialCommunityIcons style={styles.cardIcon} name="file-document-outline" size={50} color={Colors.light.text}  />
               </NavigationCard>
             </View> 
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   },
   cardIcon: {
     position: "absolute",
-    top: 40,
+    top: Layout.isSmallDevice?20:40,
     margin: 'auto',
     marginTop: 10,
   },
