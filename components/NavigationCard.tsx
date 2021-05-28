@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
   squareCardText: {
-    fontSize: Layout.isSmallDevice?15:12,
+    fontSize: Layout.isSmallDevice?15:18,
     color: Colors.light.text,
     marginTop: 70,
     textAlign: 'center',
