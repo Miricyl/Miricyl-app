@@ -11,9 +11,9 @@ import { Platform } from 'react-native';
 import { Linking } from 'react-native';
 import sms from 'react-native-sms-linking';
 import CloseButton from '../components/CloseButton';
-import { DeleteItem, UpdateItem } from '../storage/ContentStorage';
-import * as Notifications from 'expo-notifications';
+import { DeleteItem, UpdateItem } from '../services/ContentStorage';
 import AddButton from './AddButton';
+import { CancelNotification } from '../services/PushNotifications';
 
 
 const ContentCard = (props: { item: IContentItem, onClose: any }) => {
@@ -28,21 +28,7 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
     });
   }
 
-  const openPhone = () => {
-    if (contentItem.phoneNumber) {
-      contentItem.phoneNumber = contentItem.phoneNumber.replace(/[^0-9+]/g, '');
-      let link;
 
-      if (Platform.OS === 'ios') {
-        link = 'telprompt:${' + contentItem.phoneNumber + '}';
-      }
-      else {
-        link = 'tel:' + contentItem.phoneNumber;
-      }
-      Linking.openURL(link);
-    }
-
-  }
   const popUpDelete = () => {
     setModalVisible(true);
   }
@@ -50,7 +36,7 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
   const unscheduleItem = () => {
 
     if (contentItem.schedule.identifyer !== undefined) {
-      cancelNotification(contentItem.schedule.identifyer).then();
+      CancelNotification(contentItem.schedule.identifyer).then();
     }
 
     let item = { ...contentItem };
@@ -68,7 +54,7 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
   const deleteItem = () => {
     if (contentItem.schedule.identifyer !== undefined) {
       //TODO extend this method so it checks for success and only then deletes item, if not successful ask user to try again
-      cancelNotification(contentItem.schedule.identifyer).then(() => {
+      CancelNotification(contentItem.schedule.identifyer).then(() => {
         DeleteItem(contentItem.id).then(() => {
           props.onClose();
         });
@@ -79,18 +65,6 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
         props.onClose();
       });
     }
-  }
-
-  const openSMS = () => {
-    if (contentItem.phoneNumber) {
-      contentItem.phoneNumber = contentItem.phoneNumber.replace(/[^0-9+]/g, '');
-      sms(contentItem.phoneNumber, "").catch(console.error);
-    }
-  }
-
-  /// TODO this function should be moved to a notification class to be used across all components
-  const cancelNotification = async (id: string) => {
-    await Notifications.cancelScheduledNotificationAsync(id);
   }
 
   let thumbnail;
@@ -111,8 +85,9 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
       break;
     }
     case ContentType.Image: {
+      let image = contentItem.imageUri !== '' ? <Image source={{ uri: contentItem.imageUri }} style={styles.image} /> : <></>;
       thumbnail = (
-        <View style={styles.thumbnail}><Image source={{ uri: contentItem.imageUri }} style={styles.image} /></View>)
+        <View style={styles.thumbnail}>{image}</View>)
       break;
     }
     default: {
@@ -123,7 +98,7 @@ const ContentCard = (props: { item: IContentItem, onClose: any }) => {
   let schedule;
   let unscheduleButton;
   if (contentItem.active && contentItem.schedule) {
-    unscheduleButton = (<AddButton color={Colors.light.subtitle} onPress={() => { unscheduleItem(); setModalVisible(!modalVisible);}}><Text style={styles.textStyle}>Unschedule</Text></AddButton>)
+    unscheduleButton = (<AddButton color={Colors.light.subtitle} onPress={() => { unscheduleItem(); setModalVisible(!modalVisible); }}><Text style={styles.textStyle}>Unschedule</Text></AddButton>)
     if (contentItem.schedule.scheduleMode == ScheduleMode.Scheduled) {
       schedule = contentItem.schedule.day + " " + contentItem.schedule.hour + ":" + contentItem.schedule.minute;
     }

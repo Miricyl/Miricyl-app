@@ -3,8 +3,8 @@ import { Platform, StyleSheet, ScrollView } from 'react-native';
 import Colors from '../constants/Colors'
 import { View } from '../components/Themed';
 import { useEffect, useState } from 'react';
-import { IContentItem, Weekday, ScheduleMode, Intervals } from '../types';
-import { LoadItem, UpdateItem } from '../storage/ContentStorage';
+import { IContentItem, Weekday, ScheduleMode, Intervals, Schedule } from '../types';
+import { LoadItem, UpdateItem } from '../services/ContentStorage';
 import AddButton from '../components/AddButton'
 import Layout from '../constants/Layout';
 import { ContentProps } from '../types';
@@ -12,6 +12,7 @@ import * as Notifications from 'expo-notifications';
 import { RadioButton, Text } from 'react-native-paper';
 import { Picker } from '@react-native-picker/picker';
 import ScheduleInfo from '../components/ScheduleInfo';
+import { ScheduleIntervalNotification, ScheduleScheduledNotification } from '../services/PushNotifications';
 
 
 const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
@@ -75,91 +76,65 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
                 const result = await Notifications.cancelScheduledNotificationAsync(contentItem.schedule.identifyer);
             }
 
-            let notificationId;
+            let notificationId: any;
             if (scheduleMode === ScheduleMode.Scheduled) {
-                const dayNumber = weekdays.indexOf(day as Weekday);
-                var startDate = new Date();
-                //TODO the trigger doesn't work. Calculated a time in second and schedule that as a one off and repeat scheduling when user picks up the notification
-                notificationId = await Notifications.scheduleNotificationAsync({
-                    content: {
-                        title: "A reminder",
-                        body: contentItem?.title,
-                        data: { id: contentItem?.id },
-                    },
-                    //this is the weekly repeating one. Use later when id is saved so it can be cancelled
-                    //trigger: { repeats: true, weekday:day, hour: time.getHours(), minute: time.getMinutes() },
 
-                    trigger: { repeats: false, weekday: dayNumber, hour: Number(hour), minute: Number(minute) },
-                });
+                let schedule: Schedule = {
+                    day: day as Weekday,
+                    hour: hour,
+                    minute: minute,
+                    scheduleMode: ScheduleMode.Scheduled,
+                    identifyer: contentItem.schedule.identifyer,
+                    frequency: Intervals.Days,
+                    deltaTime: 0
+
+                }
+
+                notificationId = await ScheduleScheduledNotification(contentItem, schedule);
 
                 if (notificationId) {
                     var item = { ...contentItem };
                     item.active = true;
+                    item.schedule = schedule;
                     item.schedule.identifyer = notificationId;
-                    item.schedule.day = day as Weekday;
-                    item.schedule.hour = hour;
-                    item.schedule.minute = minute;
-                    item.schedule.scheduleMode = ScheduleMode.Scheduled;
 
                     setContentItem(item);
                     UpdateItem(item);
                 }
             }
+
             if (scheduleMode === ScheduleMode.Interval) {
-                let multiplier = 60; //corresponds to minute
-                switch (interval) {
-                    case Intervals.Minutes:
-                        multiplier = 60;
-                        break;
-                    case Intervals.Hours:
-                        multiplier = 60 * 60;
-                        break;
-                    case Intervals.Days:
-                        multiplier = 60 * 60 * 24;
-                        break;
-                    case Intervals.Weeks:
-                        multiplier = 60 * 60 * 24 * 7;
-                        break;
-                    case Intervals.Months:
-                        multiplier = 60 * 60 * 24 * 7 * 30;
-                        break;
+                const timeUnits = Number('' + firstDigit + secondDigit);
+                let schedule: Schedule = {
+                    day: day as Weekday,
+                    hour: hour,
+                    minute: minute,
+                    scheduleMode: ScheduleMode.Interval,
+                    identifyer: contentItem.schedule.identifyer,
+                    frequency: Intervals.Days,
+                    deltaTime: timeUnits
 
                 }
-                const timeUnits = Number('' + firstDigit + secondDigit);
-                const seconds = timeUnits * multiplier;
-                notificationId = await Notifications.scheduleNotificationAsync({
-                    content: {
-                        title: "A reminder",
-                        body: contentItem.title,
-                        data: { id: contentItem.id },
-                    },
-                    //this is the weekly repeating one. Use later when id is saved so it can be cancelled
-                    //trigger: { repeats: true, weekday:day, hour: time.getHours(), minute: time.getMinutes() },
-                    trigger: {
-                        seconds: seconds,
-                        repeats: false
-                    }, //change to true for deployment
-                });
-
-                console.log("Id notification " + notificationId);
+                notificationId = await ScheduleIntervalNotification(contentItem, schedule);
 
                 if (notificationId) {
+
                     var item = { ...contentItem };
                     item.active = true;
+                    item.schedule = schedule;
                     item.schedule.identifyer = notificationId;
-                    item.schedule.frequency = interval as Intervals;
-                    item.schedule.deltaTime = timeUnits;
-                    item.schedule.scheduleMode = ScheduleMode.Interval;
 
                     setContentItem(item);
                     UpdateItem(item);
                 }
             }
         }
+
     }
 
     let dateContainer;
     let picker;
+    let dayWidth = Platform.OS == "android" ? 180 : 150;
 
     if (contentItem !== undefined && contentItem.active) {
         if (scheduleMode === ScheduleMode.Scheduled) {
@@ -173,7 +148,7 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
 
         if (scheduleMode === ScheduleMode.Scheduled) {
             picker = (<View style={styles.pickers}>
-                <Picker selectedValue={day} style={{ ...styles.picker, width: 150 }} onValueChange={(itemValue: any, itemIndex: Number) =>
+                <Picker selectedValue={day} style={{ ...styles.picker, width: dayWidth }} onValueChange={(itemValue: any, itemIndex: Number) =>
                     setDay(itemValue)}>
                     {weekdays.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
                 </Picker>

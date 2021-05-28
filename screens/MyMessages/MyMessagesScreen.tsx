@@ -4,7 +4,7 @@ import { Text, View } from '../../components/Themed';
 import Layout from '../../constants/Layout';
 import ContentCard from '../../components/ContentCard';
 import { IContentItem, LinkType } from '../../types';
-import { LoadAllItems, AddItem } from '../../storage/ContentStorage';
+import { LoadAllItems, AddItem } from '../../services/ContentStorage';
 import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native';
 import AddButton from '../../components/AddButton';
 

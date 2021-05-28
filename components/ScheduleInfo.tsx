@@ -9,7 +9,7 @@ import { Feather, AntDesign } from '@expo/vector-icons';
 import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 
 import CloseButton from './CloseButton';
-import { DeleteItem, UpdateItem } from '../storage/ContentStorage';
+import { DeleteItem, UpdateItem } from '../services/ContentStorage';
 import * as Notifications from 'expo-notifications';
 import AddButton from './AddButton';
 

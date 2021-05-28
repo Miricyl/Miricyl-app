@@ -4,7 +4,7 @@ import { Text, View } from '../../components/Themed';
 import Layout from '../../constants/Layout';
 import { CategoryType, ContentType, IContentItem, ContentProps } from '../../types';
 import { useEffect, useState } from 'react';
-import { LoadItem } from '../../storage/ContentStorage';
+import { DeleteItem, LoadItem } from '../../services/ContentStorage';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
 import sms from 'react-native-sms-linking';
@@ -12,8 +12,10 @@ import { LinkPreview } from '@flyerhq/react-native-link-preview';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import SelectWidget from '../../components/SelectWidget';
 import AddButton from '../../components/AddButton';
-import * as Notifications from 'expo-notifications'
+import * as Notifications from 'expo-notifications';
 import { useNavigation } from '@react-navigation/native';
+import { CancelNotification } from '../../services/PushNotifications';
+import { WebBrowser } from 'expo';
 
 
 const ContentScreen = ({ navigation, route }: ContentProps) => {
@@ -62,8 +64,8 @@ const ContentScreen = ({ navigation, route }: ContentProps) => {
 
   const goToEditing = () => {
     if (contentItem) {
-      nav.navigate('CreateMessage', {    
-        category:contentItem.category,
+      nav.navigate('CreateMessage', {
+        category: contentItem.category,
         contentId: contentItem.id
       })
     }
@@ -78,14 +80,36 @@ const ContentScreen = ({ navigation, route }: ContentProps) => {
     }
   }
 
+  const deleteMessage = () => {
+    if (contentItem) {
+      if (contentItem.schedule.identifyer !== undefined) {
+        //TODO extend this method so it checks for success and only then deletes item, if not successful ask user to try again
+        CancelNotification(contentItem.schedule.identifyer).then(() => {
+          DeleteItem(contentItem.id).then(() => {
+            nav.navigate('MyMessages');
+          });
+        });
+      }
+      else {
+        DeleteItem(contentItem.id).then(() => {
+          nav.navigate('MyMessages')
+        });
+      }
+    }
+  }
+
+
   let content;
   if (contentItem) {
+
+    let webview = contentItem.url ? contentItem.url : 'https://miricyl.org';
+    console.log(webview);
     switch (contentItem.contentType) {
       case ContentType.Text: {
         content = <View style={styles.contentContainer}>
           <Text style={styles.title}>{contentItem.title}</Text>
           <View style={styles.contentHolder}><Text style={styles.textItem}>{contentItem.text}</Text></View>
-          </View>
+        </View>
         break;
       }
       case ContentType.PhoneNumber: {
@@ -95,13 +119,13 @@ const ContentScreen = ({ navigation, route }: ContentProps) => {
         break;
       }
       case ContentType.Url: {
-        content = <View style={styles.contentContainer}><Text style={styles.title}>{contentItem.title}</Text><View style={styles.contentHolder}><Text style={styles.title}>{contentItem.text}</Text><LinkPreview text={contentItem.url as string}/></View></View>
+        content = <View style={styles.contentContainer}><Text style={styles.title}>{contentItem.title}</Text><View style={styles.contentHolder}><Text style={styles.title}>{contentItem.text}</Text>
+        <TouchableOpacity onPress={openPhone}><Feather name="phone-call" size={55} color={Colors.light.subtitle} /></TouchableOpacity><TouchableOpacity onPress={() => { WebBrowser.openBrowserAsync(contentItem.url) }}><MaterialIcons name="sms" size={55} color={Colors.light.subtitle} /></TouchableOpacity></View></View>
         break;
       }
-      case ContentType.Image: {
-        content = <View style={styles.contentContainer}><Text style={styles.title}>{contentItem.title}</Text><View style={styles.contentHolder}><Image style={styles.image} source={{
-          uri: contentItem.imageUri
-        }}></Image></View><Text style={styles.textItem}>{contentItem.text}</Text></View>
+      case ContentType.Image: {      
+        let image = contentItem.imageUri !== '' ? <Image source={{ uri: contentItem.imageUri }} style={styles.image} /> : <></>;
+        content = <View style={styles.contentContainer}><Text style={styles.title}>{contentItem.title}</Text><View style={styles.contentHolder}>{image}</View><Text style={styles.textItem}>{contentItem.text}</Text></View>
         break;
       }
       default: {
@@ -113,10 +137,14 @@ const ContentScreen = ({ navigation, route }: ContentProps) => {
 
   return (
     <View style={styles.container}>
-      
-        {content}
-        <View style={styles.buttonArea}><AddButton onPress={goToScheduling} width={Layout.window.width * 0.3}>Schedule</AddButton><AddButton width={Layout.window.width * 0.3}>Delete</AddButton><AddButton width={Layout.window.width * 0.3} onPress={goToEditing}>Edit</AddButton></View>
- 
+
+      {content}
+      <View style={styles.buttonArea}>
+        <AddButton onPress={goToScheduling} width={Layout.window.width * 0.3}>Schedule</AddButton>
+        <AddButton onPress={deleteMessage} width={Layout.window.width * 0.3}>Delete</AddButton>
+        <AddButton onPress={goToEditing} width={Layout.window.width * 0.3} >Edit</AddButton>
+      </View>
+
     </View>
 
   );
@@ -129,7 +157,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-evenly',
-    backgroundColor:Colors.grey
+    backgroundColor: Colors.grey
   },
   contentContainer: {
     flex: 1,
@@ -137,7 +165,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     marginVertical: 30,
-   
+
   },
 
   contentHolder: {
@@ -153,8 +181,8 @@ const styles = StyleSheet.create({
     width: Layout.window.width * 0.9,
     marginTop: 10,
     marginBottom: 10,
-    overflow: 'hidden', 
-    padding:20
+    overflow: 'hidden',
+    padding: 20
 
   },
   background: {
@@ -168,7 +196,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     backgroundColor: 'transparent',
-    paddingVertical:30
+    paddingVertical: 30
   },
   contentCards: {
     flex: 1,
@@ -197,17 +225,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     backgroundColor: 'transparent',
     color: 'black',
-    margin:20
+    margin: 20
 
 
   },
   callIcons: {
-    width:Layout.window.width*0.7,
+    width: Layout.window.width * 0.7,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     margin: 30,
-    paddingHorizontal:30
+    paddingHorizontal: 30
   },
   image: {
     width: Layout.window.width * 0.9,

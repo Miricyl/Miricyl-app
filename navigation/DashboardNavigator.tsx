@@ -45,7 +45,7 @@ export default function DashboardStackNavigator() {
             <Stack.Screen
                 name="SelfCare"
                 component={SelfCareScreen}
-                options={{ headerTitle: 'SelfCare' }}
+                options={{ headerTitle: 'Self Care' }}
             />
             <Stack.Screen
                 name="CreateAMessage"
@@ -68,7 +68,7 @@ export default function DashboardStackNavigator() {
             <Stack.Screen
                 name="Content"
                 component={ContentScreen}
-                options={{ title: 'ContentScreen' }}
+                options={{ title: '' }}
             />
             <Stack.Screen
                 name="Scheduling"

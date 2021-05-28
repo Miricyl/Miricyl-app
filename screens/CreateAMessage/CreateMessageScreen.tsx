@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Platform, StyleSheet, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, Image, ScrollView } from 'react-native';
+import { Platform, StyleSheet, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, Image, ScrollView, Modal } from 'react-native';
 import Colors from '../../constants/Colors'
 import { Text, View } from '../../components/Themed';
 import { useEffect, useState } from 'react';
 import { CategoryType, ContentSelect, ContentType, IContentItem, CategoryProps, Schedule, Intervals, ScheduleMode, Weekday } from '../../types';
-import { AddItem, LoadItem, UpdateItem } from '../../storage/ContentStorage';
+import { AddItem, LoadItem, UpdateItem } from '../../services/ContentStorage';
 import AddButton from '../../components/AddButton'
 import { useNavigation } from '@react-navigation/native';
 import Layout from '../../constants/Layout';
@@ -12,11 +12,14 @@ import InputField from '../../components/InputField';
 import { Entypo, FontAwesome } from '@expo/vector-icons';
 import SelectButton from '../../components/SelectButton';
 import * as ImagePicker from 'expo-image-picker';
+import { Item } from 'react-native-paper/lib/typescript/components/List/List';
+import CloseButton from '../../components/CloseButton';
+import { Icon } from '@expo/vector-icons/build/createIconSet';
 
 
 export default function CreateMessageScreen({ navigation, route }: CategoryProps) {
     const { category, contentId } = route.params;
-
+    //TODO this could be refactored so that we only use contentItem to store the state.
     const [contentType, setContentType] = useState(ContentType.Url);
     const [contentText, setContentText] = useState("");
     const [contentTitle, setContentTitle] = useState("");
@@ -97,12 +100,11 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
                     if (item) {
                         item.contentType = contentType;
                         item.imageUri = contentImage;
+                        item.url = contentUrl;
                         item.phoneNumber = contentPhoneNumber;
                         item.text = contentText;
                         item.title = contentTitle;
                         await UpdateItem(item);
-
-                        nav.navigate('MyMessages');
                     }
                 })
                 return contentItem.id;
@@ -110,24 +112,35 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
             else {
                 let itemNew = { ...contentItem };
                 itemNew.title = contentTitle;
+                itemNew.url = contentUrl;
+                itemNew.phoneNumber = contentPhoneNumber;
                 itemNew.contentType = contentType;
                 itemNew.text = contentText;
                 itemNew.imageUri = contentImage;
+                itemNew.category = category;
                 const id = await AddItem(itemNew);
                 return id;
             }
+
         }
+        return "";
     }
 
-    const save = () => {
-        saveContentItem();
+    const save = async () => {
+        let success =await saveContentItem(); 
+        console.log(success);
+        if (success) {
+            nav.navigate('MyMessages');
+        }
     }
 
     const scheduleMessage = async () => {
         const id = await saveContentItem();
-        nav.navigate('Scheduling', {
-            contentId: id
-        })
+        if (id) {
+            nav.navigate('Scheduling', {
+                contentId: id
+            })
+        }
 
     }
 
@@ -145,15 +158,12 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
             }
         })();
 
-
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
         });
-
-
         if (!result.cancelled) {
             setContentImage(result.uri);
         }
@@ -219,7 +229,6 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
         </TouchableWithoutFeedback>
     </KeyboardAvoidingView></ScrollView>
 
-
     );
 }
 
@@ -273,6 +282,40 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         borderRadius: 5,
+    },
+    centeredView: {
+        backgroundColor: 'transparent',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingTop: 155,
+
+    },
+    modalView: {
+        margin: 20,
+        padding: 15,
+        alignItems: 'center',
+
+    },
+    rowView: {
+        flexDirection: 'row',
+        borderRadius: 8,
+        padding: 10
+    },
+    openButton: {
+        borderRadius: 5,
+        padding: 10,
+        elevation: 2,
+        margin: 10
+    },
+    textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
+        fontWeight: 'bold'
     },
 
 });

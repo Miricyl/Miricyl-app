@@ -8,7 +8,7 @@ import { Text, View } from '../components/Themed';
 import Layout from '../constants/Layout';
 import Colors from '../constants/Colors';
 import { LinkType } from '../types'
-import { StorePushToken } from './storage/pushNotificationStorage';
+import { StorePushToken } from './storage/pushNotifications';
 import * as Notifications from 'expo-notifications'
 import { useNavigation } from '@react-navigation/native';
 
@@ -30,7 +30,6 @@ const DashboardScreen = () => {
         return;
       }
       token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.log(token);
     }
     else {
       alert('Must use physical device for Push Notifications');
