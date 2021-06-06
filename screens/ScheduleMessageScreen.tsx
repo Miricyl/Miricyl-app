@@ -8,15 +8,15 @@ import { LoadItem, UpdateItem } from '../services/ContentStorage';
 import AddButton from '../components/AddButton'
 import Layout from '../constants/Layout';
 import { ContentProps } from '../types';
-import * as Notifications from 'expo-notifications';
 import { RadioButton, Text } from 'react-native-paper';
 import { Picker } from '@react-native-picker/picker';
 import ScheduleInfo from '../components/ScheduleInfo';
 import { ScheduleIntervalNotification, ScheduleScheduledNotification } from '../services/PushNotifications';
+import { useNavigation } from '@react-navigation/native';
 
 
 const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
-
+    const nav = useNavigation();
     const { contentId } = route.params;
     const [contentItem, setContentItem] = useState<IContentItem>();
     const [hour, setHour] = useState('00');
@@ -28,10 +28,7 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
     const [interval, setInterval] = useState('Days');
 
     useEffect(() => {
-
         LoadContentItem();
-
-
     }, []);
 
     const LoadContentItem = () => {
@@ -65,16 +62,25 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
     const minutes = ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'];
     const upToTen = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
     const intervals = Object.values(Intervals);
+
     const goToPlanScreen = () => {
+        nav.navigate('FeatureNotAvailable');
+    }
+
+    const updateSchdeduleInfo = (notificationId: string, schedule: Schedule) => {
+        if (contentItem) {
+            var item: IContentItem = { ...contentItem };
+            item.active = true;
+            item.schedule = schedule;
+            item.schedule.identifyer = notificationId;
+            UpdateItem(item);
+            setContentItem(item);
+        }
 
     }
 
     const scheduleMessage = async () => {
         if (contentItem != undefined) {
-            //if notificationId isn't null the old notification needs to be unscheduled first.
-            if (contentItem?.schedule.identifyer !== undefined || contentItem?.schedule.identifyer === "") {
-                const result = await Notifications.cancelScheduledNotificationAsync(contentItem.schedule.identifyer);
-            }
 
             let notificationId: any;
             if (scheduleMode === ScheduleMode.Scheduled) {
@@ -85,7 +91,7 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
                     minute: minute,
                     scheduleMode: ScheduleMode.Scheduled,
                     identifyer: contentItem.schedule.identifyer,
-                    frequency: Intervals.Days,
+                    frequency: interval as Intervals,
                     deltaTime: 0
 
                 }
@@ -93,13 +99,8 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
                 notificationId = await ScheduleScheduledNotification(contentItem, schedule);
 
                 if (notificationId) {
-                    var item = { ...contentItem };
-                    item.active = true;
-                    item.schedule = schedule;
-                    item.schedule.identifyer = notificationId;
+                    updateSchdeduleInfo(notificationId, schedule);
 
-                    setContentItem(item);
-                    UpdateItem(item);
                 }
             }
 
@@ -111,21 +112,14 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
                     minute: minute,
                     scheduleMode: ScheduleMode.Interval,
                     identifyer: contentItem.schedule.identifyer,
-                    frequency: Intervals.Days,
+                    frequency: interval as Intervals,
                     deltaTime: timeUnits
 
                 }
                 notificationId = await ScheduleIntervalNotification(contentItem, schedule);
-
                 if (notificationId) {
+                    updateSchdeduleInfo(notificationId, schedule);
 
-                    var item = { ...contentItem };
-                    item.active = true;
-                    item.schedule = schedule;
-                    item.schedule.identifyer = notificationId;
-
-                    setContentItem(item);
-                    UpdateItem(item);
                 }
             }
         }
@@ -137,12 +131,7 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
     let dayWidth = Platform.OS == "android" ? 180 : 150;
 
     if (contentItem !== undefined && contentItem.active) {
-        if (scheduleMode === ScheduleMode.Scheduled) {
-            dateContainer = <ScheduleInfo item={contentItem} onClose={LoadContentItem} />
-        }
-        if (scheduleMode === ScheduleMode.Interval) {
-            dateContainer = <ScheduleInfo item={contentItem} onClose={LoadContentItem} />
-        }
+        dateContainer = <ScheduleInfo item={contentItem} onClose={LoadContentItem} />
     }
     if (contentItem !== undefined) {
 

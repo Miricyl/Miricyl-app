@@ -5,7 +5,7 @@ import Layout from '../../constants/Layout';
 import { CategoryType, ContentType, IContentItem, ContentProps } from '../../types';
 import { useEffect, useState } from 'react';
 import { DeleteItem, LoadItem } from '../../services/ContentStorage';
-import { Feather, MaterialIcons } from '@expo/vector-icons';
+import { Feather, FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
 import sms from 'react-native-sms-linking';
 import { LinkPreview } from '@flyerhq/react-native-link-preview';
@@ -15,8 +15,7 @@ import AddButton from '../../components/AddButton';
 import * as Notifications from 'expo-notifications';
 import { useNavigation } from '@react-navigation/native';
 import { CancelNotification } from '../../services/PushNotifications';
-import { WebBrowser } from 'expo';
-
+import * as WebBrowser from 'expo-web-browser';
 
 const ContentScreen = ({ navigation, route }: ContentProps) => {
   //content screen should allow you to schedule message and delete item.
@@ -26,9 +25,7 @@ const ContentScreen = ({ navigation, route }: ContentProps) => {
   const nav = useNavigation();
 
   useEffect(() => {
-
     LoadItem(contentId).then((data) => setContentItem(data as IContentItem))
-
   }, []);
 
 
@@ -101,9 +98,7 @@ const ContentScreen = ({ navigation, route }: ContentProps) => {
 
   let content;
   if (contentItem) {
-
     let webview = contentItem.url ? contentItem.url : 'https://miricyl.org';
-    console.log(webview);
     switch (contentItem.contentType) {
       case ContentType.Text: {
         content = <View style={styles.contentContainer}>
@@ -119,11 +114,11 @@ const ContentScreen = ({ navigation, route }: ContentProps) => {
         break;
       }
       case ContentType.Url: {
-        content = <View style={styles.contentContainer}><Text style={styles.title}>{contentItem.title}</Text><View style={styles.contentHolder}><Text style={styles.title}>{contentItem.text}</Text>
-        <TouchableOpacity onPress={openPhone}><Feather name="phone-call" size={55} color={Colors.light.subtitle} /></TouchableOpacity><TouchableOpacity onPress={() => { WebBrowser.openBrowserAsync(contentItem.url) }}><MaterialIcons name="sms" size={55} color={Colors.light.subtitle} /></TouchableOpacity></View></View>
+        let urlLink = contentItem.url ? <View style={styles.urlStyle}><TouchableOpacity onPress={() => { if (contentItem.url) { WebBrowser.openBrowserAsync(contentItem.url).then(() => { }) } }}><FontAwesome name="video-camera" size={55} color={Colors.light.subtitle} /><Text style={styles.urlText}>{contentItem.url}</Text></TouchableOpacity></View> : <></>;
+        content = <View style={styles.contentContainer}><Text style={styles.title}>{contentItem.title}</Text><View style={styles.contentHolder}>{urlLink}</View></View>
         break;
       }
-      case ContentType.Image: {      
+      case ContentType.Image: {
         let image = contentItem.imageUri !== '' ? <Image source={{ uri: contentItem.imageUri }} style={styles.image} /> : <></>;
         content = <View style={styles.contentContainer}><Text style={styles.title}>{contentItem.title}</Text><View style={styles.contentHolder}>{image}</View><Text style={styles.textItem}>{contentItem.text}</Text></View>
         break;
@@ -136,9 +131,11 @@ const ContentScreen = ({ navigation, route }: ContentProps) => {
   }
 
   return (
-    <View style={styles.container}>
 
-      {content}
+    <View style={styles.container}>
+      <ScrollView>
+        {content}
+      </ScrollView>
       <View style={styles.buttonArea}>
         <AddButton onPress={goToScheduling} width={Layout.window.width * 0.3}>Schedule</AddButton>
         <AddButton onPress={deleteMessage} width={Layout.window.width * 0.3}>Delete</AddButton>
@@ -211,10 +208,9 @@ const styles = StyleSheet.create({
   textItem: {
     backgroundColor: 'transparent',
     color: 'black',
-    padding: 40,
+    padding: 10,
     fontSize: 20,
     textAlign: 'center'
-
   },
   button: {
     backgroundColor: 'transparent',
@@ -226,8 +222,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     color: 'black',
     margin: 20
-
-
   },
   callIcons: {
     width: Layout.window.width * 0.7,
@@ -236,6 +230,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     margin: 30,
     paddingHorizontal: 30
+  },
+  urlStyle: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: 20
+  },
+  urlText: {
+    backgroundColor: 'transparent',
+    color: 'black',
+    fontSize: 20,
+    marginVertical: 20,
+    textAlign: 'center'
   },
   image: {
     width: Layout.window.width * 0.9,

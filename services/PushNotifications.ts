@@ -11,29 +11,48 @@ export const CancelNotification = async (id: string) => {
     await Notifications.cancelScheduledNotificationAsync(id);
 }
 
-
 export const ScheduleScheduledNotification = async (contentItem: IContentItem, schedule: Schedule) => {
     if (contentItem != undefined) {
         //if notificationId isn't null the old notification needs to be unscheduled first.
-        if (contentItem?.schedule.identifyer !== undefined || contentItem?.schedule.identifyer === "") {
-            const result = await Notifications.cancelScheduledNotificationAsync(contentItem.schedule.identifyer);
+        if (contentItem?.schedule.identifyer !== undefined && contentItem?.schedule.identifyer !== "") {
+            await CancelNotification(contentItem?.schedule.identifyer);
         }
 
         let notificationId;
         const weekdays = Object.values(Weekday)
-        const dayNumber = weekdays.indexOf(schedule.day);
-        var startDate = new Date();
+        const dayNumber = weekdays.indexOf(schedule.day)-1;
+
+        // calculate number of secods between now and when the message is scheduled for
+        let startDate = new Date();
+        console.log(startDate.getHours());
+        let secondsOfDay = (startDate.getHours() * 60 * 60) + (startDate.getMinutes() * 60);
+
+        let today = startDate.getDay();
+        let deltaDays = dayNumber - today;
+
+        let time = (parseInt(schedule.hour) * 60 * 60) + (parseInt(schedule.minute) * 60);
+
+        if (time < secondsOfDay) {
+            deltaDays = deltaDays - 1;
+        }
+        else {
+            time = time - secondsOfDay;
+        }
+        if (deltaDays < 0) {
+            deltaDays = 7 + deltaDays;
+        }
+        time = time + (deltaDays * 24 * 60 * 60);
 
         notificationId = await Notifications.scheduleNotificationAsync({
             content: {
-                title: "A reminder",
+                title: "A reminder",// put emoji depending on category?
                 body: contentItem?.title,
-                data: { id: contentItem?.id },
+                data: { id: contentItem.id },
             },
             //this is the weekly repeating one. Use later when id is saved so it can be cancelled
             //trigger: { repeats: true, weekday:day, hour: time.getHours(), minute: time.getMinutes() },
 
-            trigger: { repeats: false, weekday: dayNumber, hour: Number(schedule.hour), minute: Number(schedule.minute) },
+            trigger: { seconds: time, repeats: false },
         });
 
         return notificationId;
@@ -41,6 +60,11 @@ export const ScheduleScheduledNotification = async (contentItem: IContentItem, s
 }
 export const ScheduleIntervalNotification = async (contentItem: IContentItem, schedule: Schedule) => {
     if (contentItem != undefined) {
+        //if notificationId isn't null the old notification needs to be unscheduled first.
+        if (contentItem?.schedule.identifyer !== undefined && contentItem?.schedule.identifyer !== "") {
+            await CancelNotification(contentItem?.schedule.identifyer);
+        }
+
         let multiplier = 60; //corresponds to minute
         let interval = schedule.frequency;
         switch (interval) {

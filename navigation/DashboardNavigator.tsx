@@ -51,7 +51,7 @@ export default function DashboardStackNavigator() {
             <Stack.Screen
                 name="CreateAMessage"
                 component={SelectCategoryScreen}
-                options={{ title: 'Select Message Category' }}
+                options={{ title: 'Select Category' }}
             />
 
             <Stack.Screen
@@ -79,7 +79,7 @@ export default function DashboardStackNavigator() {
             <Stack.Screen
                 name="FeatureNotAvailable"
                 component={FeatureNotAvailableScreen}
-                options={{ title: 'Feature Not Available Yet' }}
+                options={{ title: 'Not Available' }}
             />
 
         </Stack.Navigator>

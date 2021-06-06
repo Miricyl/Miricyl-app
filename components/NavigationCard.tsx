@@ -33,7 +33,7 @@ const NavigationCard = ({ text, link, children, linkType, CardType = "rectNavCar
       }
       break;
     case LinkType.Url:
-      onPressFunction = () => { WebBrowser.openBrowserAsync(link) }
+      onPressFunction = () => { WebBrowser.openBrowserAsync(link).then(()=>{}) }
       break;
 
     default: {

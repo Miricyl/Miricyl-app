@@ -12,6 +12,7 @@ import InputField from '../../components/InputField';
 import { Entypo, FontAwesome } from '@expo/vector-icons';
 import SelectButton from '../../components/SelectButton';
 import * as ImagePicker from 'expo-image-picker';
+import {CorrectUrl} from '../../services/Validation';
 import { Item } from 'react-native-paper/lib/typescript/components/List/List';
 import CloseButton from '../../components/CloseButton';
 import { Icon } from '@expo/vector-icons/build/createIconSet';
@@ -26,10 +27,12 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
     const [contentImage, setContentImage] = useState("");
     const [contentPhoneNumber, setContentPhoneNumber] = useState("");
     const [contentUrl, setContentUrl] = useState("");
+    const [id,setId] = useState("");
     const [contentItem, setContentItem] = useState<IContentItem>();
 
     useEffect(() => {
         if (contentId) {
+            setId(contentId);
             LoadItem(contentId).then((data) => {
                 console.log(data)
                 if (data) {
@@ -95,30 +98,31 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
     const saveContentItem = async () => {
         //TODO check that content has been added, if not prompt user to fill in fields      
         if (contentItem) {
-            if (contentItem.id !== undefined && contentItem.id !== "") {
-                await LoadItem(contentItem.id).then(async (item) => {
+            if (id !== undefined && id !== "") {
+                await LoadItem(id).then(async (item) => {
                     if (item) {
                         item.contentType = contentType;
                         item.imageUri = contentImage;
-                        item.url = contentUrl;
+                        item.url = CorrectUrl(contentUrl);
                         item.phoneNumber = contentPhoneNumber;
                         item.text = contentText;
                         item.title = contentTitle;
                         await UpdateItem(item);
                     }
                 })
-                return contentItem.id;
+                return id;
             }
             else {
                 let itemNew = { ...contentItem };
                 itemNew.title = contentTitle;
-                itemNew.url = contentUrl;
+                itemNew.url = CorrectUrl(contentUrl);
                 itemNew.phoneNumber = contentPhoneNumber;
                 itemNew.contentType = contentType;
                 itemNew.text = contentText;
                 itemNew.imageUri = contentImage;
                 itemNew.category = category;
                 const id = await AddItem(itemNew);
+                setId(id);
                 return id;
             }
 
@@ -211,8 +215,8 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
         }
     }
     {/* //TODO fix keyboard avoiding view and add scrollview */ }
-    return (<ScrollView><KeyboardAvoidingView style={styles.screen} behavior={Platform.OS === "ios" ? "padding" : "height"}
-    ><TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    return (<KeyboardAvoidingView style={styles.screen} behavior={Platform.OS === "ios" ? "padding" : "height"}>
+   <ScrollView><TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.transparent}>
                 <View style={styles.selector}>
                     <SelectButton icon={<FontAwesome name="video-camera" size={24} color="black" />} selected={urlSelected} onPress={() => { selectContent(ContentType.Url) }} />
@@ -226,8 +230,8 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
                     <AddButton width={'90%'} color={Colors.light.tint} onPress={save}>Save</AddButton>
                 </View>
             </View>
-        </TouchableWithoutFeedback>
-    </KeyboardAvoidingView></ScrollView>
+        </TouchableWithoutFeedback></ScrollView>
+    </KeyboardAvoidingView>
 
     );
 }

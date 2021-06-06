@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Modal } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Colors from '../constants/Colors';
@@ -22,6 +22,11 @@ const ScheduleInfo = (props: { item: IContentItem, onClose: any }) => {
     const popUpDelete = () => {
         setModalVisible(true);
     }
+
+    useEffect(() => {
+        setContentItem(props.item);
+
+    }, []);
 
     const unscheduleItem = () => {
 
@@ -59,7 +64,7 @@ const ScheduleInfo = (props: { item: IContentItem, onClose: any }) => {
     if (contentItem.schedule.scheduleMode === ScheduleMode.Scheduled) {
         schedule = (<View style={styles.dateInfo}>
             <View style={styles.dateRow}><AntDesign name="calendar" size={24} color={Colors.borderGrey} /><View style={styles.dateItem}><Text>{contentItem.schedule.day}</Text></View></View>
-            <View style={styles.dateRow}><AntDesign name="clockcircleo" size={24} color={Colors.borderGrey} /><View style={styles.dateItem}><Text>{contentItem.schedule.hour + ':' + contentItem.schedule.minute as string}</Text></View></View>
+            <View style={styles.dateRow}><AntDesign name="clockcircleo" size={24} color={Colors.borderGrey} /><View style={styles.dateItem}><Text>{contentItem.schedule.hour + ':' + (contentItem.schedule.minute as string).padStart(2, '0')}</Text></View></View>
         </View>)
     }
 

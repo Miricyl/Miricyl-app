@@ -51,13 +51,18 @@ const DashboardScreen = () => {
 
   useEffect(() => {
     registerForPushNotificationsAsync()
-
+      const subscription = Notifications.addNotificationReceivedListener(notification => {
+        navigation.navigate('Content', {
+          contentId: notification.request.content.data.id
+        });
+      });
+      return () => subscription.remove();
   }, []);
 
   useEffect(() => {
     if (
       lastNotificationResponse &&
-      lastNotificationResponse.notification.request.content.data.url &&
+      lastNotificationResponse.notification.request.content.data.id &&
       lastNotificationResponse.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER
     ) {
       navigation.navigate('Content', {
