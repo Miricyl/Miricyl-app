@@ -2,6 +2,8 @@ import * as SecureStore from 'expo-secure-store';
 import * as Notifications from 'expo-notifications';
 import { IContentItem, Intervals, Schedule, Weekday } from '../types';
 
+const messageTitle='A Reminder...';
+
 export const StorePushToken = async (pushToken: string) => {
     const token = JSON.stringify(pushToken)
     await SecureStore.setItemAsync('pushToken', token);
@@ -20,11 +22,10 @@ export const ScheduleScheduledNotification = async (contentItem: IContentItem, s
 
         let notificationId;
         const weekdays = Object.values(Weekday)
-        const dayNumber = weekdays.indexOf(schedule.day)-1;
+        const dayNumber = weekdays.indexOf(schedule.day) - 1;
 
-        // calculate number of secods between now and when the message is scheduled for
+        // calculate number of seconds between now and when the message is scheduled for
         let startDate = new Date();
-        console.log(startDate.getHours());
         let secondsOfDay = (startDate.getHours() * 60 * 60) + (startDate.getMinutes() * 60);
 
         let today = startDate.getDay();
@@ -45,13 +46,13 @@ export const ScheduleScheduledNotification = async (contentItem: IContentItem, s
 
         notificationId = await Notifications.scheduleNotificationAsync({
             content: {
-                title: "A reminder",// put emoji depending on category?
+                title: messageTitle,
                 body: contentItem?.title,
-                data: { id: contentItem.id },
+                data: {
+                    id: contentItem.id, reschedule: true
+                },
             },
-            //this is the weekly repeating one. Use later when id is saved so it can be cancelled
-            //trigger: { repeats: true, weekday:day, hour: time.getHours(), minute: time.getMinutes() },
-
+                      
             trigger: { seconds: time, repeats: false },
         });
 
@@ -92,9 +93,9 @@ export const ScheduleIntervalNotification = async (contentItem: IContentItem, sc
         const seconds = schedule.deltaTime * multiplier;
         let notificationId = await Notifications.scheduleNotificationAsync({
             content: {
-                title: "A reminder",
+                title: messageTitle,
                 body: contentItem.title,
-                data: { id: contentItem.id },
+                data: { id: contentItem.id, reschedule: false },
             },
             //this is the weekly repeating one. Use later when id is saved so it can be cancelled
             //trigger: { repeats: true, weekday:day, hour: time.getHours(), minute: time.getMinutes() },
@@ -106,4 +107,22 @@ export const ScheduleIntervalNotification = async (contentItem: IContentItem, sc
 
         return notificationId;
     }
+}
+
+
+export const RescheduleNotification = async (id: string, title: string) => {
+
+    let notificationId = await Notifications.scheduleNotificationAsync({
+        content: {
+            title: messageTitle,
+            body: title,
+            data: { id: id, reschedule: false },
+        },
+        trigger: {
+            seconds: 604800, //in a weeks time
+            repeats: false
+        }, //change to true for deployment
+    });
+
+    return notificationId;
 }

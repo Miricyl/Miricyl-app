@@ -30,7 +30,6 @@ const ContentScreen = ({ navigation, route }: ContentProps) => {
 
 
   const openPhone = () => {
-    console.log(contentItem);
     if (contentItem) {
       if (contentItem.phoneNumber) {
         contentItem.phoneNumber = contentItem.phoneNumber.replace(/[^0-9+]/g, '');

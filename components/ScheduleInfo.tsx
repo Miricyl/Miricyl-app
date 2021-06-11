@@ -41,10 +41,11 @@ const ScheduleInfo = (props: { item: IContentItem, onClose: any }) => {
                 UpdateItem(item).then(() => {
                     setModalVisible(!modalVisible);
                     props.onClose();
-                })});
+                })
+            });
         }
 
-  setModalVisible(!modalVisible);
+        setModalVisible(!modalVisible);
 
     }
 
@@ -57,7 +58,7 @@ const ScheduleInfo = (props: { item: IContentItem, onClose: any }) => {
     let schedule;
     if (contentItem.schedule.scheduleMode === ScheduleMode.Interval) {
         schedule = (<View style={styles.dateInfo}>
-            <View style={styles.dateRow}><Feather name="repeat" size={24} color={Colors.borderGrey} /><View style={styles.dateItem}><Text>{'Every ' + contentItem.schedule.deltaTime+ ' ' + contentItem.schedule.frequency}</Text></View></View>
+            <View style={styles.dateRow}><Feather name="repeat" size={24} color={Colors.borderGrey} /><View style={styles.dateItem}><Text>{'Every ' + contentItem.schedule.deltaTime + ' ' + contentItem.schedule.frequency}</Text></View></View>
         </View>)
     }
 
@@ -79,14 +80,14 @@ const ScheduleInfo = (props: { item: IContentItem, onClose: any }) => {
                         <View style={styles.modalView}>
                             <Text style={styles.modalText}>Stop sending this message?</Text>
                             <View>
-                            <AddButton
-                                color={Colors.light.subtitle}
-                                onPress={() => {
-                                    unscheduleItem();
-                                   
-                                }}>
-                                <Text style={styles.textStyle}>Unschedule</Text>
-                            </AddButton></View>
+                                <AddButton
+                                    color={Colors.light.subtitle}
+                                    onPress={() => {
+                                        unscheduleItem();
+
+                                    }}>
+                                    <Text style={styles.textStyle}>Unschedule</Text>
+                                </AddButton></View>
                             <AddButton
                                 color={Colors.grey}
                                 onPress={() => {

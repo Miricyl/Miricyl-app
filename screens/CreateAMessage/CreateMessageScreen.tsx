@@ -34,7 +34,6 @@ export default function CreateMessageScreen({ navigation, route }: CategoryProps
         if (contentId) {
             setId(contentId);
             LoadItem(contentId).then((data) => {
-                console.log(data)
                 if (data) {
                     setContentItem(data as IContentItem);
                     if (data.contentType) {

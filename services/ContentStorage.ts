@@ -77,12 +77,12 @@ export const LoadAllItems = async () => {
             active: true,
             schedule: {
                 identifyer: 'erw452rw3rw3',
-                minute:'0',
-                hour:'12',
-                day:Weekday.Saturday,
-                deltaTime:2,
+                minute: '0',
+                hour: '12',
+                day: Weekday.Saturday,
+                deltaTime: 2,
                 frequency: Intervals.Weeks,
-                scheduleMode:ScheduleMode.Scheduled,
+                scheduleMode: ScheduleMode.Scheduled,
             }
 
 
@@ -96,12 +96,12 @@ export const LoadAllItems = async () => {
             active: true,
             schedule: {
                 identifyer: 'erw452rw3rw3',
-                minute:'0',
-                hour:'12',
-                day:Weekday.Saturday,
-                deltaTime:2,
+                minute: '0',
+                hour: '12',
+                day: Weekday.Saturday,
+                deltaTime: 2,
                 frequency: Intervals.Weeks,
-                scheduleMode:ScheduleMode.Scheduled,
+                scheduleMode: ScheduleMode.Scheduled,
             }
 
 
@@ -114,12 +114,12 @@ export const LoadAllItems = async () => {
             active: true,
             schedule: {
                 identifyer: 'erw452rw3rw3',
-                minute:'0',
-                hour:'12',
-                day:Weekday.Saturday,
-                deltaTime:2,
+                minute: '0',
+                hour: '12',
+                day: Weekday.Saturday,
+                deltaTime: 2,
                 frequency: Intervals.Weeks,
-                scheduleMode:ScheduleMode.Scheduled,
+                scheduleMode: ScheduleMode.Scheduled,
             }
         }
 
@@ -132,13 +132,13 @@ export const LoadAllItems = async () => {
             active: true,
             schedule: {
                 identifyer: 'erw452rw3rw3',
-                minute:'0',
-                hour:'12',
-                day:Weekday.Saturday,
-                deltaTime:2,
+                minute: '0',
+                hour: '12',
+                day: Weekday.Saturday,
+                deltaTime: 2,
                 frequency: Intervals.Days,
-                scheduleMode:ScheduleMode.Interval,
-    
+                scheduleMode: ScheduleMode.Interval,
+
             }
 
         }
@@ -165,16 +165,18 @@ export const LoadItem = async (id: string) => {
 
     }
     //TODO define a good example message to be present if the user hasn't added anything themselves, could even be scheduled to send them a message?
-    const item: IContentItem = { id: "unknown", category: CategoryType.Love, contentType: ContentType.Text, active: false, schedule:{
-        identifyer:undefined,
-        minute:'0',
-        hour:'12',
-        day:Weekday.Saturday,
-        deltaTime:2,
-        frequency: Intervals.Days,
-        scheduleMode:ScheduleMode.Interval,
+    const item: IContentItem = {
+        id: "unknown", category: CategoryType.Love, contentType: ContentType.Text, active: false, schedule: {
+            identifyer: undefined,
+            minute: '0',
+            hour: '12',
+            day: Weekday.Saturday,
+            deltaTime: 2,
+            frequency: Intervals.Days,
+            scheduleMode: ScheduleMode.Interval,
 
-    }}
+        }
+    }
     return item;
 }
 
@@ -187,7 +189,7 @@ export const LoadItemByCategory = async (categoryType: CategoryType) => {
         let contentItems = items.filter(o => o.category === categoryType);
         return contentItems;
     }
-    
+
     return items;
 }
 
@@ -197,9 +199,27 @@ export const LoadItemOnActive = async (active: boolean) => {
     let items: IContentItem[] = [];
     if (itemsString) {
         items = JSON.parse(itemsString) as IContentItem[];
-        let contentItems = items.filter(o => o.active=== active);
+        let contentItems = items.filter(o => o.active === active);
         return contentItems;
     }
-    
+
     return items;
+}
+
+export const UpdateNotificationId = async (itemId: string, notificationId: string) => {
+    let contentItemString = await AsyncStorage.getItem('items') as string;
+    let items: IContentItem[] = []
+    if (contentItemString) {
+
+        items = JSON.parse(contentItemString) as IContentItem[];
+        var index = items.findIndex((item) => item.id === itemId);
+
+        if (index !== -1) {
+            items[index].schedule.identifyer = notificationId;
+            await AsyncStorage.setItem('items', JSON.stringify(items));
+        }
+
+        return itemId;
+    }
+
 }
