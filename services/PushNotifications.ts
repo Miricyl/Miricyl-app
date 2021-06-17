@@ -52,7 +52,7 @@ export const ScheduleScheduledNotification = async (contentItem: IContentItem, s
                     id: contentItem.id, reschedule: true
                 },
             },
-                      
+
             trigger: { seconds: time, repeats: false },
         });
 
@@ -125,4 +125,8 @@ export const RescheduleNotification = async (id: string, title: string) => {
     });
 
     return notificationId;
+}
+
+export const UnscheduleAllMessages = async () => {
+    await Notifications.cancelAllScheduledNotificationsAsync();
 }

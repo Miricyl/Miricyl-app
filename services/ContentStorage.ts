@@ -62,6 +62,7 @@ export const LoadAllItems = async () => {
     let items: IContentItem[] = []
     if (itemsString) {
         items = JSON.parse(itemsString) as IContentItem[];
+        items = OrderBasedOnTime(items);
 
     }
 
@@ -221,5 +222,31 @@ export const UpdateNotificationId = async (itemId: string, notificationId: strin
 
         return itemId;
     }
+}
+export const RemoveAllSchedules = async () => {
+    let contentItemString = await AsyncStorage.getItem('items') as string;
+    let items: IContentItem[] = []
+    if (contentItemString) {
 
+        items = JSON.parse(contentItemString) as IContentItem[];
+
+        for (let i = 0; i < items.length; i++) {
+            items[i].active = false;
+            items[i].schedule.identifyer = "";
+        }
+
+
+        await AsyncStorage.setItem('items', JSON.stringify(items));
+    }
+
+}
+
+function OrderBasedOnTime(items: IContentItem[]): IContentItem[] {
+    items.sort(function (a, b) {
+        return b.active.valueOf().toString().localeCompare(a.active.valueOf().toString()) || b.schedule.scheduleMode.localeCompare(a.schedule.scheduleMode) || parseInt(a.schedule.day) - parseInt(b.schedule.day) || parseInt(a.schedule.hour) - parseInt(b.schedule.hour);
+    });
+
+    console.log(items)
+
+    return items;
 }

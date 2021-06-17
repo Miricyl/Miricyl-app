@@ -116,7 +116,6 @@ export enum Weekday {
   Thursday='Thursday',
   Friday='Friday',
   Saturday='Saturday',
-  EveryDay='Every Day',
 }
 
 export interface IInputFieldDetails {

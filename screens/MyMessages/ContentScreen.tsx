@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Linking, ScrollView, Platform, Image, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
+import { Linking, ScrollView, Platform, Image, StyleSheet, TouchableOpacity, ImageBackground, Modal } from 'react-native';
 import { Text, View } from '../../components/Themed';
 import Layout from '../../constants/Layout';
 import { CategoryType, ContentType, IContentItem, ContentProps } from '../../types';
@@ -8,19 +8,17 @@ import { DeleteItem, LoadItem } from '../../services/ContentStorage';
 import { Feather, FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
 import sms from 'react-native-sms-linking';
-import { LinkPreview } from '@flyerhq/react-native-link-preview';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import SelectWidget from '../../components/SelectWidget';
 import AddButton from '../../components/AddButton';
-import * as Notifications from 'expo-notifications';
 import { useNavigation } from '@react-navigation/native';
 import { CancelNotification } from '../../services/PushNotifications';
 import * as WebBrowser from 'expo-web-browser';
+import CloseButton from '../../components/CloseButton';
 
 const ContentScreen = ({ navigation, route }: ContentProps) => {
   //content screen should allow you to schedule message and delete item.
   const { contentId } = route.params;
   const [contentItem, setContentItem] = useState<IContentItem>();
+  const [modalVisible, setModalVisible] = useState(false);
 
   const nav = useNavigation();
 
@@ -130,18 +128,46 @@ const ContentScreen = ({ navigation, route }: ContentProps) => {
   }
 
   return (
-
     <View style={styles.container}>
       <ScrollView>
         {content}
       </ScrollView>
       <View style={styles.buttonArea}>
         <AddButton onPress={goToScheduling} width={Layout.window.width * 0.3}>Schedule</AddButton>
-        <AddButton onPress={deleteMessage} width={Layout.window.width * 0.3}>Delete</AddButton>
+        <AddButton onPress={()=>{setModalVisible(true)}} width={Layout.window.width * 0.3}>Delete</AddButton>
         <AddButton onPress={goToEditing} width={Layout.window.width * 0.3} >Edit</AddButton>
       </View>
+      <Modal
+        animationType='slide'
+        transparent={true}
+        visible={modalVisible}>
+        <View style={styles.centeredView}>
+          <View style={styles.rowView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Are you sure you want to delete this item?</Text>
+              <AddButton color={Colors.light.subtitle}
+                onPress={() => {
+                  deleteMessage();
+                  setModalVisible(!modalVisible);
+                }}>
+                <Text style={styles.textStyle}>Yes</Text>
+              </AddButton>
+              <AddButton
+                color={Colors.grey}
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                }}>
+                <Text style={{ ...styles.textStyle, color: 'black' }}>Cancel</Text>
+              </AddButton>
+            </View>
+            <CloseButton onPress={() => {
+              setModalVisible(!modalVisible);
+            }} />
+          </View>
+        </View>
+      </Modal>
 
-    </View>
+    </View >
 
   );
 }
@@ -246,7 +272,35 @@ const styles = StyleSheet.create({
     width: Layout.window.width * 0.9,
     height: Layout.window.height * 0.4
 
-  }
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    fontWeight: 'bold'
+  },
+  centeredView: {
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 155,
+
+  },
+  modalView: {
+    margin: 20,
+    padding: 15,
+    alignItems: 'center',
+
+  },
+  rowView: {
+    flexDirection: 'row',
+    borderRadius: 8,
+    padding: 10
+  },
 });
 
 
