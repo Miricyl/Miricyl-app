@@ -24,8 +24,10 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      }
+        "backgroundColor": "#FFFFFF"  
+      },
+      "package": "org.miricyl",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/images/favicon.png"

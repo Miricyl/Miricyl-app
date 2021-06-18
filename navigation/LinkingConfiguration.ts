@@ -10,14 +10,17 @@ export default {
             screens: {
               DashboardScreen:'dashboard',
               SelfCareScreen:'self-care',
-              JoyScreen: 'joy',
+              MyMessagesScreen: 'my-messages',
               ContentImportScreen:'content-import',
               CopingStrategiesScreen:'coping-strategies',
               MoodScreen:'mood',
               PlacesToDistractScreen:'places-to-distract',
               SelfCheckScreen:'self-check',
               AddWellnessMessageScreen:'wellness-message',
-              ContentScreen:'content-screen'
+              ContentScreen:'content-screen',
+              CreateQuoteScreen:'create-quote',
+              SchedulingMessageScreen:'schedule-message',
+              FeatureNotAvailable:'feature-not-available'
             },
           }
         },
