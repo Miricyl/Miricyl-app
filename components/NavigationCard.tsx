@@ -33,7 +33,7 @@ const NavigationCard = ({ text, link, children, linkType, CardType = "rectNavCar
       }
       break;
     case LinkType.Url:
-      onPressFunction = () => { WebBrowser.openBrowserAsync(link) }
+      onPressFunction = () => { WebBrowser.openBrowserAsync(link).then(()=>{}) }
       break;
 
     default: {
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
   squareCardText: {
-    fontSize: Layout.isSmallDevice?15:18,
+    fontSize: Layout.isSmallDevice?12:18,
     color: Colors.light.text,
     marginTop: 70,
     textAlign: 'center',

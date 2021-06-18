@@ -1,37 +1,33 @@
 import * as React from 'react';
-import { Linking, ScrollView, Platform, Image, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
+import { Linking, ScrollView, Platform, Image, StyleSheet, TouchableOpacity, ImageBackground, Modal } from 'react-native';
 import { Text, View } from '../../components/Themed';
 import Layout from '../../constants/Layout';
 import { CategoryType, ContentType, IContentItem, ContentProps } from '../../types';
 import { useEffect, useState } from 'react';
-import { LoadItem } from '../../storage/ContentStorage';
-import { Feather, MaterialIcons } from '@expo/vector-icons';
+import { DeleteItem, LoadItem } from '../../services/ContentStorage';
+import { Feather, FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
 import sms from 'react-native-sms-linking';
-import { LinkPreview } from '@flyerhq/react-native-link-preview';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import SelectWidget from '../../components/SelectWidget';
 import AddButton from '../../components/AddButton';
-import * as Notifications from 'expo-notifications'
 import { useNavigation } from '@react-navigation/native';
-
+import { CancelNotification } from '../../services/PushNotifications';
+import * as WebBrowser from 'expo-web-browser';
+import CloseButton from '../../components/CloseButton';
 
 const ContentScreen = ({ navigation, route }: ContentProps) => {
   //content screen should allow you to schedule message and delete item.
   const { contentId } = route.params;
   const [contentItem, setContentItem] = useState<IContentItem>();
+  const [modalVisible, setModalVisible] = useState(false);
 
   const nav = useNavigation();
 
   useEffect(() => {
-
     LoadItem(contentId).then((data) => setContentItem(data as IContentItem))
-
   }, []);
 
 
   const openPhone = () => {
-    console.log(contentItem);
     if (contentItem) {
       if (contentItem.phoneNumber) {
         contentItem.phoneNumber = contentItem.phoneNumber.replace(/[^0-9+]/g, '');
@@ -62,8 +58,8 @@ const ContentScreen = ({ navigation, route }: ContentProps) => {
 
   const goToEditing = () => {
     if (contentItem) {
-      nav.navigate('CreateMessage', {    
-        category:contentItem.category,
+      nav.navigate('CreateMessage', {
+        category: contentItem.category,
         contentId: contentItem.id
       })
     }
@@ -78,14 +74,34 @@ const ContentScreen = ({ navigation, route }: ContentProps) => {
     }
   }
 
+  const deleteMessage = () => {
+    if (contentItem) {
+      if (contentItem.schedule.identifyer !== undefined) {
+        //TODO extend this method so it checks for success and only then deletes item, if not successful ask user to try again
+        CancelNotification(contentItem.schedule.identifyer).then(() => {
+          DeleteItem(contentItem.id).then(() => {
+            nav.navigate('MyMessages');
+          });
+        });
+      }
+      else {
+        DeleteItem(contentItem.id).then(() => {
+          nav.navigate('MyMessages')
+        });
+      }
+    }
+  }
+
+
   let content;
   if (contentItem) {
+    let webview = contentItem.url ? contentItem.url : 'https://miricyl.org';
     switch (contentItem.contentType) {
       case ContentType.Text: {
         content = <View style={styles.contentContainer}>
           <Text style={styles.title}>{contentItem.title}</Text>
           <View style={styles.contentHolder}><Text style={styles.textItem}>{contentItem.text}</Text></View>
-          </View>
+        </View>
         break;
       }
       case ContentType.PhoneNumber: {
@@ -95,13 +111,13 @@ const ContentScreen = ({ navigation, route }: ContentProps) => {
         break;
       }
       case ContentType.Url: {
-        content = <View style={styles.contentContainer}><Text style={styles.title}>{contentItem.title}</Text><View style={styles.contentHolder}><Text style={styles.title}>{contentItem.text}</Text><LinkPreview text={contentItem.url as string}/></View></View>
+        let urlLink = contentItem.url ? <View style={styles.urlStyle}><TouchableOpacity onPress={() => { if (contentItem.url) { WebBrowser.openBrowserAsync(contentItem.url).then(() => { }) } }}><FontAwesome name="video-camera" size={55} color={Colors.light.subtitle} /><Text style={styles.urlText}>{contentItem.url}</Text></TouchableOpacity></View> : <></>;
+        content = <View style={styles.contentContainer}><Text style={styles.title}>{contentItem.title}</Text><View style={styles.contentHolder}>{urlLink}</View></View>
         break;
       }
       case ContentType.Image: {
-        content = <View style={styles.contentContainer}><Text style={styles.title}>{contentItem.title}</Text><View style={styles.contentHolder}><Image style={styles.image} source={{
-          uri: contentItem.imageUri
-        }}></Image></View><Text style={styles.textItem}>{contentItem.text}</Text></View>
+        let image = contentItem.imageUri !== '' ? <Image source={{ uri: contentItem.imageUri }} style={styles.image} /> : <></>;
+        content = <View style={styles.contentContainer}><Text style={styles.title}>{contentItem.title}</Text><View style={styles.contentHolder}>{image}</View><Text style={styles.textItem}>{contentItem.text}</Text></View>
         break;
       }
       default: {
@@ -113,11 +129,45 @@ const ContentScreen = ({ navigation, route }: ContentProps) => {
 
   return (
     <View style={styles.container}>
-      
+      <ScrollView>
         {content}
-        <View style={styles.buttonArea}><AddButton onPress={goToScheduling} width={Layout.window.width * 0.3}>Schedule</AddButton><AddButton width={Layout.window.width * 0.3}>Delete</AddButton><AddButton width={Layout.window.width * 0.3} onPress={goToEditing}>Edit</AddButton></View>
- 
-    </View>
+      </ScrollView>
+      <View style={styles.buttonArea}>
+        <AddButton onPress={goToScheduling} width={Layout.window.width * 0.3}>Schedule</AddButton>
+        <AddButton onPress={()=>{setModalVisible(true)}} width={Layout.window.width * 0.3}>Delete</AddButton>
+        <AddButton onPress={goToEditing} width={Layout.window.width * 0.3} >Edit</AddButton>
+      </View>
+      <Modal
+        animationType='slide'
+        transparent={true}
+        visible={modalVisible}>
+        <View style={styles.centeredView}>
+          <View style={styles.rowView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Are you sure you want to delete this item?</Text>
+              <AddButton color={Colors.light.subtitle}
+                onPress={() => {
+                  deleteMessage();
+                  setModalVisible(!modalVisible);
+                }}>
+                <Text style={styles.textStyle}>Yes</Text>
+              </AddButton>
+              <AddButton
+                color={Colors.grey}
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                }}>
+                <Text style={{ ...styles.textStyle, color: 'black' }}>Cancel</Text>
+              </AddButton>
+            </View>
+            <CloseButton onPress={() => {
+              setModalVisible(!modalVisible);
+            }} />
+          </View>
+        </View>
+      </Modal>
+
+    </View >
 
   );
 }
@@ -129,7 +179,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-evenly',
-    backgroundColor:Colors.grey
+    backgroundColor: Colors.grey
   },
   contentContainer: {
     flex: 1,
@@ -137,7 +187,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     marginVertical: 30,
-   
+
   },
 
   contentHolder: {
@@ -153,8 +203,8 @@ const styles = StyleSheet.create({
     width: Layout.window.width * 0.9,
     marginTop: 10,
     marginBottom: 10,
-    overflow: 'hidden', 
-    padding:20
+    overflow: 'hidden',
+    padding: 20
 
   },
   background: {
@@ -168,7 +218,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     backgroundColor: 'transparent',
-    paddingVertical:30
+    paddingVertical: 30
   },
   contentCards: {
     flex: 1,
@@ -183,10 +233,9 @@ const styles = StyleSheet.create({
   textItem: {
     backgroundColor: 'transparent',
     color: 'black',
-    padding: 40,
+    padding: 10,
     fontSize: 20,
     textAlign: 'center'
-
   },
   button: {
     backgroundColor: 'transparent',
@@ -197,23 +246,61 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     backgroundColor: 'transparent',
     color: 'black',
-    margin:20
-
-
+    margin: 20
   },
   callIcons: {
-    width:Layout.window.width*0.7,
+    width: Layout.window.width * 0.7,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     margin: 30,
-    paddingHorizontal:30
+    paddingHorizontal: 30
+  },
+  urlStyle: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: 20
+  },
+  urlText: {
+    backgroundColor: 'transparent',
+    color: 'black',
+    fontSize: 20,
+    marginVertical: 20,
+    textAlign: 'center'
   },
   image: {
     width: Layout.window.width * 0.9,
     height: Layout.window.height * 0.4
 
-  }
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    fontWeight: 'bold'
+  },
+  centeredView: {
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 155,
+
+  },
+  modalView: {
+    margin: 20,
+    padding: 15,
+    alignItems: 'center',
+
+  },
+  rowView: {
+    flexDirection: 'row',
+    borderRadius: 8,
+    padding: 10
+  },
 });
 
 

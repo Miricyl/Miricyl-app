@@ -1,23 +1,26 @@
 import * as React from 'react';
-import { Platform, StyleSheet, ScrollView } from 'react-native';
+import { Platform, StyleSheet, ScrollView, Modal } from 'react-native';
 import Colors from '../constants/Colors'
 import { View } from '../components/Themed';
 import { useEffect, useState } from 'react';
-import { IContentItem, Weekday, ScheduleMode, Intervals } from '../types';
-import { LoadItem, UpdateItem } from '../storage/ContentStorage';
+import { IContentItem, Weekday, ScheduleMode, Intervals, Schedule } from '../types';
+import { LoadItem, UpdateItem } from '../services/ContentStorage';
 import AddButton from '../components/AddButton'
 import Layout from '../constants/Layout';
 import { ContentProps } from '../types';
-import * as Notifications from 'expo-notifications';
 import { RadioButton, Text } from 'react-native-paper';
 import { Picker } from '@react-native-picker/picker';
 import ScheduleInfo from '../components/ScheduleInfo';
+import { ScheduleIntervalNotification, ScheduleScheduledNotification } from '../services/PushNotifications';
+import { useNavigation } from '@react-navigation/native';
+import CloseButton from '../components/CloseButton';
 
 
 const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
-
+    const nav = useNavigation();
     const { contentId } = route.params;
     const [contentItem, setContentItem] = useState<IContentItem>();
+    const [contentSchedule, setContentSchedule] = useState<Schedule>();
     const [hour, setHour] = useState('00');
     const [minute, setMinute] = useState('00')
     const [day, setDay] = useState("Monday");
@@ -25,18 +28,17 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
     const [firstDigit, setFirstDigit] = useState('0');
     const [secondDigit, setSecondDigit] = useState('0');
     const [interval, setInterval] = useState('Days');
+    const [showModal, setShowModal] = useState(false)
 
     useEffect(() => {
-
         LoadContentItem();
-
-
     }, []);
 
     const LoadContentItem = () => {
         LoadItem(contentId).then((data) => {
             if (data) {
                 setContentItem(data as IContentItem);
+                setContentSchedule(data.schedule as Schedule);
                 setHour(data.schedule.hour);
                 setMinute(data.schedule.minute);
 
@@ -64,116 +66,93 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
     const minutes = ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'];
     const upToTen = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
     const intervals = Object.values(Intervals);
+
     const goToPlanScreen = () => {
+        nav.navigate('FeatureNotAvailable');
+    }
+
+    const close = () => {
+        setShowModal(!showModal);
+    }
+
+    const updateScheduleInfo = (notificationId: string, schedule: Schedule) => {
+        if (contentItem) {
+            schedule.identifyer = notificationId
+            var item: IContentItem = { ...contentItem };
+            item.active = true;
+            item.schedule = schedule;
+            UpdateItem(item);
+            setContentSchedule(schedule);
+            setContentItem(item);
+        }
 
     }
 
     const scheduleMessage = async () => {
         if (contentItem != undefined) {
-            //if notificationId isn't null the old notification needs to be unscheduled first.
-            if (contentItem?.schedule.identifyer !== undefined || contentItem?.schedule.identifyer === "") {
-                const result = await Notifications.cancelScheduledNotificationAsync(contentItem.schedule.identifyer);
+            if (contentItem.active) {
+                setShowModal(true);
             }
 
-            let notificationId;
-            if (scheduleMode === ScheduleMode.Scheduled) {
-                const dayNumber = weekdays.indexOf(day as Weekday);
-                var startDate = new Date();
-                //TODO the trigger doesn't work. Calculated a time in second and schedule that as a one off and repeat scheduling when user picks up the notification
-                notificationId = await Notifications.scheduleNotificationAsync({
-                    content: {
-                        title: "A reminder",
-                        body: contentItem?.title,
-                        data: { id: contentItem?.id },
-                    },
-                    //this is the weekly repeating one. Use later when id is saved so it can be cancelled
-                    //trigger: { repeats: true, weekday:day, hour: time.getHours(), minute: time.getMinutes() },
+            else {
 
-                    trigger: { repeats: false, weekday: dayNumber, hour: Number(hour), minute: Number(minute) },
-                });
+                let notificationId: any;
+                if (scheduleMode === ScheduleMode.Scheduled) {
 
-                if (notificationId) {
-                    var item = { ...contentItem };
-                    item.active = true;
-                    item.schedule.identifyer = notificationId;
-                    item.schedule.day = day as Weekday;
-                    item.schedule.hour = hour;
-                    item.schedule.minute = minute;
-                    item.schedule.scheduleMode = ScheduleMode.Scheduled;
+                    let schedule: Schedule = {
+                        day: day as Weekday,
+                        hour: hour,
+                        minute: minute,
+                        scheduleMode: ScheduleMode.Scheduled,
+                        identifyer: contentItem.schedule.identifyer,
+                        frequency: interval as Intervals,
+                        deltaTime: 0
 
-                    setContentItem(item);
-                    UpdateItem(item);
+                    }
+
+                    notificationId = await ScheduleScheduledNotification(contentItem, schedule);
+
+                    if (notificationId) {
+                        updateScheduleInfo(notificationId, schedule);
+
+                    }
                 }
-            }
-            if (scheduleMode === ScheduleMode.Interval) {
-                let multiplier = 60; //corresponds to minute
-                switch (interval) {
-                    case Intervals.Minutes:
-                        multiplier = 60;
-                        break;
-                    case Intervals.Hours:
-                        multiplier = 60 * 60;
-                        break;
-                    case Intervals.Days:
-                        multiplier = 60 * 60 * 24;
-                        break;
-                    case Intervals.Weeks:
-                        multiplier = 60 * 60 * 24 * 7;
-                        break;
-                    case Intervals.Months:
-                        multiplier = 60 * 60 * 24 * 7 * 30;
-                        break;
 
-                }
-                const timeUnits = Number('' + firstDigit + secondDigit);
-                const seconds = timeUnits * multiplier;
-                notificationId = await Notifications.scheduleNotificationAsync({
-                    content: {
-                        title: "A reminder",
-                        body: contentItem.title,
-                        data: { id: contentItem.id },
-                    },
-                    //this is the weekly repeating one. Use later when id is saved so it can be cancelled
-                    //trigger: { repeats: true, weekday:day, hour: time.getHours(), minute: time.getMinutes() },
-                    trigger: {
-                        seconds: seconds,
-                        repeats: false
-                    }, //change to true for deployment
-                });
+                if (scheduleMode === ScheduleMode.Interval) {
+                    const timeUnits = Number('' + firstDigit + secondDigit);
+                    let schedule: Schedule = {
+                        day: day as Weekday,
+                        hour: hour,
+                        minute: minute,
+                        scheduleMode: ScheduleMode.Interval,
+                        identifyer: contentItem.schedule.identifyer,
+                        frequency: interval as Intervals,
+                        deltaTime: timeUnits
 
-                console.log("Id notification " + notificationId);
+                    }
+                    notificationId = await ScheduleIntervalNotification(contentItem, schedule);
+                    if (notificationId) {
+                        updateScheduleInfo(notificationId, schedule);
 
-                if (notificationId) {
-                    var item = { ...contentItem };
-                    item.active = true;
-                    item.schedule.identifyer = notificationId;
-                    item.schedule.frequency = interval as Intervals;
-                    item.schedule.deltaTime = timeUnits;
-                    item.schedule.scheduleMode = ScheduleMode.Interval;
-
-                    setContentItem(item);
-                    UpdateItem(item);
+                    }
                 }
             }
         }
+
     }
 
     let dateContainer;
     let picker;
+    let dayWidth = Platform.OS == "android" ? 180 : 150;
 
-    if (contentItem !== undefined && contentItem.active) {
-        if (scheduleMode === ScheduleMode.Scheduled) {
-            dateContainer = <ScheduleInfo item={contentItem} onClose={LoadContentItem} />
-        }
-        if (scheduleMode === ScheduleMode.Interval) {
-            dateContainer = <ScheduleInfo item={contentItem} onClose={LoadContentItem} />
-        }
+    if (contentSchedule !== undefined && contentItem != undefined && contentItem.active) {
+        dateContainer = <ScheduleInfo id={contentItem.id} scheduleItem={contentSchedule} onClose={LoadContentItem} />
     }
     if (contentItem !== undefined) {
 
         if (scheduleMode === ScheduleMode.Scheduled) {
             picker = (<View style={styles.pickers}>
-                <Picker selectedValue={day} style={{ ...styles.picker, width: 150 }} onValueChange={(itemValue: any, itemIndex: Number) =>
+                <Picker selectedValue={day} style={{ ...styles.picker, width: dayWidth }} onValueChange={(itemValue: any, itemIndex: Number) =>
                     setDay(itemValue)}>
                     {weekdays.map((item: any, index: Number) => { return (<Picker.Item label={item} value={item} key={index.toString()} />) })}
                 </Picker>
@@ -232,6 +211,29 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
             {picker}
             <AddButton width={'90%'} color={Colors.light.tint} onPress={scheduleMessage}>Schedule</AddButton>
         </View>
+        <Modal
+            animationType='slide'
+            transparent={true}
+            visible={showModal}>
+            <View style={styles.centeredView}>
+                <View style={styles.rowView}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>You must first unschedule the existing message</Text>
+                        <View>
+                            <AddButton
+                                color={Colors.light.subtitle}
+                                onPress={() => {
+                                   close();
+                                }}>
+                                <Text style={styles.textStyle}>OK</Text>
+                            </AddButton></View>
+                    </View>
+                    <CloseButton onPress={() => {
+                        setShowModal(!showModal);
+                    }} />
+                </View>
+            </View>
+        </Modal>
     </ScrollView>
     );
 }
@@ -293,7 +295,41 @@ const styles = StyleSheet.create({
         padding: 10,
         height: 60,
         width: 50
-    }
+    },
+    centeredView: {
+        backgroundColor: 'transparent',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingTop: 155,
+
+    },
+    modalView: {
+        margin: 20,
+        padding: 15,
+        alignItems: 'center',
+
+    },
+    rowView: {
+        flexDirection: 'row',
+        borderRadius: 8,
+        padding: 10
+    },
+    openButton: {
+        borderRadius: 5,
+        padding: 10,
+        elevation: 2,
+        margin: 10
+    },
+    textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
+        fontWeight: 'bold'
+    },
 
 });
 

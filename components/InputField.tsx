@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
     },
     textInput: {
         textAlignVertical: 'top',
+        padding:5
 
     }
 

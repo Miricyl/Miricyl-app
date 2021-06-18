@@ -19,7 +19,8 @@ export default {
               AddWellnessMessageScreen:'wellness-message',
               ContentScreen:'content-screen',
               CreateQuoteScreen:'create-quote',
-              SchedulingMessageScreen:'schedule-message'
+              SchedulingMessageScreen:'schedule-message',
+              FeatureNotAvailable:'feature-not-available'
             },
           }
         },
