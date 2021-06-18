@@ -1,4 +1,4 @@
-import { CategoryType, ContentType, IContentItem, Intervals, ScheduleMode, Weekday } from '../types';
+import { CategoryType, ContentType, IContentItem, Intervals, Schedule, ScheduleMode, Weekday } from '../types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'uuid';
 
@@ -41,6 +41,24 @@ export const UpdateItem = async (contentItem: IContentItem) => {
     }
 }
 
+export const UpdateSchedule = async (id: string, schedule: Schedule, active: boolean) => {
+    let contentItemString = await AsyncStorage.getItem('items') as string;
+    let items: IContentItem[] = []
+    if (contentItemString) {
+
+        items = JSON.parse(contentItemString) as IContentItem[];
+        var index = items.findIndex((item) => item.id === id);
+
+        if (index !== -1) {
+            items[index].schedule = schedule;
+            items[index].active = active;
+            await AsyncStorage.setItem('items', JSON.stringify(items));
+        }
+
+        return id;
+    }
+}
+
 export const DeleteItem = async (contentItemId: string) => {
 
     let contentItemString = await AsyncStorage.getItem('items') as string;
@@ -68,53 +86,17 @@ export const LoadAllItems = async () => {
 
     else {
 
-        //this is to allow quick testing and development, remove before publish
-        const joyItem1: IContentItem = {
+        //default item if no items have been added yet
+        const item: IContentItem = {
             id: "1",
-            text: "This is a joy item with a link",
-            url: "https://www.bbc.co.uk",
-            contentType: ContentType.Url,
-            category: CategoryType.Love,
-            active: true,
-            schedule: {
-                identifyer: 'erw452rw3rw3',
-                minute: '0',
-                hour: '12',
-                day: Weekday.Saturday,
-                deltaTime: 2,
-                frequency: Intervals.Weeks,
-                scheduleMode: ScheduleMode.Scheduled,
-            }
-
-
-        }
-        const joyItem2: IContentItem = {
-            id: "2",
-            text: "Call my mum",
-            phoneNumber: "07799416722",
-            contentType: ContentType.PhoneNumber,
-            category: CategoryType.Love,
-            active: true,
-            schedule: {
-                identifyer: 'erw452rw3rw3',
-                minute: '0',
-                hour: '12',
-                day: Weekday.Saturday,
-                deltaTime: 2,
-                frequency: Intervals.Weeks,
-                scheduleMode: ScheduleMode.Scheduled,
-            }
-
-
-        }
-        const joyItem3: IContentItem = {
-            id: "3",
-            text: "Act as if what you do makes a difference. It does.",
+            title: "Welcome!",
+            text: "Try creating your own message. You can decide when you would like the message sent to you by scheduling it for set day and time or at a set interval.",
+            url: "",
             contentType: ContentType.Text,
             category: CategoryType.Love,
-            active: true,
+            active: false,
             schedule: {
-                identifyer: 'erw452rw3rw3',
+                identifyer: undefined,
                 minute: '0',
                 hour: '12',
                 day: Weekday.Saturday,
@@ -123,35 +105,9 @@ export const LoadAllItems = async () => {
                 scheduleMode: ScheduleMode.Scheduled,
             }
         }
-
-        const joyItem4: IContentItem = {
-            id: "4",
-            text: "Me and my friends.",
-            imageUri: "https://media.bloomandwild.com/v1/trim:15/2160x2160/smart/filters:format(webp)/https://assets-0.bloomandwild.com/letterbox-main/the-quinn-ht/cfe4b3bf-5e6b-4e08-a557-a0ce36704a65.jpeg",
-            contentType: ContentType.Image,
-            category: CategoryType.Love,
-            active: true,
-            schedule: {
-                identifyer: 'erw452rw3rw3',
-                minute: '0',
-                hour: '12',
-                day: Weekday.Saturday,
-                deltaTime: 2,
-                frequency: Intervals.Days,
-                scheduleMode: ScheduleMode.Interval,
-
-            }
-
-        }
-
-        items.push(joyItem1);
-        items.push(joyItem2);
-        items.push(joyItem3);
-        items.push(joyItem4);
-        AsyncStorage.setItem('items', JSON.stringify(items));
-
+        items.push(item);
+        await AsyncStorage.setItem('items', JSON.stringify(items));
     }
-
     return items;
 }
 
@@ -167,7 +123,12 @@ export const LoadItem = async (id: string) => {
     }
     //TODO define a good example message to be present if the user hasn't added anything themselves, could even be scheduled to send them a message?
     const item: IContentItem = {
-        id: "unknown", category: CategoryType.Love, contentType: ContentType.Text, active: false, schedule: {
+        id: "unknown",
+        category: CategoryType.Love,
+        contentType: ContentType.Text,
+        text: "Sorry, couldn't find the message you were looking for.",
+        active: false,
+        schedule: {
             identifyer: undefined,
             minute: '0',
             hour: '12',
@@ -245,8 +206,6 @@ function OrderBasedOnTime(items: IContentItem[]): IContentItem[] {
     items.sort(function (a, b) {
         return b.active.valueOf().toString().localeCompare(a.active.valueOf().toString()) || b.schedule.scheduleMode.localeCompare(a.schedule.scheduleMode) || parseInt(a.schedule.day) - parseInt(b.schedule.day) || parseInt(a.schedule.hour) - parseInt(b.schedule.hour);
     });
-
-    console.log(items)
 
     return items;
 }

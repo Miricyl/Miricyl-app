@@ -101,7 +101,7 @@ export const ScheduleIntervalNotification = async (contentItem: IContentItem, sc
             //trigger: { repeats: true, weekday:day, hour: time.getHours(), minute: time.getMinutes() },
             trigger: {
                 seconds: seconds,
-                repeats: false
+                repeats: true
             }, //change to true for deployment
         });
 
@@ -120,7 +120,7 @@ export const RescheduleNotification = async (id: string, title: string) => {
         },
         trigger: {
             seconds: 604800, //in a weeks time
-            repeats: false
+            repeats: true
         }, //change to true for deployment
     });
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Platform, StyleSheet, ScrollView } from 'react-native';
+import { Platform, StyleSheet, ScrollView, Modal } from 'react-native';
 import Colors from '../constants/Colors'
 import { View } from '../components/Themed';
 import { useEffect, useState } from 'react';
@@ -13,12 +13,14 @@ import { Picker } from '@react-native-picker/picker';
 import ScheduleInfo from '../components/ScheduleInfo';
 import { ScheduleIntervalNotification, ScheduleScheduledNotification } from '../services/PushNotifications';
 import { useNavigation } from '@react-navigation/native';
+import CloseButton from '../components/CloseButton';
 
 
 const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
     const nav = useNavigation();
     const { contentId } = route.params;
     const [contentItem, setContentItem] = useState<IContentItem>();
+    const [contentSchedule, setContentSchedule] = useState<Schedule>();
     const [hour, setHour] = useState('00');
     const [minute, setMinute] = useState('00')
     const [day, setDay] = useState("Monday");
@@ -26,6 +28,7 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
     const [firstDigit, setFirstDigit] = useState('0');
     const [secondDigit, setSecondDigit] = useState('0');
     const [interval, setInterval] = useState('Days');
+    const [showModal, setShowModal] = useState(false)
 
     useEffect(() => {
         LoadContentItem();
@@ -35,6 +38,7 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
         LoadItem(contentId).then((data) => {
             if (data) {
                 setContentItem(data as IContentItem);
+                setContentSchedule(data.schedule as Schedule);
                 setHour(data.schedule.hour);
                 setMinute(data.schedule.minute);
 
@@ -67,13 +71,18 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
         nav.navigate('FeatureNotAvailable');
     }
 
-    const updateSchdeduleInfo = (notificationId: string, schedule: Schedule) => {
+    const close = () => {
+        setShowModal(!showModal);
+    }
+
+    const updateScheduleInfo = (notificationId: string, schedule: Schedule) => {
         if (contentItem) {
+            schedule.identifyer = notificationId
             var item: IContentItem = { ...contentItem };
             item.active = true;
             item.schedule = schedule;
-            item.schedule.identifyer = notificationId;
             UpdateItem(item);
+            setContentSchedule(schedule);
             setContentItem(item);
         }
 
@@ -81,45 +90,51 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
 
     const scheduleMessage = async () => {
         if (contentItem != undefined) {
-
-            let notificationId: any;
-            if (scheduleMode === ScheduleMode.Scheduled) {
-
-                let schedule: Schedule = {
-                    day: day as Weekday,
-                    hour: hour,
-                    minute: minute,
-                    scheduleMode: ScheduleMode.Scheduled,
-                    identifyer: contentItem.schedule.identifyer,
-                    frequency: interval as Intervals,
-                    deltaTime: 0
-
-                }
-
-                notificationId = await ScheduleScheduledNotification(contentItem, schedule);
-
-                if (notificationId) {
-                    updateSchdeduleInfo(notificationId, schedule);
-
-                }
+            if (contentItem.active) {
+                setShowModal(true);
             }
 
-            if (scheduleMode === ScheduleMode.Interval) {
-                const timeUnits = Number('' + firstDigit + secondDigit);
-                let schedule: Schedule = {
-                    day: day as Weekday,
-                    hour: hour,
-                    minute: minute,
-                    scheduleMode: ScheduleMode.Interval,
-                    identifyer: contentItem.schedule.identifyer,
-                    frequency: interval as Intervals,
-                    deltaTime: timeUnits
+            else {
 
+                let notificationId: any;
+                if (scheduleMode === ScheduleMode.Scheduled) {
+
+                    let schedule: Schedule = {
+                        day: day as Weekday,
+                        hour: hour,
+                        minute: minute,
+                        scheduleMode: ScheduleMode.Scheduled,
+                        identifyer: contentItem.schedule.identifyer,
+                        frequency: interval as Intervals,
+                        deltaTime: 0
+
+                    }
+
+                    notificationId = await ScheduleScheduledNotification(contentItem, schedule);
+
+                    if (notificationId) {
+                        updateScheduleInfo(notificationId, schedule);
+
+                    }
                 }
-                notificationId = await ScheduleIntervalNotification(contentItem, schedule);
-                if (notificationId) {
-                    updateSchdeduleInfo(notificationId, schedule);
 
+                if (scheduleMode === ScheduleMode.Interval) {
+                    const timeUnits = Number('' + firstDigit + secondDigit);
+                    let schedule: Schedule = {
+                        day: day as Weekday,
+                        hour: hour,
+                        minute: minute,
+                        scheduleMode: ScheduleMode.Interval,
+                        identifyer: contentItem.schedule.identifyer,
+                        frequency: interval as Intervals,
+                        deltaTime: timeUnits
+
+                    }
+                    notificationId = await ScheduleIntervalNotification(contentItem, schedule);
+                    if (notificationId) {
+                        updateScheduleInfo(notificationId, schedule);
+
+                    }
                 }
             }
         }
@@ -130,8 +145,8 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
     let picker;
     let dayWidth = Platform.OS == "android" ? 180 : 150;
 
-    if (contentItem !== undefined && contentItem.active) {
-        dateContainer = <ScheduleInfo item={contentItem} onClose={LoadContentItem} />
+    if (contentSchedule !== undefined && contentItem != undefined && contentItem.active) {
+        dateContainer = <ScheduleInfo id={contentItem.id} scheduleItem={contentSchedule} onClose={LoadContentItem} />
     }
     if (contentItem !== undefined) {
 
@@ -196,6 +211,29 @@ const ScheduleMessageScreen = ({ navigation, route }: ContentProps) => {
             {picker}
             <AddButton width={'90%'} color={Colors.light.tint} onPress={scheduleMessage}>Schedule</AddButton>
         </View>
+        <Modal
+            animationType='slide'
+            transparent={true}
+            visible={showModal}>
+            <View style={styles.centeredView}>
+                <View style={styles.rowView}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>You must first unschedule the existing message</Text>
+                        <View>
+                            <AddButton
+                                color={Colors.light.subtitle}
+                                onPress={() => {
+                                   close();
+                                }}>
+                                <Text style={styles.textStyle}>OK</Text>
+                            </AddButton></View>
+                    </View>
+                    <CloseButton onPress={() => {
+                        setShowModal(!showModal);
+                    }} />
+                </View>
+            </View>
+        </Modal>
     </ScrollView>
     );
 }
@@ -257,7 +295,41 @@ const styles = StyleSheet.create({
         padding: 10,
         height: 60,
         width: 50
-    }
+    },
+    centeredView: {
+        backgroundColor: 'transparent',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingTop: 155,
+
+    },
+    modalView: {
+        margin: 20,
+        padding: 15,
+        alignItems: 'center',
+
+    },
+    rowView: {
+        flexDirection: 'row',
+        borderRadius: 8,
+        padding: 10
+    },
+    openButton: {
+        borderRadius: 5,
+        padding: 10,
+        elevation: 2,
+        margin: 10
+    },
+    textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
+        fontWeight: 'bold'
+    },
 
 });
 

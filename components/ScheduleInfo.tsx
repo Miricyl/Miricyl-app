@@ -3,42 +3,42 @@ import { StyleSheet, Modal } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Colors from '../constants/Colors';
 import { Text, View } from './Themed';
-import { IContentItem, ScheduleMode } from '../types';
+import { IContentItem, Schedule, ScheduleMode } from '../types';
 import Layout from '../constants/Layout';
 import { Feather, AntDesign } from '@expo/vector-icons';
 import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 
 import CloseButton from './CloseButton';
-import { DeleteItem, UpdateItem } from '../services/ContentStorage';
+import { DeleteItem, UpdateItem, UpdateSchedule } from '../services/ContentStorage';
 import * as Notifications from 'expo-notifications';
 import AddButton from './AddButton';
 
 
-const ScheduleInfo = (props: { item: IContentItem, onClose: any }) => {
+const ScheduleInfo = (props: { id:string, scheduleItem: Schedule, onClose: any }) => {
 
     const [modalVisible, setModalVisible] = useState(false);
-    const [contentItem, setContentItem] = useState<IContentItem>(props.item);
+    const [schedule, setSchedule] = useState<Schedule>(props.scheduleItem);
+    const [id, setId]= useState<string>(props.id)
 
     const popUpDelete = () => {
         setModalVisible(true);
     }
 
     useEffect(() => {
-        setContentItem(props.item);
+        setSchedule(props.scheduleItem);
 
     }, []);
 
     const unscheduleItem = () => {
 
-        if (contentItem.schedule.identifyer !== undefined) {
-            cancelNotification(contentItem.schedule.identifyer).then(() => {
-                let item = { ...contentItem };
-                if (item.schedule) {
-                    item.schedule.identifyer = '';
-                    item.active = false;
+        if (schedule.identifyer !== undefined) {
+            cancelNotification(schedule.identifyer).then(() => {
+                let item = { ...schedule };
+                if (schedule) {
+                    schedule.identifyer = '';
                 }
-                setContentItem(item);
-                UpdateItem(item).then(() => {
+                setSchedule(schedule);
+                UpdateSchedule(id,schedule,false).then(() => {
                     setModalVisible(!modalVisible);
                     props.onClose();
                 })
@@ -55,17 +55,17 @@ const ScheduleInfo = (props: { item: IContentItem, onClose: any }) => {
     }
 
 
-    let schedule;
-    if (contentItem.schedule.scheduleMode === ScheduleMode.Interval) {
-        schedule = (<View style={styles.dateInfo}>
-            <View style={styles.dateRow}><Feather name="repeat" size={24} color={Colors.borderGrey} /><View style={styles.dateItem}><Text>{'Every ' + contentItem.schedule.deltaTime + ' ' + contentItem.schedule.frequency}</Text></View></View>
+    let scheduleComponent;
+    if (schedule.scheduleMode === ScheduleMode.Interval) {
+        scheduleComponent = (<View style={styles.dateInfo}>
+            <View style={styles.dateRow}><Feather name="repeat" size={24} color={Colors.borderGrey} /><View style={styles.dateItem}><Text>{'Every ' + schedule.deltaTime + ' ' + schedule.frequency}</Text></View></View>
         </View>)
     }
 
-    if (contentItem.schedule.scheduleMode === ScheduleMode.Scheduled) {
-        schedule = (<View style={styles.dateInfo}>
-            <View style={styles.dateRow}><AntDesign name="calendar" size={24} color={Colors.borderGrey} /><View style={styles.dateItem}><Text>{contentItem.schedule.day}</Text></View></View>
-            <View style={styles.dateRow}><AntDesign name="clockcircleo" size={24} color={Colors.borderGrey} /><View style={styles.dateItem}><Text>{contentItem.schedule.hour + ':' + (contentItem.schedule.minute as string).padStart(2, '0')}</Text></View></View>
+    if (schedule.scheduleMode === ScheduleMode.Scheduled) {
+        scheduleComponent = (<View style={styles.dateInfo}>
+            <View style={styles.dateRow}><AntDesign name="calendar" size={24} color={Colors.borderGrey} /><View style={styles.dateItem}><Text>{schedule.day}</Text></View></View>
+            <View style={styles.dateRow}><AntDesign name="clockcircleo" size={24} color={Colors.borderGrey} /><View style={styles.dateItem}><Text>{schedule.hour + ':' + (schedule.minute as string).padStart(2, '0')}</Text></View></View>
         </View>)
     }
 
@@ -104,7 +104,7 @@ const ScheduleInfo = (props: { item: IContentItem, onClose: any }) => {
             </Modal>
             <View style={styles.content}>
                 <View style={styles.textContent}>
-                    <View>{schedule}</View>
+                    <View>{scheduleComponent}</View>
                 </View>
             </View>
             <CloseButton onPress={popUpDelete} />
